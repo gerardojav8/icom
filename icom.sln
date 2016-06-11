@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAOicom", "DAOicom\DAOicom.csproj", "{EAE7C4C5-0B2B-449F-8E1B-0165EA0B5FE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebIcomToken", "WebIcomToken\WebIcomToken.csproj", "{D4EFD7CE-E1F0-44F4-85C1-11670DF5EFFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebIcomApi", "WebIcomApi\WebIcomApi.csproj", "{7E90671A-D391-4778-90AA-5E472F7369E1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EAE7C4C5-0B2B-449F-8E1B-0165EA0B5FE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAE7C4C5-0B2B-449F-8E1B-0165EA0B5FE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAE7C4C5-0B2B-449F-8E1B-0165EA0B5FE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAE7C4C5-0B2B-449F-8E1B-0165EA0B5FE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4EFD7CE-E1F0-44F4-85C1-11670DF5EFFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4EFD7CE-E1F0-44F4-85C1-11670DF5EFFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4EFD7CE-E1F0-44F4-85C1-11670DF5EFFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4EFD7CE-E1F0-44F4-85C1-11670DF5EFFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E90671A-D391-4778-90AA-5E472F7369E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E90671A-D391-4778-90AA-5E472F7369E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E90671A-D391-4778-90AA-5E472F7369E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E90671A-D391-4778-90AA-5E472F7369E1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
