@@ -26,6 +26,7 @@ namespace WebIcomToken
 
             app.UseWebApi(config);
 
+
         }
 
         public void ConfigureOAuth(IAppBuilder app)
