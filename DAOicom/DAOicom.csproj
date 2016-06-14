@@ -59,6 +59,7 @@
     <Compile Include="filtros.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\maquinasHelper.cs" />
     <Compile Include="Helpers\usuariosHelper.cs" />
     <Compile Include="maquinas.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>

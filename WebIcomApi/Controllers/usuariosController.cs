@@ -62,7 +62,8 @@ namespace WebIcomApi.Controllers
                 return JsonConvert.SerializeObject(objusuarios) ;
             }
 
-
         }
+
+        
     }
 }

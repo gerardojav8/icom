@@ -131,8 +131,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\maquinasController.cs" />
     <Compile Include="Controllers\usuariosController.cs" />
     <Compile Include="Entidades\clsError.cs" />
+    <Compile Include="Entidades\clsMaquinas.cs" />
     <Compile Include="Entidades\clsUsuarios.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
