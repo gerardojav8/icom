@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="icomModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="icomModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="componentes">
           <Key>
             <PropertyRef Name="idcomponente" />
@@ -41,6 +41,7 @@
           <Property Name="aniofabricacion" Type="int" />
           <Property Name="idequipo" Type="int" />
           <Property Name="imagen" Type="text" />
+          <Property Name="idtipomaquina" Type="int" />
         </EntityType>
         <EntityType Name="mediciones">
           <Key>
@@ -118,6 +119,14 @@
           <Property Name="nombre" Type="varchar" MaxLength="100" />
           <Property Name="descripcion" Type="varchar" MaxLength="200" />
         </EntityType>
+        <EntityType Name="tipomaquina">
+          <Key>
+            <PropertyRef Name="idtipomaquina" />
+          </Key>
+          <Property Name="idtipomaquina" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="100" />
+          <Property Name="descripcion" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="usuarios">
           <Key>
             <PropertyRef Name="idusuario" />
@@ -127,7 +136,7 @@
           <Property Name="apepaterno" Type="varchar" MaxLength="50" />
           <Property Name="apematerno" Type="varchar" MaxLength="50" />
           <Property Name="telefono" Type="varchar" MaxLength="12" />
-          <Property Name="mail" Type="nchar" MaxLength="50" />
+          <Property Name="mail" Type="varchar" MaxLength="100" />
           <Property Name="edad" Type="int" />
           <Property Name="idpuesto" Type="int" />
           <Property Name="passapp" Type="varchar" MaxLength="100" />
@@ -142,6 +151,18 @@
             </Principal>
             <Dependent Role="maquinas">
               <PropertyRef Name="idequipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_maquinas_tipomaquina">
+          <End Role="tipomaquina" Type="Self.tipomaquina" Multiplicity="0..1" />
+          <End Role="maquinas" Type="Self.maquinas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipomaquina">
+              <PropertyRef Name="idtipomaquina" />
+            </Principal>
+            <Dependent Role="maquinas">
+              <PropertyRef Name="idtipomaquina" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -301,9 +322,14 @@
           <EntitySet Name="reportes" EntityType="Self.reportes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipofallas" EntityType="Self.tipofallas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipomantenimientos" EntityType="Self.tipomantenimientos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tipomaquina" EntityType="Self.tipomaquina" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="usuarios" EntityType="Self.usuarios" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_maquinas_equipoauxiliar" Association="Self.FK_maquinas_equipoauxiliar">
             <End Role="equipoauxiliar" EntitySet="equipoauxiliar" />
+            <End Role="maquinas" EntitySet="maquinas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_maquinas_tipomaquina" Association="Self.FK_maquinas_tipomaquina">
+            <End Role="tipomaquina" EntitySet="tipomaquina" />
             <End Role="maquinas" EntitySet="maquinas" />
           </AssociationSet>
           <AssociationSet Name="FK_mediciones_componentes" Association="Self.FK_mediciones_componentes">
@@ -355,8 +381,7 @@
             <End Role="usuarios" EntitySet="usuarios" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="icomModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -403,6 +428,8 @@
           <NavigationProperty Name="mediciones" Relationship="Self.FK_mediciones_maquinas" FromRole="maquinas" ToRole="mediciones" />
           <NavigationProperty Name="medicionesfiltros" Relationship="Self.FK_medicionesfiltros_maquinas" FromRole="maquinas" ToRole="medicionesfiltros" />
           <NavigationProperty Name="reportes" Relationship="Self.FK_reportes_maquinas" FromRole="maquinas" ToRole="reportes" />
+          <Property Name="idtipomaquina" Type="Int32" />
+          <NavigationProperty Name="tipomaquina" Relationship="icomModel.FK_maquinas_tipomaquina" FromRole="maquinas" ToRole="tipomaquina" />
         </EntityType>
         <EntityType Name="mediciones">
           <Key>
@@ -504,7 +531,7 @@
           <Property Name="apepaterno" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="apematerno" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="telefono" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
-          <Property Name="mail" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="mail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="edad" Type="Int32" />
           <Property Name="idpuesto" Type="Int32" />
           <Property Name="passapp" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -735,7 +762,33 @@
             <End Role="usuarios" EntitySet="usuarios" />
             <End Role="reportes" EntitySet="reportes" />
           </AssociationSet>
+          <EntitySet Name="tipomaquina" EntityType="icomModel.tipomaquina" />
+          <AssociationSet Name="FK_maquinas_tipomaquina" Association="icomModel.FK_maquinas_tipomaquina">
+            <End Role="tipomaquina" EntitySet="tipomaquina" />
+            <End Role="maquinas" EntitySet="maquinas" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="tipomaquina">
+          <Key>
+            <PropertyRef Name="idtipomaquina" />
+          </Key>
+          <Property Name="idtipomaquina" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="maquinas" Relationship="icomModel.FK_maquinas_tipomaquina" FromRole="tipomaquina" ToRole="maquinas" />
+        </EntityType>
+        <Association Name="FK_maquinas_tipomaquina">
+          <End Type="icomModel.tipomaquina" Role="tipomaquina" Multiplicity="0..1" />
+          <End Type="icomModel.maquinas" Role="maquinas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipomaquina">
+              <PropertyRef Name="idtipomaquina" />
+            </Principal>
+            <Dependent Role="maquinas">
+              <PropertyRef Name="idtipomaquina" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -773,6 +826,7 @@
           <EntitySetMapping Name="maquinas">
             <EntityTypeMapping TypeName="icomModel.maquinas">
               <MappingFragment StoreEntitySet="maquinas">
+                <ScalarProperty Name="idtipomaquina" ColumnName="idtipomaquina" />
                 <ScalarProperty Name="noserie" ColumnName="noserie" />
                 <ScalarProperty Name="noeconomico" ColumnName="noeconomico" />
                 <ScalarProperty Name="marca" ColumnName="marca" />
@@ -876,6 +930,15 @@
                 <ScalarProperty Name="idpuesto" ColumnName="idpuesto" />
                 <ScalarProperty Name="passapp" ColumnName="passapp" />
                 <ScalarProperty Name="usuario" ColumnName="usuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tipomaquina">
+            <EntityTypeMapping TypeName="icomModel.tipomaquina">
+              <MappingFragment StoreEntitySet="tipomaquina">
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="idtipomaquina" ColumnName="idtipomaquina" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

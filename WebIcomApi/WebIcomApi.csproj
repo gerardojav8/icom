@@ -134,6 +134,7 @@
     <Compile Include="Controllers\maquinasController.cs" />
     <Compile Include="Controllers\usuariosController.cs" />
     <Compile Include="Entidades\clsError.cs" />
+    <Compile Include="Entidades\clsListaMaquinas.cs" />
     <Compile Include="Entidades\clsMaquinas.cs" />
     <Compile Include="Entidades\clsUsuarios.cs" />
     <Compile Include="Global.asax.cs">

@@ -101,6 +101,9 @@
     <Compile Include="tipomantenimientos.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
+    <Compile Include="tipomaquina.cs">
+      <DependentUpon>ModelIcom.tt</DependentUpon>
+    </Compile>
     <Compile Include="usuarios.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>

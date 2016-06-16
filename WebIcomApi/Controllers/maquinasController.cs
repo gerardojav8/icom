@@ -19,7 +19,7 @@ namespace WebIcomApi.Controllers
         [Authorize]
         [HttpPost]
         [Route("getTodasMaquinas")]
-        public string getTodasMaquinas()
+        public Object getTodasMaquinas()
         {
             maquinasHelper maqhelp = new maquinasHelper();
 
@@ -30,7 +30,7 @@ namespace WebIcomApi.Controllers
                 clsError objerr = new clsError();
                 objerr.error = "No se han encontrado maquinas";
                 objerr.result = 0;
-                return JsonConvert.SerializeObject(objerr);
+                return objerr;
             }
             else
             {
@@ -39,7 +39,7 @@ namespace WebIcomApi.Controllers
                     clsError objerr = new clsError();
                     objerr.error = "No se han encontrado maquinas";
                     objerr.result = 0;
-                    return JsonConvert.SerializeObject(objerr);
+                    return objerr;
                 }
                 else
                 {
@@ -51,12 +51,54 @@ namespace WebIcomApi.Controllers
                     }
 
 
-                    return JsonConvert.SerializeObject(lstmaq);
+                    return lstmaq;
                 }
 
             }
 
 
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getListadoMaquinas")]
+        public Object getListadoMaquinas()
+        {
+            maquinasHelper maqhelp = new maquinasHelper();
+
+            List<maquinas> lstemaq = maqhelp.getTodasMaquinas();
+
+            if (lstemaq == null)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No se han encontrado maquinas";
+                objerr.result = 0;
+                return objerr;
+            }
+            else
+            {
+                if (lstemaq.Count() < 1)
+                {
+                    clsError objerr = new clsError();
+                    objerr.error = "No se han encontrado maquinas";
+                    objerr.result = 0;
+                    return objerr;
+                }
+                else
+                {
+                    List<clsListaMaquinas> lstmaq = new List<clsListaMaquinas>();
+                    foreach (maquinas item in lstemaq)
+                    {
+                        clsListaMaquinas objmaq = new clsListaMaquinas(item);
+                        lstmaq.Add(objmaq);
+                    }
+
+
+                    return lstmaq;
+                }
+
+            }
+        }
+
     }
 }

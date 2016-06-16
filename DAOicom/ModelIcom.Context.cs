@@ -37,5 +37,6 @@ namespace DAOicom
         public virtual DbSet<tipofallas> tipofallas { get; set; }
         public virtual DbSet<tipomantenimientos> tipomantenimientos { get; set; }
         public virtual DbSet<usuarios> usuarios { get; set; }
+        public virtual DbSet<tipomaquina> tipomaquina { get; set; }
     }
 }

@@ -29,6 +29,7 @@ namespace DAOicom
         public Nullable<int> aniofabricacion { get; set; }
         public Nullable<int> idequipo { get; set; }
         public string imagen { get; set; }
+        public Nullable<int> idtipomaquina { get; set; }
     
         public virtual equipoauxiliar equipoauxiliar { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -37,5 +38,6 @@ namespace DAOicom
         public virtual ICollection<medicionesfiltros> medicionesfiltros { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<reportes> reportes { get; set; }
+        public virtual tipomaquina tipomaquina { get; set; }
     }
 }

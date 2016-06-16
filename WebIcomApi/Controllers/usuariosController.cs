@@ -41,7 +41,7 @@ namespace WebIcomApi.Controllers
         [Authorize]
         [HttpPost]
         [Route("getUsuarioByuserAndpass")]
-        public string getUsuarioByuserAndpass(JObject json)
+        public Object getUsuarioByuserAndpass(JObject json)
         {
             usuariosHelper objushelp = new usuariosHelper();
             String usuario = json["usuario"].ToString();
@@ -54,12 +54,12 @@ namespace WebIcomApi.Controllers
                 clsError objerr = new clsError();
                 objerr.error = "No se ha encontrado el usuario";
                 objerr.result = 0;
-                return JsonConvert.SerializeObject(objerr);
+                return objerr;
             }
             else
             {
                 clsUsuarios objusuarios = new clsUsuarios(objus);
-                return JsonConvert.SerializeObject(objusuarios) ;
+                return objusuarios ;
             }
 
         }

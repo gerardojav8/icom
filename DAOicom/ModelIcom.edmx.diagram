@@ -8,8 +8,8 @@
         <EntityTypeShape EntityType="icomModel.componentes" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="icomModel.equipoauxiliar" Width="1.5" PointX="0.75" PointY="7.625" IsExpanded="true" />
         <EntityTypeShape EntityType="icomModel.filtros" Width="1.5" PointX="6" PointY="11.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="icomModel.maquinas" Width="1.5" PointX="3" PointY="7.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="icomModel.mediciones" Width="1.5" PointX="5.25" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="icomModel.maquinas" Width="1.5" PointX="2.75" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="icomModel.mediciones" Width="1.5" PointX="5.875" PointY="7.75" IsExpanded="true" />
         <EntityTypeShape EntityType="icomModel.medicionesfiltros" Width="1.5" PointX="8.25" PointY="7.5" IsExpanded="true" />
         <EntityTypeShape EntityType="icomModel.puestos" Width="1.5" PointX="0.75" PointY="15.25" IsExpanded="true" />
         <EntityTypeShape EntityType="icomModel.refacciones_reporte" Width="1.5" PointX="7.5" PointY="2.75" IsExpanded="true" />
@@ -30,6 +30,8 @@
         <AssociationConnector Association="icomModel.FK_reportes_usuarios_atiende" ManuallyRouted="false" />
         <AssociationConnector Association="icomModel.FK_reportes_usuarios_realizo" ManuallyRouted="false" />
         <AssociationConnector Association="icomModel.FK_reportes_usuarios_reporto" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="icomModel.tipomaquina" Width="1.5" PointX="0.75" PointY="4.25" />
+        <AssociationConnector Association="icomModel.FK_maquinas_tipomaquina" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
