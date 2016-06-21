@@ -84,10 +84,10 @@ namespace WebIcomApi.Controllers
             String idatiende = json["idatiende"].ToString();
             String descripcion = json["descripcion"].ToString();            
 
-            reportes objrep = new reportes();
+            reportes objrep = new reportes();            
 
             objrep.no_serie = no_serie;
-            objrep.km_horometro = Decimal.Parse(kmho);
+            objrep.km_horometro = System.Convert.ToDecimal(kmho, System.Globalization.CultureInfo.CreateSpecificCulture("en-US"));
             objrep.modelo = Int32.Parse(modelo);
             objrep.idreporto = Int32.Parse(idreporto);
             objrep.idtipofalla = Int32.Parse(idtipofalla);
