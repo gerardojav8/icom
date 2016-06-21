@@ -102,6 +102,15 @@
           <Property Name="idtipomto" Type="int" />
           <Property Name="descripcion" Type="varchar" MaxLength="255" />
           <Property Name="observaciones" Type="varchar" MaxLength="255" />
+          <Property Name="idstatus" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="statusreporte">
+          <Key>
+            <PropertyRef Name="idstatus" />
+          </Key>
+          <Property Name="idstatus" Type="tinyint" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="50" />
+          <Property Name="descripcion" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="tipofallas">
           <Key>
@@ -238,6 +247,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_reportes_statusreporte">
+          <End Role="statusreporte" Type="Self.statusreporte" Multiplicity="0..1" />
+          <End Role="reportes" Type="Self.reportes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="statusreporte">
+              <PropertyRef Name="idstatus" />
+            </Principal>
+            <Dependent Role="reportes">
+              <PropertyRef Name="idstatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_reportes_tipofallas">
           <End Role="tipofallas" Type="Self.tipofallas" Multiplicity="0..1" />
           <End Role="reportes" Type="Self.reportes" Multiplicity="*" />
@@ -320,6 +341,7 @@
           <EntitySet Name="puestos" EntityType="Self.puestos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="refacciones_reporte" EntityType="Self.refacciones_reporte" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="reportes" EntityType="Self.reportes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="statusreporte" EntityType="Self.statusreporte" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipofallas" EntityType="Self.tipofallas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipomantenimientos" EntityType="Self.tipomantenimientos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipomaquina" EntityType="Self.tipomaquina" Schema="dbo" store:Type="Tables" />
@@ -354,6 +376,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_reportes_maquinas" Association="Self.FK_reportes_maquinas">
             <End Role="maquinas" EntitySet="maquinas" />
+            <End Role="reportes" EntitySet="reportes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_reportes_statusreporte" Association="Self.FK_reportes_statusreporte">
+            <End Role="statusreporte" EntitySet="statusreporte" />
             <End Role="reportes" EntitySet="reportes" />
           </AssociationSet>
           <AssociationSet Name="FK_reportes_tipofallas" Association="Self.FK_reportes_tipofallas">
@@ -503,6 +529,8 @@
           <NavigationProperty Name="usuarios" Relationship="Self.FK_reportes_usuarios_atiende" FromRole="reportes" ToRole="usuarios" />
           <NavigationProperty Name="usuarios1" Relationship="Self.FK_reportes_usuarios_realizo" FromRole="reportes" ToRole="usuarios" />
           <NavigationProperty Name="usuarios2" Relationship="Self.FK_reportes_usuarios_reporto" FromRole="reportes" ToRole="usuarios" />
+          <Property Name="idstatus" Type="Byte" />
+          <NavigationProperty Name="statusreporte" Relationship="icomModel.FK_reportes_statusreporte" FromRole="reportes" ToRole="statusreporte" />
         </EntityType>
         <EntityType Name="tipofallas">
           <Key>
@@ -767,6 +795,11 @@
             <End Role="tipomaquina" EntitySet="tipomaquina" />
             <End Role="maquinas" EntitySet="maquinas" />
           </AssociationSet>
+          <EntitySet Name="statusreporte" EntityType="icomModel.statusreporte" />
+          <AssociationSet Name="FK_reportes_statusreporte" Association="icomModel.FK_reportes_statusreporte">
+            <End Role="statusreporte" EntitySet="statusreporte" />
+            <End Role="reportes" EntitySet="reportes" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="tipomaquina">
           <Key>
@@ -786,6 +819,27 @@
             </Principal>
             <Dependent Role="maquinas">
               <PropertyRef Name="idtipomaquina" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="statusreporte">
+          <Key>
+            <PropertyRef Name="idstatus" />
+          </Key>
+          <Property Name="idstatus" Type="Byte" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="reportes" Relationship="icomModel.FK_reportes_statusreporte" FromRole="statusreporte" ToRole="reportes" />
+        </EntityType>
+        <Association Name="FK_reportes_statusreporte">
+          <End Type="icomModel.statusreporte" Role="statusreporte" Multiplicity="0..1" />
+          <End Type="icomModel.reportes" Role="reportes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="statusreporte">
+              <PropertyRef Name="idstatus" />
+            </Principal>
+            <Dependent Role="reportes">
+              <PropertyRef Name="idstatus" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -881,6 +935,7 @@
           <EntitySetMapping Name="reportes">
             <EntityTypeMapping TypeName="icomModel.reportes">
               <MappingFragment StoreEntitySet="reportes">
+                <ScalarProperty Name="idstatus" ColumnName="idstatus" />
                 <ScalarProperty Name="folio" ColumnName="folio" />
                 <ScalarProperty Name="fecha" ColumnName="fecha" />
                 <ScalarProperty Name="hora" ColumnName="hora" />
@@ -939,6 +994,15 @@
                 <ScalarProperty Name="descripcion" ColumnName="descripcion" />
                 <ScalarProperty Name="nombre" ColumnName="nombre" />
                 <ScalarProperty Name="idtipomaquina" ColumnName="idtipomaquina" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="statusreporte">
+            <EntityTypeMapping TypeName="icomModel.statusreporte">
+              <MappingFragment StoreEntitySet="statusreporte">
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="idstatus" ColumnName="idstatus" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

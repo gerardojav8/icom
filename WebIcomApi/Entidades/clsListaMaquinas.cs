@@ -14,6 +14,8 @@ namespace WebIcomApi.Entidades
         public int modelo { get; set; }
         public int idtipomaquina { get; set; }
 
+        public int tieneReporte { get; set; }
+
         public clsListaMaquinas(maquinas obj)
         {
             this.noserie = obj.noserie;
@@ -21,6 +23,7 @@ namespace WebIcomApi.Entidades
             this.marca = obj.marca;
             this.modelo = (Int32)obj.modelo;
             this.idtipomaquina = (Int32)obj.idtipomaquina;
+
         }
     }
 }

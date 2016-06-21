@@ -60,6 +60,7 @@
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\maquinasHelper.cs" />
+    <Compile Include="Helpers\reportesHelper.cs" />
     <Compile Include="Helpers\usuariosHelper.cs" />
     <Compile Include="maquinas.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
@@ -93,6 +94,9 @@
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
     <Compile Include="reportes.cs">
+      <DependentUpon>ModelIcom.tt</DependentUpon>
+    </Compile>
+    <Compile Include="statusreporte.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
     <Compile Include="tipofallas.cs">

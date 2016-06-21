@@ -32,6 +32,8 @@
         <AssociationConnector Association="icomModel.FK_reportes_usuarios_reporto" ManuallyRouted="false" />
         <EntityTypeShape EntityType="icomModel.tipomaquina" Width="1.5" PointX="0.75" PointY="4.25" />
         <AssociationConnector Association="icomModel.FK_maquinas_tipomaquina" />
+        <EntityTypeShape EntityType="icomModel.statusreporte" Width="1.5" PointX="10.375" PointY="0.875" />
+        <AssociationConnector Association="icomModel.FK_reportes_statusreporte" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

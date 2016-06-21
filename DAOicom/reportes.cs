@@ -35,6 +35,7 @@ namespace DAOicom
         public Nullable<int> idtipomto { get; set; }
         public string descripcion { get; set; }
         public string observaciones { get; set; }
+        public Nullable<byte> idstatus { get; set; }
     
         public virtual maquinas maquinas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -44,5 +45,6 @@ namespace DAOicom
         public virtual usuarios usuarios { get; set; }
         public virtual usuarios usuarios1 { get; set; }
         public virtual usuarios usuarios2 { get; set; }
+        public virtual statusreporte statusreporte { get; set; }
     }
 }

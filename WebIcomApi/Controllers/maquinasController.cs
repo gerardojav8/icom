@@ -86,10 +86,12 @@ namespace WebIcomApi.Controllers
                 }
                 else
                 {
+                    reportesHelper objrephelp = new reportesHelper();
                     List<clsListaMaquinas> lstmaq = new List<clsListaMaquinas>();
                     foreach (maquinas item in lstemaq)
                     {
                         clsListaMaquinas objmaq = new clsListaMaquinas(item);
+                        objmaq.tieneReporte = objrephelp.tieneMaquinaReporte(objmaq.noserie);
                         lstmaq.Add(objmaq);
                     }
 

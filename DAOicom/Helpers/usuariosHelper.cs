@@ -15,6 +15,16 @@ namespace DAOicom.Helpers
             db.SaveChanges();
         }
 
+        public List<usuarios> getTodosUsuarios()
+        {
+            var query = from u in db.usuarios
+                        select u;
+
+            List<usuarios> lstusuarios = new List<usuarios>();
+            lstusuarios.AddRange(query.ToList());
+            return lstusuarios;
+        }
+
         public usuarios getUsuarioByUsuarioyPassword(String strUsuario, String strPass)
         {
             var query = from u in db.usuarios

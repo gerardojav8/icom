@@ -131,11 +131,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\commonController.cs" />
     <Compile Include="Controllers\maquinasController.cs" />
+    <Compile Include="Controllers\reportesController.cs" />
     <Compile Include="Controllers\usuariosController.cs" />
+    <Compile Include="Entidades\clsCmbUsuarios.cs" />
+    <Compile Include="Entidades\clsEntidadFolio.cs" />
     <Compile Include="Entidades\clsError.cs" />
+    <Compile Include="Entidades\clsfechahora.cs" />
+    <Compile Include="Entidades\clsInsertaRep.cs" />
     <Compile Include="Entidades\clsListaMaquinas.cs" />
     <Compile Include="Entidades\clsMaquinas.cs" />
+    <Compile Include="Entidades\clsTipoFallas.cs" />
     <Compile Include="Entidades\clsUsuarios.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

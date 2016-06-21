@@ -64,6 +64,40 @@ namespace WebIcomApi.Controllers
 
         }
 
+        [Authorize]
+        [HttpPost]
+        [Route("getCmbUsuarios")]
+        public Object getCmbUsuarios()
+        {
+            usuariosHelper objushelp = new usuariosHelper();
+           
+            List<usuarios> lstusuarios = objushelp.getTodosUsuarios();
+
+            if (lstusuarios.Count == 0)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No se han encontrado usuarios";
+                objerr.result = 0;
+                return objerr;
+            }
+            else
+            {
+                List<clsCmbUsuarios> lstcmbusuarios = new List<clsCmbUsuarios>();
+                foreach (usuarios us in lstusuarios)
+                {
+                    clsCmbUsuarios objcmbus = new clsCmbUsuarios();
+                    objcmbus.idusuario = us.idusuario;
+                    objcmbus.nombre = us.nombre;
+                    objcmbus.apepaterno = us.apepaterno;
+                    objcmbus.apematerno = us.apematerno;
+
+                    lstcmbusuarios.Add(objcmbus);
+                }
+                return lstcmbusuarios;
+            }
+
+        }
+
         
     }
 }
