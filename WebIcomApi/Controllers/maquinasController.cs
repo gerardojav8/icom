@@ -1,6 +1,7 @@
 ﻿using DAOicom;
 using DAOicom.Helpers;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,6 +102,23 @@ namespace WebIcomApi.Controllers
 
             }
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("tieneReporte")]
+        public Object tieneReporte(JObject json)
+        {
+            String noserie = json["noserie"].ToString();
+            reportesHelper objrephelp = new reportesHelper();
+            int tieneReporte = objrephelp.tieneMaquinaReporte(noserie);
+
+            Dictionary<string, int> resp = new Dictionary<string, int>();
+            resp.Add("tieneReporte", tieneReporte);
+
+            return resp;
+        }
+
+        
 
     }
 }

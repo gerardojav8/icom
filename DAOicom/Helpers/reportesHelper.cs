@@ -147,6 +147,22 @@ namespace DAOicom.Helpers
             }
         }
 
+        public reportes getReportByNoSerie(string strnoserie)
+        {
+            var query = from r in db.reportes
+                        where r.no_serie == strnoserie && r.idstatus < 3
+                        select r;
+
+            if (query.Count() > 0)
+            {
+                return query.FirstOrDefault();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public String updateReporte(reportes obj)
         {
             reportes objreporte = (from r in db.reportes

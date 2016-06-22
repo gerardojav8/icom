@@ -142,6 +142,7 @@
     <Compile Include="Entidades\clsInsertaRep.cs" />
     <Compile Include="Entidades\clsListaMaquinas.cs" />
     <Compile Include="Entidades\clsMaquinas.cs" />
+    <Compile Include="Entidades\clsReporteOperador.cs" />
     <Compile Include="Entidades\clsTipoFallas.cs" />
     <Compile Include="Entidades\clsUsuarios.cs" />
     <Compile Include="Global.asax.cs">

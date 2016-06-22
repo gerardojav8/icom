@@ -114,5 +114,80 @@ namespace WebIcomApi.Controllers
             }
             
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getReporteOperador")]
+        public Object getReporteOperador(JObject json)
+        {
+            String noserie = json["noserie"].ToString();
+
+            reportesHelper objrephelp = new reportesHelper();
+            reportes rep = objrephelp.getReportByNoSerie(noserie);
+
+            if (rep == null)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No ha podido encontrar el reporte para la unidad, verifiquelo con su Administrador de TI";
+                objerr.result = 0;
+                return objerr;
+            }
+            else
+            {
+                usuariosHelper objushelp = new usuariosHelper();
+                usuarios atiende = objushelp.getUsuarioByID((int)rep.idatiende);
+                usuarios reporto = objushelp.getUsuarioByID((int)rep.idreporto);
+
+                String stratiende = "";
+                String strreporto = "";
+                if (atiende != null)
+                {
+                    stratiende = atiende.nombre + " " + atiende.apepaterno + " " + atiende.apematerno;
+                }
+
+                if (reporto != null)
+                {
+                    strreporto = reporto.nombre + " " + reporto.apepaterno + " " + reporto.apematerno;
+                }
+
+                maquinasHelper maqhelp = new maquinasHelper();
+                maquinas maq = maqhelp.getMaquinaByNoSerie(rep.no_serie);
+
+                if (maq == null)
+                {
+                    clsError objerr = new clsError();
+                    objerr.error = "No ha podido encontrar los datos de la maquina para el reporte, verifiquelo con su Administrador de TI";
+                    objerr.result = 0;
+                    return objerr;
+                }
+
+                tipoFallasHelper tfhelp = new tipoFallasHelper();
+                tipofallas tf = tfhelp.getTipoFallasById((int)rep.idtipofalla);
+
+
+                clsReporteOperador objrepop = new clsReporteOperador();
+                objrepop.folio = rep.folio;
+                DateTime dtfecha = (DateTime)rep.fecha;
+                String fecha = dtfecha.Year + "-" + dtfecha.Month + "-" + dtfecha.Day;
+                String hora = rep.hora.ToString();
+                objrepop.fechahora = fecha + " " + hora;
+                objrepop.equipo = maq.noeconomico.ToString();
+                objrepop.noserie = maq.noserie;
+                objrepop.kmho = rep.km_horometro.ToString();
+                objrepop.modelo = rep.modelo.ToString();
+                objrepop.reporto =strreporto;
+                objrepop.tipofalla = tf.nombre;
+                objrepop.atiende = stratiende;
+                objrepop.descripcion = rep.descripcion;
+
+                return objrepop;
+
+
+            }
+
+           
+        }
+
+        
     }
 }
