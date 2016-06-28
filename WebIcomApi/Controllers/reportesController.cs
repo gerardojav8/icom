@@ -72,6 +72,37 @@ namespace WebIcomApi.Controllers
 
         [Authorize]
         [HttpPost]
+        [Route("getTipoMntos")]
+        public Object getTipoMntos()
+        {
+            tiposMntoHelper objtmhelp = new tiposMntoHelper();
+            List<tipomantenimientos> lsttipomntos = objtmhelp.getTipoMntos();
+
+            if (lsttipomntos.Count == 0)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No se han Encontrado tipos de mantenimiento";
+                objerr.result = 0;
+                return objerr;
+            }
+            else
+            {
+                List<clsTipoMnto> lst = new List<clsTipoMnto>();
+                foreach (tipomantenimientos t in lsttipomntos)
+                {
+                    clsTipoMnto objtipomnto = new clsTipoMnto();
+                    objtipomnto.idtipomnto = t.idtipomto;
+                    objtipomnto.nombre = t.nombre;
+                    objtipomnto.descripcion = t.descripcion;
+                    lst.Add(objtipomnto);
+                }
+
+                return lst;
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
         [Route("GuardarReporteOperador")]
         public Object GuardarReporteOperador(JObject json)
         {
@@ -113,6 +144,72 @@ namespace WebIcomApi.Controllers
                 return objinrep;
             }
             
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("GuardarReporteServicio")]
+        public Object GuardarReporteServicio(JObject json)
+        {
+
+            reportesHelper objrephelp = new reportesHelper();
+
+            int folio = Int32.Parse(json["folio"].ToString());
+
+            reportes objrep = objrephelp.getReporteByFolio(folio);
+
+            String kmho = json["kmho"].ToString();
+            String idrealizo = json["idrealizo"].ToString();
+            String tiemporeparacion = json["tiemporeparacion"].ToString();
+            String retraso = json["retraso"].ToString();
+            String idtipomnto = json["idtipomnto"].ToString();
+            String idtipofalla = json["idtipofalla"].ToString();
+            String observaciones = json["observaciones"].ToString();
+
+
+            objrep.km_horometro = System.Convert.ToDecimal(kmho, System.Globalization.CultureInfo.CreateSpecificCulture("en-US"));
+            objrep.idrealizo = Int32.Parse(idrealizo);
+            objrep.tiempo_reparacion = Int32.Parse(tiemporeparacion);
+            objrep.retraso = Byte.Parse(retraso);
+            objrep.idtipomto = Int32.Parse(idtipomnto);
+            objrep.observaciones = observaciones;
+            objrep.idtipofalla = Int32.Parse(idtipofalla);
+            objrep.idstatus = 2;
+
+
+            JArray jrefs = JArray.Parse(json["refacciones"].ToString());
+
+            List<refacciones_reporte> lstref = new List<refacciones_reporte>();
+            int contref = 1;
+            foreach (var jref in jrefs)
+            {
+                JObject jobj = (JObject)jref;
+                refacciones_reporte objref = new refacciones_reporte();
+                objref.folio_reporte = folio;
+                objref.no_refaccion = contref;
+                objref.nombre = jobj["nombre_refaccion"].ToString();
+
+                lstref.Add(objref);
+                contref++;
+
+            }
+
+            String resp = objrephelp.GuardaReporteServicios(objrep, lstref);
+
+            if (resp != "")
+            {
+                clsError objerr = new clsError();
+                objerr.error = "Error al guardar el reporte " + resp;
+                objerr.result = 0;
+                return objerr;
+            }
+            else
+            {
+                Dictionary<String, String> dresp = new Dictionary<string, string>();
+                dresp.Add("respuesta", "exito");
+                return dresp;
+            }
+
         }
 
         [Authorize]

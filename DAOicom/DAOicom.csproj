@@ -60,8 +60,10 @@
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\maquinasHelper.cs" />
+    <Compile Include="Helpers\refacciones_reporteHelper.cs" />
     <Compile Include="Helpers\reportesHelper.cs" />
     <Compile Include="Helpers\tipoFallasHelper.cs" />
+    <Compile Include="Helpers\tiposMntoHelper.cs" />
     <Compile Include="Helpers\usuariosHelper.cs" />
     <Compile Include="maquinas.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>

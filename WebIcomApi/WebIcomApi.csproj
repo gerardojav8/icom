@@ -144,6 +144,7 @@
     <Compile Include="Entidades\clsMaquinas.cs" />
     <Compile Include="Entidades\clsReporteOperador.cs" />
     <Compile Include="Entidades\clsTipoFallas.cs" />
+    <Compile Include="Entidades\clsTipoMnto.cs" />
     <Compile Include="Entidades\clsUsuarios.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

@@ -134,7 +134,7 @@ namespace DAOicom.Helpers
         public int tieneMaquinaReporte(string strnoserie)
         {
             var query = from r in db.reportes
-                        where r.no_serie == strnoserie && r.idstatus < 3
+                        where r.no_serie == strnoserie && r.idstatus < 2
                         select r;
 
             if (query.Count() > 0)
@@ -150,7 +150,7 @@ namespace DAOicom.Helpers
         public reportes getReportByNoSerie(string strnoserie)
         {
             var query = from r in db.reportes
-                        where r.no_serie == strnoserie && r.idstatus < 3
+                        where r.no_serie == strnoserie && r.idstatus < 2
                         select r;
 
             if (query.Count() > 0)
@@ -195,6 +195,29 @@ namespace DAOicom.Helpers
                 return e.ToString();
             }
 
+        }
+
+        public String GuardaReporteServicios(reportes obj, List<refacciones_reporte> lstrefs)
+        {
+            String resp = updateReporte(obj);
+
+            if(resp != ""){
+                return resp;
+            }
+
+            refacciones_reporteHelper rrhelp = new refacciones_reporteHelper();
+            foreach (refacciones_reporte rr in lstrefs)
+            {               
+                resp = rrhelp.insertaRefacciones_reporte(rr);
+                if (resp != "")
+                {
+                    return "Error al insertar la reparacion " + resp;
+                }
+            }
+
+            
+
+            return "";
         }
     }
 }
