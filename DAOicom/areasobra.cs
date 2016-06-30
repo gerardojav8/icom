@@ -12,35 +12,23 @@ namespace DAOicom
     using System;
     using System.Collections.Generic;
     
-    public partial class usuarios
+    public partial class areasobra
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public usuarios()
+        public areasobra()
         {
-            this.reportes = new HashSet<reportes>();
-            this.reportes1 = new HashSet<reportes>();
-            this.reportes2 = new HashSet<reportes>();
+            this.obras = new HashSet<obras>();
             this.solicitudmaquinaria = new HashSet<solicitudmaquinaria>();
         }
     
-        public int idusuario { get; set; }
+        public int idareaobra { get; set; }
         public string nombre { get; set; }
-        public string apepaterno { get; set; }
-        public string apematerno { get; set; }
-        public string telefono { get; set; }
-        public string mail { get; set; }
-        public Nullable<int> edad { get; set; }
-        public Nullable<int> idpuesto { get; set; }
-        public string passapp { get; set; }
-        public string usuario { get; set; }
+        public string descripcion { get; set; }
+        public Nullable<decimal> latitud { get; set; }
+        public Nullable<decimal> longitud { get; set; }
     
-        public virtual puestos puestos { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<reportes> reportes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<reportes> reportes1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<reportes> reportes2 { get; set; }
+        public virtual ICollection<obras> obras { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<solicitudmaquinaria> solicitudmaquinaria { get; set; }
     }

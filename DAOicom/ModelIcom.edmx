@@ -5,6 +5,16 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="icomModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="areasobra">
+          <Key>
+            <PropertyRef Name="idareaobra" />
+          </Key>
+          <Property Name="idareaobra" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="100" />
+          <Property Name="descripcion" Type="varchar" MaxLength="200" />
+          <Property Name="latitud" Type="decimal" Precision="10" Scale="10" />
+          <Property Name="longitud" Type="decimal" Precision="10" Scale="10" />
+        </EntityType>
         <EntityType Name="componentes">
           <Key>
             <PropertyRef Name="idcomponente" />
@@ -42,6 +52,7 @@
           <Property Name="idequipo" Type="int" />
           <Property Name="imagen" Type="text" />
           <Property Name="idtipomaquina" Type="int" />
+          <Property Name="idobra" Type="int" />
         </EntityType>
         <EntityType Name="mediciones">
           <Key>
@@ -65,6 +76,15 @@
           <Property Name="idfiltro" Type="int" Nullable="false" />
           <Property Name="medicion" Type="int" />
           <Property Name="comentario" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="obras">
+          <Key>
+            <PropertyRef Name="idobra" />
+          </Key>
+          <Property Name="idobra" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="100" />
+          <Property Name="descripcion" Type="varchar" MaxLength="200" />
+          <Property Name="idareaobra" Type="int" />
         </EntityType>
         <EntityType Name="puestos">
           <Key>
@@ -103,6 +123,28 @@
           <Property Name="descripcion" Type="varchar" MaxLength="255" />
           <Property Name="observaciones" Type="varchar" MaxLength="255" />
           <Property Name="idstatus" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="requerimientos_solicitudes">
+          <Key>
+            <PropertyRef Name="norequerimiento" />
+            <PropertyRef Name="foliosolicitud" />
+          </Key>
+          <Property Name="norequerimiento" Type="int" Nullable="false" />
+          <Property Name="foliosolicitud" Type="int" Nullable="false" />
+          <Property Name="equipo" Type="varchar" MaxLength="100" />
+          <Property Name="marca" Type="varchar" MaxLength="100" />
+          <Property Name="modelo" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="solicitudmaquinaria">
+          <Key>
+            <PropertyRef Name="folio" />
+          </Key>
+          <Property Name="folio" Type="int" Nullable="false" />
+          <Property Name="fecha" Type="date" />
+          <Property Name="time" Type="time" Precision="7" />
+          <Property Name="requeridopara" Type="date" />
+          <Property Name="idareaobra" Type="int" />
+          <Property Name="idresponsable" Type="int" />
         </EntityType>
         <EntityType Name="statusreporte">
           <Key>
@@ -163,6 +205,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_maquinas_obras">
+          <End Role="obras" Type="Self.obras" Multiplicity="0..1" />
+          <End Role="maquinas" Type="Self.maquinas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="obras">
+              <PropertyRef Name="idobra" />
+            </Principal>
+            <Dependent Role="maquinas">
+              <PropertyRef Name="idobra" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_maquinas_tipomaquina">
           <End Role="tipomaquina" Type="Self.tipomaquina" Multiplicity="0..1" />
           <End Role="maquinas" Type="Self.maquinas" Multiplicity="*" />
@@ -220,6 +274,18 @@
             </Principal>
             <Dependent Role="medicionesfiltros">
               <PropertyRef Name="noserie" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_obras_areasobra">
+          <End Role="areasobra" Type="Self.areasobra" Multiplicity="0..1" />
+          <End Role="obras" Type="Self.obras" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="areasobra">
+              <PropertyRef Name="idareaobra" />
+            </Principal>
+            <Dependent Role="obras">
+              <PropertyRef Name="idareaobra" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -319,6 +385,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_requerimientos_solicitudes_solicitudmaquinaria">
+          <End Role="solicitudmaquinaria" Type="Self.solicitudmaquinaria" Multiplicity="1" />
+          <End Role="requerimientos_solicitudes" Type="Self.requerimientos_solicitudes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="solicitudmaquinaria">
+              <PropertyRef Name="folio" />
+            </Principal>
+            <Dependent Role="requerimientos_solicitudes">
+              <PropertyRef Name="foliosolicitud" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_solicitudmaquinaria_areasobra">
+          <End Role="areasobra" Type="Self.areasobra" Multiplicity="0..1" />
+          <End Role="solicitudmaquinaria" Type="Self.solicitudmaquinaria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="areasobra">
+              <PropertyRef Name="idareaobra" />
+            </Principal>
+            <Dependent Role="solicitudmaquinaria">
+              <PropertyRef Name="idareaobra" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_solicitudmaquinaria_usuarios">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="0..1" />
+          <End Role="solicitudmaquinaria" Type="Self.solicitudmaquinaria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="idusuario" />
+            </Principal>
+            <Dependent Role="solicitudmaquinaria">
+              <PropertyRef Name="idresponsable" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_usuarios_puestos">
           <End Role="puestos" Type="Self.puestos" Multiplicity="0..1" />
           <End Role="usuarios" Type="Self.usuarios" Multiplicity="*" />
@@ -332,15 +434,19 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="icomModelStoreContainer">
+          <EntitySet Name="areasobra" EntityType="Self.areasobra" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="componentes" EntityType="Self.componentes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="equipoauxiliar" EntityType="Self.equipoauxiliar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="filtros" EntityType="Self.filtros" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="maquinas" EntityType="Self.maquinas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="mediciones" EntityType="Self.mediciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="medicionesfiltros" EntityType="Self.medicionesfiltros" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="obras" EntityType="Self.obras" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="puestos" EntityType="Self.puestos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="refacciones_reporte" EntityType="Self.refacciones_reporte" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="reportes" EntityType="Self.reportes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="requerimientos_solicitudes" EntityType="Self.requerimientos_solicitudes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="solicitudmaquinaria" EntityType="Self.solicitudmaquinaria" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="statusreporte" EntityType="Self.statusreporte" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipofallas" EntityType="Self.tipofallas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipomantenimientos" EntityType="Self.tipomantenimientos" Schema="dbo" store:Type="Tables" />
@@ -348,6 +454,10 @@
           <EntitySet Name="usuarios" EntityType="Self.usuarios" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_maquinas_equipoauxiliar" Association="Self.FK_maquinas_equipoauxiliar">
             <End Role="equipoauxiliar" EntitySet="equipoauxiliar" />
+            <End Role="maquinas" EntitySet="maquinas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_maquinas_obras" Association="Self.FK_maquinas_obras">
+            <End Role="obras" EntitySet="obras" />
             <End Role="maquinas" EntitySet="maquinas" />
           </AssociationSet>
           <AssociationSet Name="FK_maquinas_tipomaquina" Association="Self.FK_maquinas_tipomaquina">
@@ -369,6 +479,10 @@
           <AssociationSet Name="FK_medicionesfiltros_maquinas" Association="Self.FK_medicionesfiltros_maquinas">
             <End Role="maquinas" EntitySet="maquinas" />
             <End Role="medicionesfiltros" EntitySet="medicionesfiltros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_obras_areasobra" Association="Self.FK_obras_areasobra">
+            <End Role="areasobra" EntitySet="areasobra" />
+            <End Role="obras" EntitySet="obras" />
           </AssociationSet>
           <AssociationSet Name="FK_refacciones_reporte_reportes" Association="Self.FK_refacciones_reporte_reportes">
             <End Role="reportes" EntitySet="reportes" />
@@ -401,6 +515,18 @@
           <AssociationSet Name="FK_reportes_usuarios_reporto" Association="Self.FK_reportes_usuarios_reporto">
             <End Role="usuarios" EntitySet="usuarios" />
             <End Role="reportes" EntitySet="reportes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_requerimientos_solicitudes_solicitudmaquinaria" Association="Self.FK_requerimientos_solicitudes_solicitudmaquinaria">
+            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
+            <End Role="requerimientos_solicitudes" EntitySet="requerimientos_solicitudes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_solicitudmaquinaria_areasobra" Association="Self.FK_solicitudmaquinaria_areasobra">
+            <End Role="areasobra" EntitySet="areasobra" />
+            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
+          </AssociationSet>
+          <AssociationSet Name="FK_solicitudmaquinaria_usuarios" Association="Self.FK_solicitudmaquinaria_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
           </AssociationSet>
           <AssociationSet Name="FK_usuarios_puestos" Association="Self.FK_usuarios_puestos">
             <End Role="puestos" EntitySet="puestos" />
@@ -456,6 +582,8 @@
           <NavigationProperty Name="reportes" Relationship="Self.FK_reportes_maquinas" FromRole="maquinas" ToRole="reportes" />
           <Property Name="idtipomaquina" Type="Int32" />
           <NavigationProperty Name="tipomaquina" Relationship="icomModel.FK_maquinas_tipomaquina" FromRole="maquinas" ToRole="tipomaquina" />
+          <Property Name="idobra" Type="Int32" />
+          <NavigationProperty Name="obras" Relationship="icomModel.FK_maquinas_obras" FromRole="maquinas" ToRole="obras" />
         </EntityType>
         <EntityType Name="mediciones">
           <Key>
@@ -568,6 +696,7 @@
           <NavigationProperty Name="reportes" Relationship="Self.FK_reportes_usuarios_atiende" FromRole="usuarios" ToRole="reportes" />
           <NavigationProperty Name="reportes1" Relationship="Self.FK_reportes_usuarios_realizo" FromRole="usuarios" ToRole="reportes" />
           <NavigationProperty Name="reportes2" Relationship="Self.FK_reportes_usuarios_reporto" FromRole="usuarios" ToRole="reportes" />
+          <NavigationProperty Name="solicitudmaquinaria" Relationship="icomModel.FK_solicitudmaquinaria_usuarios" FromRole="usuarios" ToRole="solicitudmaquinaria" />
         </EntityType>
         <Association Name="FK_mediciones_componentes">
           <End Role="componentes" Type="Self.componentes" Multiplicity="1" />
@@ -800,6 +929,30 @@
             <End Role="statusreporte" EntitySet="statusreporte" />
             <End Role="reportes" EntitySet="reportes" />
           </AssociationSet>
+          <EntitySet Name="areasobra" EntityType="icomModel.areasobra" />
+          <EntitySet Name="obras" EntityType="icomModel.obras" />
+          <EntitySet Name="requerimientos_solicitudes" EntityType="icomModel.requerimientos_solicitudes" />
+          <EntitySet Name="solicitudmaquinaria" EntityType="icomModel.solicitudmaquinaria" />
+          <AssociationSet Name="FK_obras_areasobra" Association="icomModel.FK_obras_areasobra">
+            <End Role="areasobra" EntitySet="areasobra" />
+            <End Role="obras" EntitySet="obras" />
+          </AssociationSet>
+          <AssociationSet Name="FK_solicitudmaquinaria_areasobra" Association="icomModel.FK_solicitudmaquinaria_areasobra">
+            <End Role="areasobra" EntitySet="areasobra" />
+            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
+          </AssociationSet>
+          <AssociationSet Name="FK_maquinas_obras" Association="icomModel.FK_maquinas_obras">
+            <End Role="obras" EntitySet="obras" />
+            <End Role="maquinas" EntitySet="maquinas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_requerimientos_solicitudes_solicitudmaquinaria" Association="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria">
+            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
+            <End Role="requerimientos_solicitudes" EntitySet="requerimientos_solicitudes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_solicitudmaquinaria_usuarios" Association="icomModel.FK_solicitudmaquinaria_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="tipomaquina">
           <Key>
@@ -843,6 +996,115 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="areasobra">
+          <Key>
+            <PropertyRef Name="idareaobra" />
+          </Key>
+          <Property Name="idareaobra" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="latitud" Type="Decimal" Precision="10" Scale="10" />
+          <Property Name="longitud" Type="Decimal" Precision="10" Scale="10" />
+          <NavigationProperty Name="obras" Relationship="icomModel.FK_obras_areasobra" FromRole="areasobra" ToRole="obras" />
+          <NavigationProperty Name="solicitudmaquinaria" Relationship="icomModel.FK_solicitudmaquinaria_areasobra" FromRole="areasobra" ToRole="solicitudmaquinaria" />
+        </EntityType>
+        <EntityType Name="obras">
+          <Key>
+            <PropertyRef Name="idobra" />
+          </Key>
+          <Property Name="idobra" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="idareaobra" Type="Int32" />
+          <NavigationProperty Name="areasobra" Relationship="icomModel.FK_obras_areasobra" FromRole="obras" ToRole="areasobra" />
+          <NavigationProperty Name="maquinas" Relationship="icomModel.FK_maquinas_obras" FromRole="obras" ToRole="maquinas" />
+        </EntityType>
+        <EntityType Name="requerimientos_solicitudes">
+          <Key>
+            <PropertyRef Name="norequerimiento" />
+            <PropertyRef Name="foliosolicitud" />
+          </Key>
+          <Property Name="norequerimiento" Type="Int32" Nullable="false" />
+          <Property Name="foliosolicitud" Type="Int32" Nullable="false" />
+          <Property Name="equipo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="marca" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="modelo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="solicitudmaquinaria" Relationship="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria" FromRole="requerimientos_solicitudes" ToRole="solicitudmaquinaria" />
+        </EntityType>
+        <EntityType Name="solicitudmaquinaria">
+          <Key>
+            <PropertyRef Name="folio" />
+          </Key>
+          <Property Name="folio" Type="Int32" Nullable="false" />
+          <Property Name="fecha" Type="DateTime" Precision="0" />
+          <Property Name="time" Type="Time" Precision="7" />
+          <Property Name="requeridopara" Type="DateTime" Precision="0" />
+          <Property Name="idareaobra" Type="Int32" />
+          <Property Name="idresponsable" Type="Int32" />
+          <NavigationProperty Name="areasobra" Relationship="icomModel.FK_solicitudmaquinaria_areasobra" FromRole="solicitudmaquinaria" ToRole="areasobra" />
+          <NavigationProperty Name="requerimientos_solicitudes" Relationship="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria" FromRole="solicitudmaquinaria" ToRole="requerimientos_solicitudes" />
+          <NavigationProperty Name="usuarios" Relationship="icomModel.FK_solicitudmaquinaria_usuarios" FromRole="solicitudmaquinaria" ToRole="usuarios" />
+        </EntityType>
+        <Association Name="FK_obras_areasobra">
+          <End Type="icomModel.areasobra" Role="areasobra" Multiplicity="0..1" />
+          <End Type="icomModel.obras" Role="obras" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="areasobra">
+              <PropertyRef Name="idareaobra" />
+            </Principal>
+            <Dependent Role="obras">
+              <PropertyRef Name="idareaobra" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_solicitudmaquinaria_areasobra">
+          <End Type="icomModel.areasobra" Role="areasobra" Multiplicity="0..1" />
+          <End Type="icomModel.solicitudmaquinaria" Role="solicitudmaquinaria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="areasobra">
+              <PropertyRef Name="idareaobra" />
+            </Principal>
+            <Dependent Role="solicitudmaquinaria">
+              <PropertyRef Name="idareaobra" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_maquinas_obras">
+          <End Type="icomModel.obras" Role="obras" Multiplicity="0..1" />
+          <End Type="icomModel.maquinas" Role="maquinas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="obras">
+              <PropertyRef Name="idobra" />
+            </Principal>
+            <Dependent Role="maquinas">
+              <PropertyRef Name="idobra" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_requerimientos_solicitudes_solicitudmaquinaria">
+          <End Type="icomModel.solicitudmaquinaria" Role="solicitudmaquinaria" Multiplicity="1" />
+          <End Type="icomModel.requerimientos_solicitudes" Role="requerimientos_solicitudes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="solicitudmaquinaria">
+              <PropertyRef Name="folio" />
+            </Principal>
+            <Dependent Role="requerimientos_solicitudes">
+              <PropertyRef Name="foliosolicitud" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_solicitudmaquinaria_usuarios">
+          <End Type="icomModel.usuarios" Role="usuarios" Multiplicity="0..1" />
+          <End Type="icomModel.solicitudmaquinaria" Role="solicitudmaquinaria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="idusuario" />
+            </Principal>
+            <Dependent Role="solicitudmaquinaria">
+              <PropertyRef Name="idresponsable" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -880,6 +1142,7 @@
           <EntitySetMapping Name="maquinas">
             <EntityTypeMapping TypeName="icomModel.maquinas">
               <MappingFragment StoreEntitySet="maquinas">
+                <ScalarProperty Name="idobra" ColumnName="idobra" />
                 <ScalarProperty Name="idtipomaquina" ColumnName="idtipomaquina" />
                 <ScalarProperty Name="noserie" ColumnName="noserie" />
                 <ScalarProperty Name="noeconomico" ColumnName="noeconomico" />
@@ -1003,6 +1266,50 @@
                 <ScalarProperty Name="descripcion" ColumnName="descripcion" />
                 <ScalarProperty Name="nombre" ColumnName="nombre" />
                 <ScalarProperty Name="idstatus" ColumnName="idstatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="areasobra">
+            <EntityTypeMapping TypeName="icomModel.areasobra">
+              <MappingFragment StoreEntitySet="areasobra">
+                <ScalarProperty Name="longitud" ColumnName="longitud" />
+                <ScalarProperty Name="latitud" ColumnName="latitud" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="idareaobra" ColumnName="idareaobra" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="obras">
+            <EntityTypeMapping TypeName="icomModel.obras">
+              <MappingFragment StoreEntitySet="obras">
+                <ScalarProperty Name="idareaobra" ColumnName="idareaobra" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="idobra" ColumnName="idobra" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="requerimientos_solicitudes">
+            <EntityTypeMapping TypeName="icomModel.requerimientos_solicitudes">
+              <MappingFragment StoreEntitySet="requerimientos_solicitudes">
+                <ScalarProperty Name="modelo" ColumnName="modelo" />
+                <ScalarProperty Name="marca" ColumnName="marca" />
+                <ScalarProperty Name="equipo" ColumnName="equipo" />
+                <ScalarProperty Name="foliosolicitud" ColumnName="foliosolicitud" />
+                <ScalarProperty Name="norequerimiento" ColumnName="norequerimiento" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="solicitudmaquinaria">
+            <EntityTypeMapping TypeName="icomModel.solicitudmaquinaria">
+              <MappingFragment StoreEntitySet="solicitudmaquinaria">
+                <ScalarProperty Name="idresponsable" ColumnName="idresponsable" />
+                <ScalarProperty Name="idareaobra" ColumnName="idareaobra" />
+                <ScalarProperty Name="requeridopara" ColumnName="requeridopara" />
+                <ScalarProperty Name="time" ColumnName="time" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="folio" ColumnName="folio" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

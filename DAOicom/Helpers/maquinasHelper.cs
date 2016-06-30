@@ -18,6 +18,7 @@ namespace DAOicom.Helpers
         public List<maquinas> getTodasMaquinas()
         {
             var query = from m in db.maquinas
+                        orderby m.noserie
                         select m;
 
             List<maquinas> lstmaq = new List<maquinas>();

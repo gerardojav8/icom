@@ -50,6 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="areasobra.cs">
+      <DependentUpon>ModelIcom.tt</DependentUpon>
+    </Compile>
     <Compile Include="componentes.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
@@ -59,9 +62,13 @@
     <Compile Include="filtros.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\areasObraHelper.cs" />
     <Compile Include="Helpers\maquinasHelper.cs" />
+    <Compile Include="Helpers\obrasHelper.cs" />
     <Compile Include="Helpers\refacciones_reporteHelper.cs" />
     <Compile Include="Helpers\reportesHelper.cs" />
+    <Compile Include="Helpers\requerimientosSolicitudesHelper.cs" />
+    <Compile Include="Helpers\solicitudMaquinariaHelper.cs" />
     <Compile Include="Helpers\tipoFallasHelper.cs" />
     <Compile Include="Helpers\tiposMntoHelper.cs" />
     <Compile Include="Helpers\usuariosHelper.cs" />
@@ -89,6 +96,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ModelIcom.edmx</DependentUpon>
     </Compile>
+    <Compile Include="obras.cs">
+      <DependentUpon>ModelIcom.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="puestos.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
@@ -97,6 +107,12 @@
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
     <Compile Include="reportes.cs">
+      <DependentUpon>ModelIcom.tt</DependentUpon>
+    </Compile>
+    <Compile Include="requerimientos_solicitudes.cs">
+      <DependentUpon>ModelIcom.tt</DependentUpon>
+    </Compile>
+    <Compile Include="solicitudmaquinaria.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
     <Compile Include="statusreporte.cs">

@@ -274,6 +274,7 @@ namespace WebIcomApi.Controllers
                 objrepop.modelo = rep.modelo.ToString();
                 objrepop.reporto =strreporto;
                 objrepop.tipofalla = tf.nombre;
+                objrepop.idtipofalla = tf.idtipofalla.ToString();
                 objrepop.atiende = stratiende;
                 objrepop.descripcion = rep.descripcion;
 

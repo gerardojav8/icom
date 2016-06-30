@@ -15,6 +15,7 @@ namespace WebIcomApi.Entidades
         public String modelo { get; set; }
         public String reporto { get; set; }
         public String tipofalla { get; set; }
+        public String idtipofalla { get; set; }
         public String atiende { get; set; }
         public String  descripcion { get; set; }
     }

@@ -17,6 +17,30 @@ namespace WebIcomApi.Controllers
     [RoutePrefix("maquinas")]
     public class maquinasController : ApiController
     {
+
+        [Authorize]
+        [HttpPost]
+        [Route("getFolioSolicitud")]
+        public Object getFolioSolicitud()
+        {
+            solicitudMaquinariaHelper objsmhelp = new solicitudMaquinariaHelper();
+            String folio = objsmhelp.getFolioSolicitud();
+
+            if (folio == "")
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No se ha generado el folio";
+                objerr.result = 0;
+                return objerr;
+            }
+            else
+            {
+                clsEntidadFolio objfol = new clsEntidadFolio();
+                objfol.folio = folio;
+                return objfol;
+            }
+        }
+
         [Authorize]
         [HttpPost]
         [Route("getTodasMaquinas")]
@@ -116,6 +140,68 @@ namespace WebIcomApi.Controllers
             resp.Add("tieneReporte", tieneReporte);
 
             return resp;
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("GuardarSolicitudMaquinaria")]
+        public Object GuardarSolicitudMaquinaria(JObject json)
+        {
+
+            solicitudMaquinariaHelper objsmhelp = new solicitudMaquinariaHelper();
+
+            int folio = Int32.Parse(objsmhelp.getFolioSolicitud());
+
+            solicitudmaquinaria objsm = new solicitudmaquinaria();
+            
+            String fecha = json["fecha"].ToString();
+            String time = json["time"].ToString();
+            String requeridopara = json["requeridopara"].ToString();
+            String idareaobra = json["idareaobra"].ToString();
+            String idresponsable = json["idresponsable"].ToString();
+
+            String strFechaHora = fecha + " " + time;
+            DateTime fechahora = DateTime.ParseExact( strFechaHora, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InstalledUICulture);
+            objsm.folio = folio;
+            objsm.fecha = fechahora.Date;
+            objsm.time = fechahora.TimeOfDay;
+                      
+
+            JArray jlstreq = JArray.Parse(json["requermientos"].ToString());
+
+            List<requerimientos_solicitudes> lstreq = new List<requerimientos_solicitudes>();
+            int contreq = 1;
+            foreach (var jref in jlstreq)
+            {
+                JObject jobj = (JObject)jref;
+                requerimientos_solicitudes objreq = new requerimientos_solicitudes();
+                objreq.foliosolicitud = folio;
+                objreq.norequerimiento = contreq;
+                objreq.equipo = jobj["equipo"].ToString();
+                objreq.marca = jobj["marca"].ToString();
+                objreq.modelo = jobj["modelo"].ToString();
+
+                lstreq.Add(objreq);
+                contreq++;
+
+            }
+
+            String resp = objsmhelp.GuardaSolicitud(objsm, lstreq);
+
+            if (resp != "")
+            {
+                clsError objerr = new clsError();
+                objerr.error = "Error al guardar la solicitud " + resp;
+                objerr.result = 0;
+                return objerr;
+            }
+            else
+            {
+                Dictionary<String, String> dresp = new Dictionary<string, string>();
+                dresp.Add("respuesta", "exito");
+                return dresp;
+            }
+
         }
 
         

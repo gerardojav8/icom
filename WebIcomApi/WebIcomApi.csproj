@@ -133,8 +133,10 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\commonController.cs" />
     <Compile Include="Controllers\maquinasController.cs" />
+    <Compile Include="Controllers\obrasController.cs" />
     <Compile Include="Controllers\reportesController.cs" />
     <Compile Include="Controllers\usuariosController.cs" />
+    <Compile Include="Entidades\clsAreasobra.cs" />
     <Compile Include="Entidades\clsCmbUsuarios.cs" />
     <Compile Include="Entidades\clsEntidadFolio.cs" />
     <Compile Include="Entidades\clsError.cs" />
