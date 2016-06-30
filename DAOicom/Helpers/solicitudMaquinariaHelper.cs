@@ -87,14 +87,14 @@ namespace DAOicom.Helpers
                 if (query.Count() <= 0)
                 {
 
-                    folio = "2" + anioact + mesact + "001";
+                    folio = anioact + mesact + "001";
                 }
                 else
                 {
                     solicitudmaquinaria objrep = query.FirstOrDefault();
                     String folioact = objrep.folio.ToString();
 
-                    String consecutivoact = folioact.Substring(7);
+                    String consecutivoact = folioact.Substring(6);
                     int intcons = Int32.Parse(consecutivoact);
                     String strconsec = (intcons + 1).ToString();
 
@@ -104,7 +104,7 @@ namespace DAOicom.Helpers
                         case 2: strconsec = "0" + strconsec; break;
                     }
 
-                    folio = "2" + anioact + mesact + strconsec;
+                    folio = anioact + mesact + strconsec;
 
                 }
 

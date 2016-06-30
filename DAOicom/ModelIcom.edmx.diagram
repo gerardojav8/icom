@@ -35,7 +35,7 @@
         <EntityTypeShape EntityType="icomModel.statusreporte" Width="1.5" PointX="10.375" PointY="0.875" />
         <AssociationConnector Association="icomModel.FK_reportes_statusreporte" />
         <EntityTypeShape EntityType="icomModel.areasobra" Width="1.5" PointX="0.75" PointY="10.375" />
-        <EntityTypeShape EntityType="icomModel.obras" Width="1.5" PointX="3" PointY="10.5" />
+        <EntityTypeShape EntityType="icomModel.obras" Width="1.5" PointX="8.25" PointY="10.5" />
         <EntityTypeShape EntityType="icomModel.requerimientos_solicitudes" Width="1.5" PointX="10" PointY="15.125" />
         <EntityTypeShape EntityType="icomModel.solicitudmaquinaria" Width="1.5" PointX="7.75" PointY="14.875" />
         <AssociationConnector Association="icomModel.FK_obras_areasobra" />

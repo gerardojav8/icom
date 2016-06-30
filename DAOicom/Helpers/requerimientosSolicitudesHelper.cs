@@ -59,6 +59,7 @@ namespace DAOicom.Helpers
             objrs.equipo = obj.equipo;
             objrs.marca = obj.marca;
             objrs.modelo = obj.modelo;
+            objrs.cantidad = obj.cantidad;
             
 
             try

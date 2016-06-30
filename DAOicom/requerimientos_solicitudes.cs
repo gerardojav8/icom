@@ -19,6 +19,7 @@ namespace DAOicom
         public string equipo { get; set; }
         public string marca { get; set; }
         public string modelo { get; set; }
+        public Nullable<int> cantidad { get; set; }
     
         public virtual solicitudmaquinaria solicitudmaquinaria { get; set; }
     }

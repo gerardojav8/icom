@@ -153,21 +153,22 @@ namespace WebIcomApi.Controllers
             int folio = Int32.Parse(objsmhelp.getFolioSolicitud());
 
             solicitudmaquinaria objsm = new solicitudmaquinaria();
-            
-            String fecha = json["fecha"].ToString();
-            String time = json["time"].ToString();
+                        
             String requeridopara = json["requeridopara"].ToString();
             String idareaobra = json["idareaobra"].ToString();
             String idresponsable = json["idresponsable"].ToString();
+            
+            DateTime dtrequeridopara = DateTime.ParseExact( requeridopara, "yyyy-MM-dd", System.Globalization.CultureInfo.InstalledUICulture);
+            
+            objsm.folio = folio;            
+            objsm.fecha = DateTime.Now;
+            objsm.time = DateTime.Now.TimeOfDay;
+            objsm.requeridopara = dtrequeridopara;
+            objsm.idareaobra = Int32.Parse(idareaobra);
+            objsm.idresponsable = Int32.Parse(idresponsable);
 
-            String strFechaHora = fecha + " " + time;
-            DateTime fechahora = DateTime.ParseExact( strFechaHora, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InstalledUICulture);
-            objsm.folio = folio;
-            objsm.fecha = fechahora.Date;
-            objsm.time = fechahora.TimeOfDay;
-                      
 
-            JArray jlstreq = JArray.Parse(json["requermientos"].ToString());
+            JArray jlstreq = JArray.Parse(json["requerimientos"].ToString());
 
             List<requerimientos_solicitudes> lstreq = new List<requerimientos_solicitudes>();
             int contreq = 1;
@@ -180,6 +181,7 @@ namespace WebIcomApi.Controllers
                 objreq.equipo = jobj["equipo"].ToString();
                 objreq.marca = jobj["marca"].ToString();
                 objreq.modelo = jobj["modelo"].ToString();
+                objreq.cantidad = Int32.Parse(jobj["cantidad"].ToString());
 
                 lstreq.Add(objreq);
                 contreq++;

@@ -12,8 +12,8 @@
           <Property Name="idareaobra" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="nombre" Type="varchar" MaxLength="100" />
           <Property Name="descripcion" Type="varchar" MaxLength="200" />
-          <Property Name="latitud" Type="decimal" Precision="10" Scale="10" />
-          <Property Name="longitud" Type="decimal" Precision="10" Scale="10" />
+          <Property Name="latitud" Type="decimal" Precision="14" Scale="7" />
+          <Property Name="longitud" Type="decimal" Precision="14" Scale="7" />
         </EntityType>
         <EntityType Name="componentes">
           <Key>
@@ -134,6 +134,7 @@
           <Property Name="equipo" Type="varchar" MaxLength="100" />
           <Property Name="marca" Type="varchar" MaxLength="100" />
           <Property Name="modelo" Type="varchar" MaxLength="100" />
+          <Property Name="cantidad" Type="int" />
         </EntityType>
         <EntityType Name="solicitudmaquinaria">
           <Key>
@@ -1003,8 +1004,8 @@
           <Property Name="idareaobra" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="latitud" Type="Decimal" Precision="10" Scale="10" />
-          <Property Name="longitud" Type="Decimal" Precision="10" Scale="10" />
+          <Property Name="latitud" Type="Decimal" Precision="14" Scale="7" />
+          <Property Name="longitud" Type="Decimal" Precision="14" Scale="7" />
           <NavigationProperty Name="obras" Relationship="icomModel.FK_obras_areasobra" FromRole="areasobra" ToRole="obras" />
           <NavigationProperty Name="solicitudmaquinaria" Relationship="icomModel.FK_solicitudmaquinaria_areasobra" FromRole="areasobra" ToRole="solicitudmaquinaria" />
         </EntityType>
@@ -1030,6 +1031,7 @@
           <Property Name="marca" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="modelo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="solicitudmaquinaria" Relationship="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria" FromRole="requerimientos_solicitudes" ToRole="solicitudmaquinaria" />
+          <Property Name="cantidad" Type="Int32" />
         </EntityType>
         <EntityType Name="solicitudmaquinaria">
           <Key>
@@ -1293,6 +1295,7 @@
           <EntitySetMapping Name="requerimientos_solicitudes">
             <EntityTypeMapping TypeName="icomModel.requerimientos_solicitudes">
               <MappingFragment StoreEntitySet="requerimientos_solicitudes">
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
                 <ScalarProperty Name="modelo" ColumnName="modelo" />
                 <ScalarProperty Name="marca" ColumnName="marca" />
                 <ScalarProperty Name="equipo" ColumnName="equipo" />
