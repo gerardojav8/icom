@@ -6,30 +6,30 @@ using System.Threading.Tasks;
 
 namespace DAOicom.Helpers
 {
-    public class obrasHelper
+    public class filtrosHelper
     {
         private icomEntities db = new icomEntities();
-        public void insertObra(obras objareaobra)
+        public void insertFiltros(filtros objfiltros)
         {
-            db.obras.Add(objareaobra);
+            db.filtros.Add(objfiltros);
             db.SaveChanges();
         }
 
-        public List<obras> getTodasobras()
+        public List<filtros> getTodasfiltros()
         {
-            var query = from a in db.obras
-                        select a;
+            var query = from tf in db.filtros
+                        select tf;
 
-            List<obras> lstobras = new List<obras>();
-            lstobras.AddRange(query.ToList());
-            return lstobras;
+            List<filtros> lstfiltros = new List<filtros>();
+            lstfiltros.AddRange(query.ToList());
+            return lstfiltros;
         }
 
-        public obras getobrasById(int id)
+        public filtros getfiltrosById(int id)
         {
-            var query = from a in db.obras
-                        where a.idobra == id
-                        select a;
+            var query = from t in db.filtros
+                        where t.idfiltro == id
+                        select t;
 
             if (query.Count() > 0)
             {
@@ -41,15 +41,14 @@ namespace DAOicom.Helpers
             }
         }
 
-        public String updateobras(obras obj)
+        public String updatefiltros(filtros obj)
         {
-            obras objtf = (from a in db.obras
-                               where a.idobra == obj.idobra
-                               select a).FirstOrDefault();
+            filtros objtf = (from t in db.filtros
+                                where t.idfiltro == obj.idfiltro
+                                select t).FirstOrDefault();
 
             objtf.nombre = obj.nombre;
             objtf.descripcion = obj.descripcion;
-            objtf.idareaobra = obj.idareaobra;
 
             try
             {

@@ -26,10 +26,8 @@ namespace DAOicom
         }
     
         public virtual DbSet<componentes> componentes { get; set; }
-        public virtual DbSet<equipoauxiliar> equipoauxiliar { get; set; }
         public virtual DbSet<filtros> filtros { get; set; }
         public virtual DbSet<maquinas> maquinas { get; set; }
-        public virtual DbSet<mediciones> mediciones { get; set; }
         public virtual DbSet<medicionesfiltros> medicionesfiltros { get; set; }
         public virtual DbSet<puestos> puestos { get; set; }
         public virtual DbSet<refacciones_reporte> refacciones_reporte { get; set; }
@@ -43,5 +41,7 @@ namespace DAOicom
         public virtual DbSet<obras> obras { get; set; }
         public virtual DbSet<requerimientos_solicitudes> requerimientos_solicitudes { get; set; }
         public virtual DbSet<solicitudmaquinaria> solicitudmaquinaria { get; set; }
+        public virtual DbSet<equipoauxiliar> equipoauxiliar { get; set; }
+        public virtual DbSet<mediciones> mediciones { get; set; }
     }
 }

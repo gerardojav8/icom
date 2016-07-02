@@ -86,6 +86,225 @@ namespace WebIcomApi.Controllers
 
         [Authorize]
         [HttpPost]
+        [Route("ModificaFichaMaquina")]
+        public Object ModificaFichaMaquina(JObject json)
+        {
+            String noserie = json["noserie"].ToString();
+
+            maquinasHelper maqhelp = new maquinasHelper();            
+            maquinas objmaq = maqhelp.getMaquinaByNoSerie(noserie);
+            
+            if(objmaq == null) {
+                clsError objerr = new clsError();
+                objerr.error = "No se ha encontrado la maquina, imposible modificarla";
+                objerr.result = 0;
+                return objerr;
+            }
+
+            String idobra = json["idobra"].ToString();
+            String imagen = json["imagen"].ToString();
+
+            objmaq.idobra = Int32.Parse(idobra);
+
+            if (imagen != "")
+            {
+                objmaq.imagen = imagen;
+            }
+
+            String idequipoaux = json["idequipoaux"].ToString();
+            String marcaaux = json["marcaaux"].ToString();
+            String modeloaux = json["modeloaux"].ToString();
+            String serieaux = json["serieaux"].ToString();
+
+
+            equipoauxiliar objeqaux = new equipoauxiliar();
+            
+            if(idequipoaux != ""){
+                objeqaux.idequipo = Int32.Parse(idequipoaux);
+            }
+
+            objeqaux.marca = marcaaux;
+            objeqaux.modelo = modeloaux;
+            objeqaux.noserie = serieaux;
+
+            JArray jefs = JArray.Parse(json["estadosfisicos"].ToString());
+
+            List<mediciones> lstmed = new List<mediciones>();            
+            foreach (var jef in jefs)
+            {
+                JObject jobj = (JObject)jef;
+                mediciones objmed = new mediciones();
+                objmed.noserie = noserie;
+                objmed.idcomponente = Int32.Parse(jobj["idcomponente"].ToString());
+                objmed.marca = jobj["marca"].ToString();
+                objmed.tipo = jobj["tipo"].ToString();
+                objmed.capacidad = jobj["capacidad"].ToString();
+                objmed.calificacion = Int32.Parse(jobj["calificacion"].ToString());
+                objmed.comentario = jobj["comentario"].ToString();
+
+                lstmed.Add(objmed);                
+            }
+
+            JArray jfs = JArray.Parse(json["filtros"].ToString());
+
+            List<medicionesfiltros> lstfil = new List<medicionesfiltros>();
+            foreach (var jf in jfs)
+            {
+                JObject jobj = (JObject)jf;
+                medicionesfiltros objmed = new medicionesfiltros();
+                objmed.noserie = noserie;
+                objmed.idfiltro = Int32.Parse(jobj["idfiltro"].ToString());
+                objmed.medicion = Int32.Parse(jobj["medicion"].ToString());
+                objmed.comentario = jobj["comentario"].ToString();
+
+                lstfil.Add(objmed);
+            }
+
+            String resp = maqhelp.updateMaquina(objmaq, objeqaux, lstmed, lstfil);
+
+            if (resp != "")
+            {
+                clsError objerr = new clsError();
+                objerr.error = resp;
+                objerr.result = 0;
+                return objerr;
+            }
+            else
+            {
+                Dictionary<String, String> dresp = new Dictionary<string, string>();
+                dresp.Add("respuesta", "exito");
+                return dresp;
+            }
+            
+
+
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getFichaMaquina")]
+        public Object getFichaMaquina(JObject json)
+        {
+
+            String noserie = json["noserie"].ToString();
+
+            maquinasHelper maqhelp = new maquinasHelper();
+
+            maquinas objmaquina = maqhelp.getMaquinaByNoSerie(noserie);
+
+            if (objmaquina == null)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No se ha encontrado la maquina";
+                objerr.result = 0;
+                return objerr;
+            }
+
+
+            clsFichaMaquina objficha = new clsFichaMaquina();
+
+            objficha.noeco = objmaquina.noeconomico.ToString();
+            objficha.descripcion = objmaquina.descripcion;
+            objficha.marca = objmaquina.marca;
+            objficha.modelo = objmaquina.modelo.ToString();
+            objficha.serie = objmaquina.noserie;
+            objficha.idobraactual = objmaquina.idobra.ToString();
+            objficha.imagen = objmaquina.imagen;
+
+            EquipoAuxHelper eahelp = new EquipoAuxHelper();
+
+            if (objmaquina.idequipo != null)
+            {
+
+                equipoauxiliar objea = eahelp.getequipoauxiliarById((Int32)objmaquina.idequipo);
+
+                if (objea == null)
+                {
+                    objficha.equipoaux = 0;
+                    objficha.marcaaux = "";
+                    objficha.modelaux = "";
+                    objficha.serieaux = "";
+                }
+                else
+                {
+                    objficha.equipoaux = 1;
+                    objficha.marcaaux = objea.marca;
+                    objficha.modelaux = objea.modelo.ToString();
+                    objficha.serieaux = objea.noserie;
+                }
+            }
+            else
+            {
+                objficha.equipoaux = 0;
+                objficha.marcaaux = "";
+                objficha.modelaux = "";
+                objficha.serieaux = "";
+
+            }
+
+            EstadosFisicoHelper efhelp = new EstadosFisicoHelper();
+            componentesHelper comhelp = new componentesHelper();
+
+            List<mediciones> lstmed = efhelp.getMedicionesByNoSerie(objmaquina.noserie);
+            List<clsEstadosFisicos> lsef = new List<clsEstadosFisicos>();
+
+            foreach (mediciones med in lstmed)
+            {
+                clsEstadosFisicos objef = new clsEstadosFisicos();
+                componentes objcomp = comhelp.getcomponentesById(med.idcomponente);
+                String nombre = "";
+                if (objcomp != null)
+                {
+                    nombre = objcomp.nombre;
+                }
+
+                objef.nombre = nombre;
+                objef.idcomponente = med.idcomponente;
+                objef.marca = med.marca;
+                objef.tipo = med.tipo;
+                objef.capacidad = med.capacidad;
+                objef.comentario = med.comentario;
+                objef.calificacion = med.calificacion.ToString();
+
+                lsef.Add(objef);
+                
+            }
+
+            objficha.estadosfisicos = lsef;
+
+            medicionesFiltrosHelper mfhelp = new medicionesFiltrosHelper();
+            filtrosHelper fhelp = new filtrosHelper();
+
+            List<medicionesfiltros> lstmedfil = mfhelp.getTodasmedicionesfiltrosByNoSerie(objmaquina.noserie);
+            List<clsFiltros> lstfil = new List<clsFiltros>();
+
+            foreach (medicionesfiltros medfil in lstmedfil)
+            {
+                clsFiltros objfil = new clsFiltros();
+                filtros fil = fhelp.getfiltrosById(medfil.idfiltro);
+                String nombre = "";
+                if (fil != null)
+                {
+                    nombre = fil.nombre;
+                }
+
+                objfil.nombre = nombre;
+                objfil.idfiltro = medfil.idfiltro;
+                objfil.medicion = medfil.medicion.ToString();
+                objfil.comentario = medfil.comentario;
+
+                lstfil.Add(objfil);
+
+            }
+
+            objficha.filtros = lstfil;
+
+            return objficha;
+
+        }
+
+        [Authorize]
+        [HttpPost]
         [Route("getListadoMaquinas")]
         public Object getListadoMaquinas()
         {

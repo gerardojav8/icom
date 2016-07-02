@@ -48,5 +48,37 @@ namespace WebIcomApi.Controllers
                 return lst;
             }
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getObras")]
+        public Object getObras()
+        {
+            obrasHelper obhelp = new obrasHelper();
+            List<obras> lstobras = obhelp.getTodasobras();
+
+            if (lstobras.Count == 0)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No se han Encontrado obras";
+                objerr.result = 0;
+                return objerr;
+            }
+            else
+            {
+                List<clsObras> lst = new List<clsObras>();
+                foreach (obras a in lstobras)
+                {
+                    clsObras objobra = new clsObras();
+                    objobra.idobra = a.idobra;
+                    objobra.nombre = a.nombre;
+                    objobra.descripcion = a.descripcion;
+                    objobra.idareaobra = (Int32)a.idareaobra;
+                    lst.Add(objobra);
+                }
+
+                return lst;
+            }
+        }
     }
 }

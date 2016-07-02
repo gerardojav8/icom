@@ -140,10 +140,14 @@
     <Compile Include="Entidades\clsCmbUsuarios.cs" />
     <Compile Include="Entidades\clsEntidadFolio.cs" />
     <Compile Include="Entidades\clsError.cs" />
+    <Compile Include="Entidades\clsEstadosFisicos.cs" />
     <Compile Include="Entidades\clsfechahora.cs" />
+    <Compile Include="Entidades\clsFichaMaquina.cs" />
+    <Compile Include="Entidades\clsFiltros.cs" />
     <Compile Include="Entidades\clsInsertaRep.cs" />
     <Compile Include="Entidades\clsListaMaquinas.cs" />
     <Compile Include="Entidades\clsMaquinas.cs" />
+    <Compile Include="Entidades\clsObras.cs" />
     <Compile Include="Entidades\clsReporteOperador.cs" />
     <Compile Include="Entidades\clsTipoFallas.cs" />
     <Compile Include="Entidades\clsTipoMnto.cs" />

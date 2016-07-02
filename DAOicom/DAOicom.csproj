@@ -63,7 +63,12 @@
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\areasObraHelper.cs" />
+    <Compile Include="Helpers\componentesHelper.cs" />
+    <Compile Include="Helpers\EquipoAuxHelper.cs" />
+    <Compile Include="Helpers\EstadosFisicoHelper.cs" />
+    <Compile Include="Helpers\filtrosHelper.cs" />
     <Compile Include="Helpers\maquinasHelper.cs" />
+    <Compile Include="Helpers\medicionesFiltrosHelper.cs" />
     <Compile Include="Helpers\obrasHelper.cs" />
     <Compile Include="Helpers\refacciones_reporteHelper.cs" />
     <Compile Include="Helpers\reportesHelper.cs" />

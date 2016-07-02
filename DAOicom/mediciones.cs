@@ -16,9 +16,9 @@ namespace DAOicom
     {
         public string noserie { get; set; }
         public int idcomponente { get; set; }
-        public Nullable<int> marca { get; set; }
-        public Nullable<int> tipo { get; set; }
-        public Nullable<int> capacidad { get; set; }
+        public string marca { get; set; }
+        public string tipo { get; set; }
+        public string capacidad { get; set; }
         public Nullable<int> calificacion { get; set; }
         public string comentario { get; set; }
     
