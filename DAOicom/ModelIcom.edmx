@@ -50,7 +50,7 @@
           <Property Name="modelo" Type="int" />
           <Property Name="aniofabricacion" Type="int" />
           <Property Name="idequipo" Type="int" />
-          <Property Name="imagen" Type="text" />
+          <Property Name="imagen" Type="image" />
           <Property Name="idtipomaquina" Type="int" />
           <Property Name="idobra" Type="int" />
           <Property Name="descripcion" Type="varchar" MaxLength="200" />
@@ -557,27 +557,6 @@
           <Property Name="descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="medicionesfiltros" Relationship="Self.FK_medicionesfiltros_filtros" FromRole="filtros" ToRole="medicionesfiltros" />
         </EntityType>
-        <EntityType Name="maquinas">
-          <Key>
-            <PropertyRef Name="noserie" />
-          </Key>
-          <Property Name="noserie" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="noeconomico" Type="Int32" />
-          <Property Name="marca" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="modelo" Type="Int32" />
-          <Property Name="aniofabricacion" Type="Int32" />
-          <Property Name="idequipo" Type="Int32" />
-          <Property Name="imagen" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="medicionesfiltros" Relationship="Self.FK_medicionesfiltros_maquinas" FromRole="maquinas" ToRole="medicionesfiltros" />
-          <NavigationProperty Name="reportes" Relationship="Self.FK_reportes_maquinas" FromRole="maquinas" ToRole="reportes" />
-          <Property Name="idtipomaquina" Type="Int32" />
-          <NavigationProperty Name="tipomaquina" Relationship="icomModel.FK_maquinas_tipomaquina" FromRole="maquinas" ToRole="tipomaquina" />
-          <Property Name="idobra" Type="Int32" />
-          <NavigationProperty Name="obras" Relationship="icomModel.FK_maquinas_obras" FromRole="maquinas" ToRole="obras" />
-          <Property Name="descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="equipoauxiliar" Relationship="icomModel.FK_maquinas_equipoauxiliar" FromRole="maquinas" ToRole="equipoauxiliar" />
-          <NavigationProperty Name="mediciones" Relationship="icomModel.FK_mediciones_maquinas" FromRole="maquinas" ToRole="mediciones" />
-        </EntityType>
         <EntityType Name="medicionesfiltros">
           <Key>
             <PropertyRef Name="noserie" />
@@ -588,7 +567,7 @@
           <Property Name="medicion" Type="Int32" />
           <Property Name="comentario" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="filtros" Relationship="Self.FK_medicionesfiltros_filtros" FromRole="medicionesfiltros" ToRole="filtros" />
-          <NavigationProperty Name="maquinas" Relationship="Self.FK_medicionesfiltros_maquinas" FromRole="medicionesfiltros" ToRole="maquinas" />
+          <NavigationProperty Name="maquinas" Relationship="icomModel.FK_medicionesfiltros_maquinas" FromRole="medicionesfiltros" ToRole="maquinas" />
         </EntityType>
         <EntityType Name="puestos">
           <Key>
@@ -628,7 +607,6 @@
           <Property Name="idtipomto" Type="Int32" />
           <Property Name="descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="observaciones" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="maquinas" Relationship="Self.FK_reportes_maquinas" FromRole="reportes" ToRole="maquinas" />
           <NavigationProperty Name="refacciones_reporte" Relationship="Self.FK_refacciones_reporte_reportes" FromRole="reportes" ToRole="refacciones_reporte" />
           <NavigationProperty Name="tipofallas" Relationship="Self.FK_reportes_tipofallas" FromRole="reportes" ToRole="tipofallas" />
           <NavigationProperty Name="tipomantenimientos" Relationship="Self.FK_reportes_tipomantenimientos" FromRole="reportes" ToRole="tipomantenimientos" />
@@ -637,6 +615,7 @@
           <NavigationProperty Name="usuarios2" Relationship="Self.FK_reportes_usuarios_reporto" FromRole="reportes" ToRole="usuarios" />
           <Property Name="idstatus" Type="Byte" />
           <NavigationProperty Name="statusreporte" Relationship="icomModel.FK_reportes_statusreporte" FromRole="reportes" ToRole="statusreporte" />
+          <NavigationProperty Name="maquinas" Relationship="icomModel.FK_reportes_maquinas" FromRole="reportes" ToRole="maquinas" />
         </EntityType>
         <EntityType Name="tipofallas">
           <Key>
@@ -685,30 +664,6 @@
             </Principal>
             <Dependent Role="medicionesfiltros">
               <PropertyRef Name="idfiltro" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_medicionesfiltros_maquinas">
-          <End Role="maquinas" Type="Self.maquinas" Multiplicity="1" />
-          <End Role="medicionesfiltros" Type="Self.medicionesfiltros" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="maquinas">
-              <PropertyRef Name="noserie" />
-            </Principal>
-            <Dependent Role="medicionesfiltros">
-              <PropertyRef Name="noserie" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_reportes_maquinas">
-          <End Role="maquinas" Type="Self.maquinas" Multiplicity="0..1" />
-          <End Role="reportes" Type="Self.reportes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="maquinas">
-              <PropertyRef Name="noserie" />
-            </Principal>
-            <Dependent Role="reportes">
-              <PropertyRef Name="no_serie" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -799,7 +754,6 @@
         <EntityContainer Name="icomEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="componentes" EntityType="Self.componentes" />
           <EntitySet Name="filtros" EntityType="Self.filtros" />
-          <EntitySet Name="maquinas" EntityType="Self.maquinas" />
           <EntitySet Name="medicionesfiltros" EntityType="Self.medicionesfiltros" />
           <EntitySet Name="puestos" EntityType="Self.puestos" />
           <EntitySet Name="refacciones_reporte" EntityType="Self.refacciones_reporte" />
@@ -810,14 +764,6 @@
           <AssociationSet Name="FK_medicionesfiltros_filtros" Association="Self.FK_medicionesfiltros_filtros">
             <End Role="filtros" EntitySet="filtros" />
             <End Role="medicionesfiltros" EntitySet="medicionesfiltros" />
-          </AssociationSet>
-          <AssociationSet Name="FK_medicionesfiltros_maquinas" Association="Self.FK_medicionesfiltros_maquinas">
-            <End Role="maquinas" EntitySet="maquinas" />
-            <End Role="medicionesfiltros" EntitySet="medicionesfiltros" />
-          </AssociationSet>
-          <AssociationSet Name="FK_reportes_maquinas" Association="Self.FK_reportes_maquinas">
-            <End Role="maquinas" EntitySet="maquinas" />
-            <End Role="reportes" EntitySet="reportes" />
           </AssociationSet>
           <AssociationSet Name="FK_usuarios_puestos" Association="Self.FK_usuarios_puestos">
             <End Role="puestos" EntitySet="puestos" />
@@ -848,10 +794,6 @@
             <End Role="reportes" EntitySet="reportes" />
           </AssociationSet>
           <EntitySet Name="tipomaquina" EntityType="icomModel.tipomaquina" />
-          <AssociationSet Name="FK_maquinas_tipomaquina" Association="icomModel.FK_maquinas_tipomaquina">
-            <End Role="tipomaquina" EntitySet="tipomaquina" />
-            <End Role="maquinas" EntitySet="maquinas" />
-          </AssociationSet>
           <EntitySet Name="statusreporte" EntityType="icomModel.statusreporte" />
           <AssociationSet Name="FK_reportes_statusreporte" Association="icomModel.FK_reportes_statusreporte">
             <End Role="statusreporte" EntitySet="statusreporte" />
@@ -869,10 +811,6 @@
             <End Role="areasobra" EntitySet="areasobra" />
             <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
           </AssociationSet>
-          <AssociationSet Name="FK_maquinas_obras" Association="icomModel.FK_maquinas_obras">
-            <End Role="obras" EntitySet="obras" />
-            <End Role="maquinas" EntitySet="maquinas" />
-          </AssociationSet>
           <AssociationSet Name="FK_requerimientos_solicitudes_solicitudmaquinaria" Association="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria">
             <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
             <End Role="requerimientos_solicitudes" EntitySet="requerimientos_solicitudes" />
@@ -882,18 +820,35 @@
             <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
           </AssociationSet>
           <EntitySet Name="equipoauxiliar" EntityType="icomModel.equipoauxiliar" />
-          <AssociationSet Name="FK_maquinas_equipoauxiliar" Association="icomModel.FK_maquinas_equipoauxiliar">
-            <End Role="equipoauxiliar" EntitySet="equipoauxiliar" />
-            <End Role="maquinas" EntitySet="maquinas" />
-          </AssociationSet>
           <EntitySet Name="mediciones" EntityType="icomModel.mediciones" />
           <AssociationSet Name="FK_mediciones_componentes" Association="icomModel.FK_mediciones_componentes">
             <End Role="componentes" EntitySet="componentes" />
             <End Role="mediciones" EntitySet="mediciones" />
           </AssociationSet>
+          <EntitySet Name="maquinas" EntityType="icomModel.maquinas" />
+          <AssociationSet Name="FK_maquinas_equipoauxiliar" Association="icomModel.FK_maquinas_equipoauxiliar">
+            <End Role="equipoauxiliar" EntitySet="equipoauxiliar" />
+            <End Role="maquinas" EntitySet="maquinas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_maquinas_obras" Association="icomModel.FK_maquinas_obras">
+            <End Role="obras" EntitySet="obras" />
+            <End Role="maquinas" EntitySet="maquinas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_maquinas_tipomaquina" Association="icomModel.FK_maquinas_tipomaquina">
+            <End Role="tipomaquina" EntitySet="tipomaquina" />
+            <End Role="maquinas" EntitySet="maquinas" />
+          </AssociationSet>
           <AssociationSet Name="FK_mediciones_maquinas" Association="icomModel.FK_mediciones_maquinas">
             <End Role="maquinas" EntitySet="maquinas" />
             <End Role="mediciones" EntitySet="mediciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_medicionesfiltros_maquinas" Association="icomModel.FK_medicionesfiltros_maquinas">
+            <End Role="maquinas" EntitySet="maquinas" />
+            <End Role="medicionesfiltros" EntitySet="medicionesfiltros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_reportes_maquinas" Association="icomModel.FK_reportes_maquinas">
+            <End Role="maquinas" EntitySet="maquinas" />
+            <End Role="reportes" EntitySet="reportes" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="tipomaquina">
@@ -905,18 +860,6 @@
           <Property Name="descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="maquinas" Relationship="icomModel.FK_maquinas_tipomaquina" FromRole="tipomaquina" ToRole="maquinas" />
         </EntityType>
-        <Association Name="FK_maquinas_tipomaquina">
-          <End Type="icomModel.tipomaquina" Role="tipomaquina" Multiplicity="0..1" />
-          <End Type="icomModel.maquinas" Role="maquinas" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tipomaquina">
-              <PropertyRef Name="idtipomaquina" />
-            </Principal>
-            <Dependent Role="maquinas">
-              <PropertyRef Name="idtipomaquina" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="statusreporte">
           <Key>
             <PropertyRef Name="idstatus" />
@@ -1012,18 +955,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_maquinas_obras">
-          <End Type="icomModel.obras" Role="obras" Multiplicity="0..1" />
-          <End Type="icomModel.maquinas" Role="maquinas" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="obras">
-              <PropertyRef Name="idobra" />
-            </Principal>
-            <Dependent Role="maquinas">
-              <PropertyRef Name="idobra" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_requerimientos_solicitudes_solicitudmaquinaria">
           <End Type="icomModel.solicitudmaquinaria" Role="solicitudmaquinaria" Multiplicity="1" />
           <End Type="icomModel.requerimientos_solicitudes" Role="requerimientos_solicitudes" Multiplicity="*" />
@@ -1058,18 +989,6 @@
           <Property Name="noserie" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="maquinas" Relationship="icomModel.FK_maquinas_equipoauxiliar" FromRole="equipoauxiliar" ToRole="maquinas" />
         </EntityType>
-        <Association Name="FK_maquinas_equipoauxiliar">
-          <End Type="icomModel.equipoauxiliar" Role="equipoauxiliar" Multiplicity="0..1" />
-          <End Type="icomModel.maquinas" Role="maquinas" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="equipoauxiliar">
-              <PropertyRef Name="idequipo" />
-            </Principal>
-            <Dependent Role="maquinas">
-              <PropertyRef Name="idequipo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="mediciones">
           <Key>
             <PropertyRef Name="noserie" />
@@ -1097,6 +1016,63 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="maquinas">
+          <Key>
+            <PropertyRef Name="noserie" />
+          </Key>
+          <Property Name="noserie" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="noeconomico" Type="Int32" />
+          <Property Name="marca" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="modelo" Type="Int32" />
+          <Property Name="aniofabricacion" Type="Int32" />
+          <Property Name="idequipo" Type="Int32" />
+          <Property Name="imagen" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="idtipomaquina" Type="Int32" />
+          <Property Name="idobra" Type="Int32" />
+          <Property Name="descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="equipoauxiliar" Relationship="icomModel.FK_maquinas_equipoauxiliar" FromRole="maquinas" ToRole="equipoauxiliar" />
+          <NavigationProperty Name="obras" Relationship="icomModel.FK_maquinas_obras" FromRole="maquinas" ToRole="obras" />
+          <NavigationProperty Name="tipomaquina" Relationship="icomModel.FK_maquinas_tipomaquina" FromRole="maquinas" ToRole="tipomaquina" />
+          <NavigationProperty Name="mediciones" Relationship="icomModel.FK_mediciones_maquinas" FromRole="maquinas" ToRole="mediciones" />
+          <NavigationProperty Name="medicionesfiltros" Relationship="icomModel.FK_medicionesfiltros_maquinas" FromRole="maquinas" ToRole="medicionesfiltros" />
+          <NavigationProperty Name="reportes" Relationship="icomModel.FK_reportes_maquinas" FromRole="maquinas" ToRole="reportes" />
+        </EntityType>
+        <Association Name="FK_maquinas_equipoauxiliar">
+          <End Type="icomModel.equipoauxiliar" Role="equipoauxiliar" Multiplicity="0..1" />
+          <End Type="icomModel.maquinas" Role="maquinas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="equipoauxiliar">
+              <PropertyRef Name="idequipo" />
+            </Principal>
+            <Dependent Role="maquinas">
+              <PropertyRef Name="idequipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_maquinas_obras">
+          <End Type="icomModel.obras" Role="obras" Multiplicity="0..1" />
+          <End Type="icomModel.maquinas" Role="maquinas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="obras">
+              <PropertyRef Name="idobra" />
+            </Principal>
+            <Dependent Role="maquinas">
+              <PropertyRef Name="idobra" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_maquinas_tipomaquina">
+          <End Type="icomModel.tipomaquina" Role="tipomaquina" Multiplicity="0..1" />
+          <End Type="icomModel.maquinas" Role="maquinas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipomaquina">
+              <PropertyRef Name="idtipomaquina" />
+            </Principal>
+            <Dependent Role="maquinas">
+              <PropertyRef Name="idtipomaquina" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_mediciones_maquinas">
           <End Type="icomModel.maquinas" Role="maquinas" Multiplicity="1" />
           <End Type="icomModel.mediciones" Role="mediciones" Multiplicity="*" />
@@ -1106,6 +1082,30 @@
             </Principal>
             <Dependent Role="mediciones">
               <PropertyRef Name="noserie" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_medicionesfiltros_maquinas">
+          <End Type="icomModel.maquinas" Role="maquinas" Multiplicity="1" />
+          <End Type="icomModel.medicionesfiltros" Role="medicionesfiltros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="maquinas">
+              <PropertyRef Name="noserie" />
+            </Principal>
+            <Dependent Role="medicionesfiltros">
+              <PropertyRef Name="noserie" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_reportes_maquinas">
+          <End Type="icomModel.maquinas" Role="maquinas" Multiplicity="0..1" />
+          <End Type="icomModel.reportes" Role="reportes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="maquinas">
+              <PropertyRef Name="noserie" />
+            </Principal>
+            <Dependent Role="reportes">
+              <PropertyRef Name="no_serie" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1130,22 +1130,6 @@
                 <ScalarProperty Name="idfiltro" ColumnName="idfiltro" />
                 <ScalarProperty Name="nombre" ColumnName="nombre" />
                 <ScalarProperty Name="descripcion" ColumnName="descripcion" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="maquinas">
-            <EntityTypeMapping TypeName="icomModel.maquinas">
-              <MappingFragment StoreEntitySet="maquinas">
-                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
-                <ScalarProperty Name="idobra" ColumnName="idobra" />
-                <ScalarProperty Name="idtipomaquina" ColumnName="idtipomaquina" />
-                <ScalarProperty Name="noserie" ColumnName="noserie" />
-                <ScalarProperty Name="noeconomico" ColumnName="noeconomico" />
-                <ScalarProperty Name="marca" ColumnName="marca" />
-                <ScalarProperty Name="modelo" ColumnName="modelo" />
-                <ScalarProperty Name="aniofabricacion" ColumnName="aniofabricacion" />
-                <ScalarProperty Name="idequipo" ColumnName="idequipo" />
-                <ScalarProperty Name="imagen" ColumnName="imagen" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1315,6 +1299,22 @@
                 <ScalarProperty Name="tipo" ColumnName="tipo" />
                 <ScalarProperty Name="marca" ColumnName="marca" />
                 <ScalarProperty Name="idcomponente" ColumnName="idcomponente" />
+                <ScalarProperty Name="noserie" ColumnName="noserie" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="maquinas">
+            <EntityTypeMapping TypeName="icomModel.maquinas">
+              <MappingFragment StoreEntitySet="maquinas">
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="idobra" ColumnName="idobra" />
+                <ScalarProperty Name="idtipomaquina" ColumnName="idtipomaquina" />
+                <ScalarProperty Name="imagen" ColumnName="imagen" />
+                <ScalarProperty Name="idequipo" ColumnName="idequipo" />
+                <ScalarProperty Name="aniofabricacion" ColumnName="aniofabricacion" />
+                <ScalarProperty Name="modelo" ColumnName="modelo" />
+                <ScalarProperty Name="marca" ColumnName="marca" />
+                <ScalarProperty Name="noeconomico" ColumnName="noeconomico" />
                 <ScalarProperty Name="noserie" ColumnName="noserie" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -89,7 +91,7 @@ namespace WebIcomApi.Controllers
         [Route("ModificaFichaMaquina")]
         public Object ModificaFichaMaquina(JObject json)
         {
-            String noserie = json["noserie"].ToString();
+            String noserie = json["serie"].ToString();
 
             maquinasHelper maqhelp = new maquinasHelper();            
             maquinas objmaq = maqhelp.getMaquinaByNoSerie(noserie);
@@ -101,31 +103,47 @@ namespace WebIcomApi.Controllers
                 return objerr;
             }
 
-            String idobra = json["idobra"].ToString();
+            String idobra = json["idobraactual"].ToString();
             String imagen = json["imagen"].ToString();
 
             objmaq.idobra = Int32.Parse(idobra);
 
             if (imagen != "")
             {
-                objmaq.imagen = imagen;
+                var bytes = Convert.FromBase64String(imagen);                
+                objmaq.imagen = bytes;
             }
 
             String idequipoaux = json["idequipoaux"].ToString();
             String marcaaux = json["marcaaux"].ToString();
             String modeloaux = json["modeloaux"].ToString();
             String serieaux = json["serieaux"].ToString();
+            String tieneequipoaux = json["equipoaux"].ToString();
 
 
             equipoauxiliar objeqaux = new equipoauxiliar();
-            
-            if(idequipoaux != ""){
-                objeqaux.idequipo = Int32.Parse(idequipoaux);
-            }
 
-            objeqaux.marca = marcaaux;
-            objeqaux.modelo = modeloaux;
-            objeqaux.noserie = serieaux;
+            if (tieneequipoaux.Equals("0"))
+            {
+                objeqaux.idequipo = -2;
+            }
+            else
+            {
+
+                if (idequipoaux != "")
+                {
+                    objeqaux.idequipo = Int32.Parse(idequipoaux);
+                }
+                else
+                {
+                    objeqaux.idequipo = -1;
+                }
+
+
+                objeqaux.marca = marcaaux;
+                objeqaux.modelo = modeloaux;
+                objeqaux.noserie = serieaux;
+            }
 
             JArray jefs = JArray.Parse(json["estadosfisicos"].ToString());
 
@@ -208,8 +226,27 @@ namespace WebIcomApi.Controllers
             objficha.marca = objmaquina.marca;
             objficha.modelo = objmaquina.modelo.ToString();
             objficha.serie = objmaquina.noserie;
-            objficha.idobraactual = objmaquina.idobra.ToString();
-            objficha.imagen = objmaquina.imagen;
+
+            obrasHelper obhelp = new obrasHelper();
+            obras ob = obhelp.getobrasById((int)objmaquina.idobra);
+            if (ob != null)
+            {
+                objficha.idobraactual = objmaquina.idobra.ToString();
+                objficha.obraactual = ob.nombre;
+            }
+            else {
+                objficha.idobraactual = "-1";
+                objficha.obraactual = "";
+            }
+
+            if (objmaquina.imagen.Length > 0)
+            {
+                objficha.imagen = Convert.ToBase64String(objmaquina.imagen);
+            }
+            else
+            {
+                objficha.imagen = "";
+            }
 
             EquipoAuxHelper eahelp = new EquipoAuxHelper();
 
@@ -220,6 +257,7 @@ namespace WebIcomApi.Controllers
 
                 if (objea == null)
                 {
+                    objficha.idequipoaux = -1;
                     objficha.equipoaux = 0;
                     objficha.marcaaux = "";
                     objficha.modelaux = "";
@@ -227,6 +265,7 @@ namespace WebIcomApi.Controllers
                 }
                 else
                 {
+                    objficha.idequipoaux = objea.idequipo;
                     objficha.equipoaux = 1;
                     objficha.marcaaux = objea.marca;
                     objficha.modelaux = objea.modelo.ToString();

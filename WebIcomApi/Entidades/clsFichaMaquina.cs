@@ -13,7 +13,9 @@ namespace WebIcomApi.Entidades
         public string modelo { get; set; }
         public string serie { get; set; }
         public string idobraactual { get; set; }
+        public string obraactual { get; set; }
         public string imagen { get; set; }
+        public int idequipoaux { get; set; }
         public int equipoaux { get; set; }
         public string  marcaaux { get; set; }
         public string modelaux { get; set; }

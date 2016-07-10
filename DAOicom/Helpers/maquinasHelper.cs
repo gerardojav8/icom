@@ -63,16 +63,31 @@ namespace DAOicom.Helpers
                 EquipoAuxHelper eahelp = new EquipoAuxHelper();
 
                 int idequipoinsert = -1;
-                if (objea.idequipo == 0)
+                if (objea.idequipo == -2)
                 {
-                   idequipoinsert = eahelp.insertequipoauxiliar(objea);
+                    idequipoinsert = -2;
                 }
                 else
                 {
-                    eahelp.updateequipoauxiliar(objea);
+                    if (objea.idequipo == -1)
+                    {
+                        idequipoinsert = eahelp.insertequipoauxiliar(objea);
+                    }
+                    else
+                    {
+                        eahelp.updateequipoauxiliar(objea);
+                        idequipoinsert = objea.idequipo;
+                    }
                 }
 
-                objmaq.idequipo = idequipoinsert;
+                if (idequipoinsert == -2)
+                {
+                    objmaq.idequipo = null;
+                }
+                else
+                {
+                    objmaq.idequipo = idequipoinsert;
+                }
 
                 db.SaveChanges();
 

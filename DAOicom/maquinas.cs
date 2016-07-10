@@ -17,9 +17,9 @@ namespace DAOicom
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public maquinas()
         {
+            this.mediciones = new HashSet<mediciones>();
             this.medicionesfiltros = new HashSet<medicionesfiltros>();
             this.reportes = new HashSet<reportes>();
-            this.mediciones = new HashSet<mediciones>();
         }
     
         public string noserie { get; set; }
@@ -28,19 +28,19 @@ namespace DAOicom
         public Nullable<int> modelo { get; set; }
         public Nullable<int> aniofabricacion { get; set; }
         public Nullable<int> idequipo { get; set; }
-        public string imagen { get; set; }
+        public byte[] imagen { get; set; }
         public Nullable<int> idtipomaquina { get; set; }
         public Nullable<int> idobra { get; set; }
         public string descripcion { get; set; }
     
+        public virtual equipoauxiliar equipoauxiliar { get; set; }
+        public virtual obras obras { get; set; }
+        public virtual tipomaquina tipomaquina { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<mediciones> mediciones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<medicionesfiltros> medicionesfiltros { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<reportes> reportes { get; set; }
-        public virtual tipomaquina tipomaquina { get; set; }
-        public virtual obras obras { get; set; }
-        public virtual equipoauxiliar equipoauxiliar { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<mediciones> mediciones { get; set; }
     }
 }

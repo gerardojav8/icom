@@ -30,7 +30,7 @@ namespace WebIcomApi.Entidades
                 this.idequipo = (Int32)obj.idequipo;
             }
 
-            this.imagen = obj.imagen;
+            this.imagen = "";
             this.idtipomaquina = (Int32)obj.idtipomaquina;
         }
     }
