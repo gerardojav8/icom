@@ -53,19 +53,31 @@
     <Compile Include="areasobra.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
+    <Compile Include="chat_eventos.cs">
+      <DependentUpon>ModelIcom.tt</DependentUpon>
+    </Compile>
+    <Compile Include="chat_general.cs">
+      <DependentUpon>ModelIcom.tt</DependentUpon>
+    </Compile>
     <Compile Include="componentes.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
     <Compile Include="equipoauxiliar.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
+    <Compile Include="eventosagenda.cs">
+      <DependentUpon>ModelIcom.tt</DependentUpon>
+    </Compile>
     <Compile Include="filtros.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\areasObraHelper.cs" />
+    <Compile Include="Helpers\chatEventosHelper.cs" />
+    <Compile Include="Helpers\chatGeneralHelper.cs" />
     <Compile Include="Helpers\componentesHelper.cs" />
     <Compile Include="Helpers\EquipoAuxHelper.cs" />
     <Compile Include="Helpers\EstadosFisicoHelper.cs" />
+    <Compile Include="Helpers\eventosAgendaHelper.cs" />
     <Compile Include="Helpers\filtrosHelper.cs" />
     <Compile Include="Helpers\maquinasHelper.cs" />
     <Compile Include="Helpers\medicionesFiltrosHelper.cs" />

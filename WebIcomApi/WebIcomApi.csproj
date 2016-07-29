@@ -131,7 +131,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Entidades\clsAgenda.cs" />
     <Compile Include="Controllers\commonController.cs" />
+    <Compile Include="Controllers\controldeobraController.cs" />
     <Compile Include="Controllers\maquinasController.cs" />
     <Compile Include="Controllers\obrasController.cs" />
     <Compile Include="Controllers\reportesController.cs" />
@@ -141,12 +143,15 @@
     <Compile Include="Entidades\clsEntidadFolio.cs" />
     <Compile Include="Entidades\clsError.cs" />
     <Compile Include="Entidades\clsEstadosFisicos.cs" />
+    <Compile Include="Entidades\clsEvento.cs" />
+    <Compile Include="Entidades\clsEventoAgenda.cs" />
     <Compile Include="Entidades\clsfechahora.cs" />
     <Compile Include="Entidades\clsFichaMaquina.cs" />
     <Compile Include="Entidades\clsFiltros.cs" />
     <Compile Include="Entidades\clsInsertaRep.cs" />
     <Compile Include="Entidades\clsListaMaquinas.cs" />
     <Compile Include="Entidades\clsMaquinas.cs" />
+    <Compile Include="Entidades\clsMensajeChat.cs" />
     <Compile Include="Entidades\clsObras.cs" />
     <Compile Include="Entidades\clsReporteOperador.cs" />
     <Compile Include="Entidades\clsTipoFallas.cs" />
