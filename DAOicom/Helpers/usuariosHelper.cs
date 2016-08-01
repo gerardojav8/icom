@@ -41,6 +41,24 @@ namespace DAOicom.Helpers
             }
         }
 
+        public List<usuarios> searchUsuario(String nombre)
+        {
+            var query = from u in db.usuarios
+                        where u.nombre.Contains(nombre) || u.apepaterno.Contains(nombre) || u.apematerno.Contains(nombre)
+                        select u;
+
+            if (query.Count() > 0)
+            {
+                List<usuarios> lstusuarios = new List<usuarios>();
+                lstusuarios.AddRange(query.ToList());
+                return lstusuarios;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public usuarios getUsuarioByID(int id)
         {
             var query = from u in db.usuarios

@@ -98,6 +98,42 @@ namespace WebIcomApi.Controllers
 
         }
 
+        [Authorize]
+        [HttpPost]
+        [Route("getUsuariosSearch")]
+        public Object getUsuariosSearch(JObject json)
+        {
+            usuariosHelper objushelp = new usuariosHelper();            
+            String nombre = json["nombre"].ToString();
+            
+
+            List<usuarios> lstusuarios = objushelp.searchUsuario(nombre);
+
+            if (lstusuarios.Count == 0)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No se han encontrado usuarios";
+                objerr.result = 0;
+                return objerr;
+            }
+            else
+            {
+                List<clsCmbUsuarios> lstcmbusuarios = new List<clsCmbUsuarios>();
+                foreach (usuarios us in lstusuarios)
+                {
+                    clsCmbUsuarios objcmbus = new clsCmbUsuarios();
+                    objcmbus.idusuario = us.idusuario;
+                    objcmbus.nombre = us.nombre;
+                    objcmbus.apepaterno = us.apepaterno;
+                    objcmbus.apematerno = us.apematerno;
+
+                    lstcmbusuarios.Add(objcmbus);
+                }
+                return lstcmbusuarios;
+            }
+
+        }
+
         
     }
 }

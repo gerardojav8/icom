@@ -35,9 +35,12 @@ namespace WebIcomApi.Controllers
             {
 
                 List<clsMensajeChat> lstmensajes = new List<clsMensajeChat>();
-                
+                usuariosHelper ushelp = new usuariosHelper();
+
                 foreach(chat_general cg in cglst){
+
                     clsMensajeChat obj = new clsMensajeChat();
+
                     obj.idmensaje = cg.idmensaje;
                     obj.idusuario = (int)cg.idusuario;
                     DateTime dtfecha = (DateTime)cg.fecha;
@@ -45,6 +48,19 @@ namespace WebIcomApi.Controllers
                     String hora = cg.hora.ToString();
                     obj.hora = hora;
                     obj.mensaje = cg.comentario;
+
+                    usuarios objus = ushelp.getUsuarioByID(obj.idusuario);
+
+                    if (objus != null)
+                    {
+                        obj.nombre = objus.nombre + " " + objus.apepaterno + " " + objus.apematerno;
+                        obj.iniciales = objus.nombre.Substring(0, 1) + objus.apepaterno.Substring(0, 1);
+                    }
+                    else {
+                        obj.nombre = "";
+                        obj.iniciales = "";
+                    }
+                    
                     lstmensajes.Add(obj);
                 }
 
