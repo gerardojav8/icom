@@ -18,6 +18,104 @@ namespace WebIcomApi.Controllers
     {
         [Authorize]
         [HttpPost]
+        [Route("GuardaMensajeconArchivo")]
+        public Object GuardaMensajeconArchivo(JObject json)
+        {
+            String strarchivo = json["archivo"].ToString();
+            String strmsg = json["mensaje"].ToString();
+            String stridusuario = json["idusuario"].ToString();
+
+
+            if (strarchivo.Equals(""))
+            {
+                clsError objerr = new clsError();
+                objerr.error = "Debe de enviar un archivo a guardar";
+                objerr.result = 0;
+                return objerr;
+            }
+
+            
+            try
+            {
+                var bytes = Convert.FromBase64String(strarchivo);
+                chatGeneralHelper cghelp = new chatGeneralHelper();
+                chat_general objchat = new chat_general();
+                objchat.archivo = bytes;
+                objchat.comentario = strmsg;
+                objchat.idusuario = Int32.Parse(stridusuario);
+
+                DateTime dtahora = DateTime.Now;
+                objchat.fecha = dtahora;
+                objchat.hora = dtahora.TimeOfDay;
+
+                long idmensaje = cghelp.insertChatGeneral(objchat);
+                if (idmensaje > -1)
+                {
+                    
+                    Dictionary<String, long> resp = new Dictionary<string, long>();
+                    resp.Add("idmensaje", idmensaje);
+                    return resp;
+                }
+                else
+                {
+                    clsError objerr = new clsError();
+                    objerr.error = "No se ha podido guardar el mensaje";
+                    objerr.result = 0;
+                    return objerr;
+
+                }
+            }
+            catch (Exception e)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "Error "+ e.ToString();
+                objerr.result = 0;
+                return objerr;
+            }
+
+            
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getArchivodeMensaje")]
+        public Object getArchivodeMensaje(JObject json)
+        {
+            String stridmensaje = json["idmensaje"].ToString();           
+           
+            try
+            {
+                chatGeneralHelper cghelp = new chatGeneralHelper();
+                chat_general objchat = cghelp.getchat_generalById(Int64.Parse(stridmensaje));
+                if (objchat == null)
+                {
+                    clsError objerr = new clsError();
+                    objerr.error = "No se ha encontrado el archivo";
+                    objerr.result = 0;
+                    return objerr;
+                }
+
+                String b64 = Convert.ToBase64String(objchat.archivo);
+                
+
+                Dictionary<String, String> resp = new Dictionary<string, string>();
+                resp.Add("archivo", b64);
+                return resp;
+                
+            }
+            catch (Exception e)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "Error " + e.ToString();
+                objerr.result = 0;
+                return objerr;
+            }
+
+
+        }
+
+        [Authorize]
+        [HttpPost]
         [Route("getMensajesChat")]
         public Object getMensajesChat()
         {
@@ -231,10 +329,12 @@ namespace WebIcomApi.Controllers
             {
 
                 List<clsMensajeChat> lstmensajes = new List<clsMensajeChat>();
+                usuariosHelper ushelp = new usuariosHelper();
 
                 foreach (chat_eventos ce in celst)
                 {
                     clsMensajeChat obj = new clsMensajeChat();
+
                     obj.idmensaje = ce.idmensaje;
                     obj.idusuario = (int)ce.idusuario;
                     DateTime dtfecha = (DateTime)ce.fecha;
@@ -242,6 +342,20 @@ namespace WebIcomApi.Controllers
                     String hora = ce.hora.ToString();
                     obj.hora = hora;
                     obj.mensaje = ce.comentario;
+
+                    usuarios objus = ushelp.getUsuarioByID(obj.idusuario);
+
+                    if (objus != null)
+                    {
+                        obj.nombre = objus.nombre + " " + objus.apepaterno + " " + objus.apematerno;
+                        obj.iniciales = objus.nombre.Substring(0, 1) + objus.apepaterno.Substring(0, 1);
+                    }
+                    else
+                    {
+                        obj.nombre = "";
+                        obj.iniciales = "";
+                    }
+                    
                     lstmensajes.Add(obj);
                 }
 

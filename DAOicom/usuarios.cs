@@ -22,8 +22,8 @@ namespace DAOicom
             this.reportes2 = new HashSet<reportes>();
             this.solicitudmaquinaria = new HashSet<solicitudmaquinaria>();
             this.eventosagenda = new HashSet<eventosagenda>();
-            this.chat_general = new HashSet<chat_general>();
             this.chat_eventos = new HashSet<chat_eventos>();
+            this.chat_general = new HashSet<chat_general>();
         }
     
         public int idusuario { get; set; }
@@ -49,8 +49,8 @@ namespace DAOicom
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<eventosagenda> eventosagenda { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<chat_general> chat_general { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<chat_eventos> chat_eventos { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<chat_general> chat_general { get; set; }
     }
 }

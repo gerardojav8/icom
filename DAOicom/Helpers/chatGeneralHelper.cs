@@ -10,10 +10,20 @@ namespace DAOicom.Helpers
     {
 
         private icomEntities db = new icomEntities();
-        public void insertChatGeneral(chat_general objchat_general)
+        public long insertChatGeneral(chat_general objchat_general)
         {
-            db.chat_general.Add(objchat_general);
-            db.SaveChanges();
+            try
+            {
+                db.chat_general.Add(objchat_general);
+                db.SaveChanges();
+                db.Entry(objchat_general).GetDatabaseValues();
+                return objchat_general.idmensaje;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return -1;
+            }
         }
 
         public List<chat_general> getTodaschat_general()
@@ -49,7 +59,7 @@ namespace DAOicom.Helpers
                 }
         }
 
-        public chat_general getchat_generalById(int id)
+        public chat_general getchat_generalById(long id)
         {
             var query = from t in db.chat_general
                         where t.idmensaje == id
@@ -77,8 +87,7 @@ namespace DAOicom.Helpers
             objcg.fecha = obj.fecha;
             objcg.hora = obj.hora;
             objcg.comentario = obj.comentario;
-            objcg.archivo = obj.archivo;
-            objcg.foto = obj.foto;
+            objcg.archivo = obj.archivo;            
 
             try
             {

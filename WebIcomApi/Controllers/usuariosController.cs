@@ -109,7 +109,7 @@ namespace WebIcomApi.Controllers
 
             List<usuarios> lstusuarios = objushelp.searchUsuario(nombre);
 
-            if (lstusuarios.Count == 0)
+            if (lstusuarios == null)
             {
                 clsError objerr = new clsError();
                 objerr.error = "No se han encontrado usuarios";

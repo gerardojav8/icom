@@ -44,7 +44,7 @@ namespace DAOicom
         public virtual DbSet<mediciones> mediciones { get; set; }
         public virtual DbSet<maquinas> maquinas { get; set; }
         public virtual DbSet<eventosagenda> eventosagenda { get; set; }
-        public virtual DbSet<chat_general> chat_general { get; set; }
         public virtual DbSet<chat_eventos> chat_eventos { get; set; }
+        public virtual DbSet<chat_general> chat_general { get; set; }
     }
 }

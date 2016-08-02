@@ -20,7 +20,6 @@ namespace DAOicom
         public Nullable<System.TimeSpan> hora { get; set; }
         public string comentario { get; set; }
         public byte[] archivo { get; set; }
-        public byte[] foto { get; set; }
     
         public virtual usuarios usuarios { get; set; }
     }
