@@ -158,6 +158,14 @@ namespace WebIcomApi.Controllers
                         obj.nombre = "";
                         obj.iniciales = "";
                     }
+
+                    if (cg.archivo != null)
+                    {
+                        obj.tieneArchivo = 1;
+                    }
+                    else {
+                        obj.tieneArchivo = 0;
+                    }
                     
                     lstmensajes.Add(obj);
                 }

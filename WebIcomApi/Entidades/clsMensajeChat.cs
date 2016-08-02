@@ -14,6 +14,7 @@ namespace WebIcomApi.Entidades
         public string mensaje { get; set; }
         public string nombre { get; set; }
         public string iniciales { get; set; }
+        public int tieneArchivo { get; set; }
         
     }
 }
