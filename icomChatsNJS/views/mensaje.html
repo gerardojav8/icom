@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../javascripts/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../javascripts/bootstrap/css/bootstrap-theme.min.css">
+    <title>Mensaje</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-sm-4">
+            <select id="cmbpersona" class=form-control>
+                <option value="Jhon Newman">Jhon Newman</option>
+                <option value="Michael Jackson">Michael Jackson</option>
+                <option value="Nicole Kidman">Nicole Kidman</option>
+                <option value="Brad Pitt">Brad Pitt</option>
+            </select>
+            <br />
+            <input id="m" autocomplete="off" /><button id="boton">enviar</button>
+        </div>        
+    </div>
+    <div class="row">
+        <ul id="messages"></ul>
+    </div>
+
+    <script src="../javascripts/jquery.min.js"></script>
+    <script src="../javascripts/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../javascripts/socket.io.js"></script>
+    <script>
+        var socket = io.connect();
+        $(document).ready(function () {
+            $('#boton').on('click', function () {
+                var datos = new Array();
+                datos.push($('#cmbpersona').val());
+                datos.push($('#m').val());
+                socket.emit('newMessage', datos);
+            });
+        });
+        socket.on('listenMessage', function (msg) {
+            $('#messages').append($($('<li>').text(msg)));
+        });
+    </script>
+</body>
+</html>
