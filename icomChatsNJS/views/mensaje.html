@@ -31,14 +31,27 @@
         var socket = io.connect();
         $(document).ready(function () {
             $('#boton').on('click', function () {
-                var datos = new Array();
+                /*var datos = new Array();
                 datos.push($('#cmbpersona').val());
-                datos.push($('#m').val());
+                datos.push($('#m').val());*/
+
+                var datos = '{'+
+                    '"idusuario": "5",'+
+                    '"mensaje": "'+ $('#m').val()+ '",'+
+					'"fecha": "",' +
+					'"hora": "",' +
+					'"filename": "",' +					
+                    '"idmensaje": "",' +
+                    '"nombre": "'+ $('#cmbpersona').val()+ '",' +
+					'"iniciales": "GG"' +
+                '}';
+
                 socket.emit('newMessage', datos);
             });
         });
-        socket.on('listenMessage', function (msg) {
-            $('#messages').append($($('<li>').text(msg)));
+        socket.on('listenMessage', function (data) {
+            
+            $('#messages').append($($('<li>').text(data.nombre + " dice: " +data.mensaje)));
         });
     </script>
 </body>
