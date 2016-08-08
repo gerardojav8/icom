@@ -60,6 +60,7 @@
     <Content Include="views\error.html" />
     <Content Include="views\index.html" />
     <Content Include="views\mensaje.html" />
+    <Content Include="views\mensajesevento.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />

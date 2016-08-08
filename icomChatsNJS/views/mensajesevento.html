@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../javascripts/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../javascripts/bootstrap/css/bootstrap-theme.min.css">
+    <title>Mensajes Evento</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-sm-4">
+            <select id="cmbpersona" class=form-control>
+                <option value="Jhon Newman">Jhon Newman</option>
+                <option value="Michael Jackson">Michael Jackson</option>
+                <option value="Nicole Kidman">Nicole Kidman</option>
+                <option value="Brad Pitt">Brad Pitt</option>
+            </select>
+            <br />
+            <input id="m" autocomplete="off" /><button id="boton">enviar</button>
+            <br/>
+            <button id="meteusuario">Mete a grupo</button>&nbsp;&nbsp;<button id="sacausuario">Saca de grupo</button>
+        </div>
+    </div>
+    <div class="row">
+        <ul id="messages"></ul>
+    </div>
+
+    <script src="../javascripts/jquery.min.js"></script>
+    <script src="../javascripts/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../javascripts/socket.io.js"></script>
+    <script>
+        var socket = io.connect();
+        $(document).ready(function () {
+            $('#boton').on('click', function () {                
+
+                var datos = '{'+
+                    '"idusuario": "5",'+
+                    '"mensaje": "'+ $('#m').val()+ '",'+
+					'"fecha": "",' +
+					'"hora": "",' +					
+                    '"idmensaje": "",' +
+                    '"nombre": "'+ $('#cmbpersona').val()+ '",' +
+					'"iniciales": "GG",' +
+                    '"idevento": "4"' +
+                '}';
+
+                socket.emit('newMessageEvento', datos);
+            });
+        });
+
+        socket.on('listenMessageEvento', function (data) {
+
+            $('#messages').append($($('<li>').text(data.nombre + " dice: " +data.mensaje)));
+        });
+
+        $("#meteusuario").on('click', function () {
+            var datos = '{' +
+                    '"idusuario": "3",' +
+                    '"idevento": "4"' +
+                    '}';
+
+            socket.emit('meteUsuarioaGrupo', datos);
+        });
+
+        $("#sacausuario").on('click', function () {
+            var datos = '{' +
+                    '"idusuario": "3",' +
+                    '"idevento": "4"' +
+                    '}';
+
+            socket.emit('sacaUsuariodeGrupo', datos);
+        });
+
+    </script>
+</body>
+</html>
