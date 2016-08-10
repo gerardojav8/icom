@@ -180,10 +180,12 @@ namespace WebIcomApi.Controllers
         [Authorize]
         [HttpPost]
         [Route("getListadoAgenda")]
-        public Object getListadoAgenda()
+        public Object getListadoAgenda(JObject json)
         {
+            String stridusuario = json["idusuario"].ToString();
+
             eventosAgendaHelper eahelp = new eventosAgendaHelper();
-            List<eventosagenda> lstea = eahelp.getEventosAnioActual();
+            List<eventosagenda> lstea = eahelp.getEventosAnioActualByIdUsuario(Int32.Parse(stridusuario));
 
             if (lstea == null)
             {
@@ -291,16 +293,43 @@ namespace WebIcomApi.Controllers
                 objearesp.mes = (int)objea.mes;
 
                 DateTime fechaini = (DateTime)objea.fechainicio;
-                String strfechaini = fechaini.Year + "-" + fechaini.Month + "-" + fechaini.Day;
+                String diaini = fechaini.Day.ToString();
+                if (diaini.Length == 1) {
+                    diaini = "0" + diaini;
+                }
+
+                String mesini = fechaini.Month.ToString();
+                if (mesini.Length == 1) {
+                    mesini = "0" + mesini;
+                }
+                
+                String strfechaini = fechaini.Year + "-" + mesini + "-" + diaini;
 
                 DateTime fechafin = (DateTime)objea.fechafin;
-                String strfechafin = fechafin.Year + "-" + fechafin.Month + "-" + fechafin.Day;
+                String diafin = fechafin.Day.ToString();
+                if (diafin.Length == 1)
+                {
+                    diafin = "0" + diafin;
+                }
+
+                String mesfin = fechafin.Month.ToString();
+                if (mesfin.Length == 1)
+                {
+                    mesfin = "0" + mesfin;
+                }
+
+                String strfechafin = fechafin.Year + "-" + mesfin + "-" + diafin;
 
                 String lapso = strfechaini + " " + objea.horaini.ToString() + " - " + strfechafin + " " + objea.horafin.ToString();
 
                 objearesp.lapso = lapso;
                 objearesp.titulo = objea.titulo;
                 objearesp.comentario = objea.comentario;
+                objearesp.fechaini = strfechaini;
+                objearesp.fechafin = strfechafin;
+                objearesp.horaini = objea.horaini.ToString();
+                objearesp.horafin = objea.horafin.ToString();
+
 
                 
                 List<Dictionary<String, String>> lstusuarios = new List<Dictionary<string, string>>();

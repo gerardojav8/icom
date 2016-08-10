@@ -46,20 +46,42 @@ namespace DAOicom.Helpers
             return lsteventosagenda;
         }
 
-        public List<eventosagenda> getEventosAnioActual()
+        public List<eventosagenda> getEventosAnioActualByIdUsuario(int idus)
         {
             DateTime dthoy = DateTime.Today;
             int anioact = dthoy.Year;
+            
+            usuarios us;
+            var queryus = from u in db.usuarios
+                        where u.idusuario == idus
+                        select u;
+
+            if (queryus.Count() > 0)
+            {
+                us = queryus.First();
+            }
+            else
+            {
+                return null;
+            }
+                                    
             var query = from ea in db.eventosagenda
-                        where ea.anio == anioact 
-                        orderby ea.fechainicio descending
+                        where ea.anio == anioact
+                        orderby ea.fechainicio ascending
                         select ea;
 
             if (query.Count() > 0)
             {
                 List<eventosagenda> lsteventosagenda = new List<eventosagenda>();
+                List<eventosagenda> lsteventosagendaresp = new List<eventosagenda>();
                 lsteventosagenda.AddRange(query.ToList());
-                return lsteventosagenda;
+                foreach (eventosagenda evento in lsteventosagenda)
+                {
+                    if (evento.usuarios.Contains(us)) {
+                        lsteventosagendaresp.Add(evento);
+                    }
+                }
+                return lsteventosagendaresp;
             }
             else {
                 return null;
