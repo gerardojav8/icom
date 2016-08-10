@@ -12,6 +12,10 @@ namespace WebIcomApi.Entidades
         public string titulo { get; set; }
         public string comentario { get; set; }
         public string lapso { get; set; }
+        public string fechaini { get; set; }
+        public string fechafin { get; set; }
+        public string horaini { get; set; }
+        public string horafin { get; set; }
         public List<Dictionary<String, String>> usuarios { get; set; }
     }
 }
