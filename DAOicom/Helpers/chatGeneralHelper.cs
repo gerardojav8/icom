@@ -87,7 +87,8 @@ namespace DAOicom.Helpers
             objcg.fecha = obj.fecha;
             objcg.hora = obj.hora;
             objcg.comentario = obj.comentario;
-            objcg.archivo = obj.archivo;            
+            objcg.archivo = obj.archivo;
+            objcg.nombrearchivo = obj.nombrearchivo;
 
             try
             {

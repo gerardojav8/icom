@@ -37,6 +37,7 @@
           <Property Name="hora" Type="time" Precision="7" />
           <Property Name="comentario" Type="varchar" MaxLength="255" />
           <Property Name="archivo" Type="varbinary(max)" />
+          <Property Name="nombrearchivo" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="componentes">
           <Key>
@@ -1330,6 +1331,7 @@
           <Property Name="hora" Type="Time" Precision="7" />
           <Property Name="comentario" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="archivo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="nombrearchivo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="usuarios" Relationship="icomModel.FK_chat_general_usuarios" FromRole="chat_general" ToRole="usuarios" />
         </EntityType>
         <Association Name="FK_chat_general_usuarios">
@@ -1593,6 +1595,7 @@
           <EntitySetMapping Name="chat_general">
             <EntityTypeMapping TypeName="icomModel.chat_general">
               <MappingFragment StoreEntitySet="chat_general">
+                <ScalarProperty Name="nombrearchivo" ColumnName="nombrearchivo" />
                 <ScalarProperty Name="archivo" ColumnName="archivo" />
                 <ScalarProperty Name="comentario" ColumnName="comentario" />
                 <ScalarProperty Name="hora" ColumnName="hora" />

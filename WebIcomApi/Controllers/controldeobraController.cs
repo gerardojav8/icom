@@ -24,6 +24,7 @@ namespace WebIcomApi.Controllers
             String strarchivo = json["archivo"].ToString();
             String strmsg = json["mensaje"].ToString();
             String stridusuario = json["idusuario"].ToString();
+            String nombrearchivo = json["nombre"].ToString();
 
 
             if (strarchivo.Equals(""))
@@ -43,6 +44,7 @@ namespace WebIcomApi.Controllers
                 objchat.archivo = bytes;
                 objchat.comentario = strmsg;
                 objchat.idusuario = Int32.Parse(stridusuario);
+                objchat.nombrearchivo = nombrearchivo;
 
                 DateTime dtahora = DateTime.Now;
                 objchat.fecha = dtahora;
@@ -100,6 +102,7 @@ namespace WebIcomApi.Controllers
 
                 Dictionary<String, String> resp = new Dictionary<string, string>();
                 resp.Add("archivo", b64);
+                resp.Add("nombre", objchat.nombrearchivo);
                 return resp;
                 
             }
