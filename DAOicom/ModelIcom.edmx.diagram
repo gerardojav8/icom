@@ -36,13 +36,6 @@
         <EntityTypeShape EntityType="icomModel.equipoauxiliar" Width="1.5" PointX="0.625" PointY="6.75" />
         <EntityTypeShape EntityType="icomModel.mediciones" Width="1.5" PointX="5.25" PointY="7.375" />
         <AssociationConnector Association="icomModel.FK_mediciones_componentes" />
-        <EntityTypeShape EntityType="icomModel.maquinas" Width="1.5" PointX="3.125" PointY="6.875" />
-        <AssociationConnector Association="icomModel.FK_maquinas_equipoauxiliar" />
-        <AssociationConnector Association="icomModel.FK_maquinas_obras" />
-        <AssociationConnector Association="icomModel.FK_maquinas_tipomaquina" />
-        <AssociationConnector Association="icomModel.FK_mediciones_maquinas" />
-        <AssociationConnector Association="icomModel.FK_medicionesfiltros_maquinas" />
-        <AssociationConnector Association="icomModel.FK_reportes_maquinas" />
         <EntityTypeShape EntityType="icomModel.eventosagenda" Width="1.5" PointX="7.625" PointY="18.125" />
         <AssociationConnector Association="icomModel.usuarios_evento" ManuallyRouted="false" >
         </AssociationConnector>
@@ -51,6 +44,13 @@
         <AssociationConnector Association="icomModel.FK_chat_eventos_usuarios" />
         <EntityTypeShape EntityType="icomModel.chat_general" Width="1.5" PointX="5.625" PointY="15.875" />
         <AssociationConnector Association="icomModel.FK_chat_general_usuarios" />
+        <EntityTypeShape EntityType="icomModel.maquinas" Width="1.5" PointX="2.625" PointY="6.75" />
+        <AssociationConnector Association="icomModel.FK_maquinas_equipoauxiliar" />
+        <AssociationConnector Association="icomModel.FK_maquinas_obras" />
+        <AssociationConnector Association="icomModel.FK_maquinas_tipomaquina" />
+        <AssociationConnector Association="icomModel.FK_mediciones_maquinas" />
+        <AssociationConnector Association="icomModel.FK_medicionesfiltros_maquinas" />
+        <AssociationConnector Association="icomModel.FK_reportes_maquinas" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

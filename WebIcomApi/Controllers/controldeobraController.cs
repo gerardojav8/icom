@@ -47,8 +47,10 @@ namespace WebIcomApi.Controllers
                 objchat.nombrearchivo = nombrearchivo;
 
                 DateTime dtahora = DateTime.Now;
+                dtahora = new DateTime(dtahora.Year, dtahora.Month, dtahora.Day, dtahora.Hour, dtahora.Minute, dtahora.Second, dtahora.Kind);
+
                 objchat.fecha = dtahora;
-                objchat.hora = dtahora.TimeOfDay;
+                objchat.hora =  dtahora.TimeOfDay;
 
                 long idmensaje = cghelp.insertChatGeneral(objchat);
                 if (idmensaje > -1)
@@ -164,10 +166,11 @@ namespace WebIcomApi.Controllers
 
                     if (cg.archivo != null)
                     {
-                        obj.tieneArchivo = 1;
+                        obj.nombrearchivo = cg.nombrearchivo;
+                        
                     }
                     else {
-                        obj.tieneArchivo = 0;
+                        obj.nombrearchivo = "";
                     }
                     
                     lstmensajes.Add(obj);

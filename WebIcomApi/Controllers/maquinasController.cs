@@ -387,6 +387,51 @@ namespace WebIcomApi.Controllers
 
         [Authorize]
         [HttpPost]
+        [Route("getListadoMaquinasBusqueda")]
+        public Object getListadoMaquinasBusqueda(JObject json)
+        {
+            String strbusqueda = json["busqueda"].ToString();
+
+            maquinasHelper maqhelp = new maquinasHelper();
+
+            List<maquinas> lstemaq = maqhelp.getMaquinasByBusqueda(strbusqueda);
+
+            if (lstemaq == null)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No se han encontrado maquinas";
+                objerr.result = 0;
+                return objerr;
+            }
+            else
+            {
+                if (lstemaq.Count() < 1)
+                {
+                    clsError objerr = new clsError();
+                    objerr.error = "No se han encontrado maquinas";
+                    objerr.result = 0;
+                    return objerr;
+                }
+                else
+                {
+                    reportesHelper objrephelp = new reportesHelper();
+                    List<clsListaMaquinas> lstmaq = new List<clsListaMaquinas>();
+                    foreach (maquinas item in lstemaq)
+                    {
+                        clsListaMaquinas objmaq = new clsListaMaquinas(item);
+                        objmaq.tieneReporte = objrephelp.tieneMaquinaReporte(objmaq.noserie);
+                        lstmaq.Add(objmaq);
+                    }
+
+
+                    return lstmaq;
+                }
+
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
         [Route("tieneReporte")]
         public Object tieneReporte(JObject json)
         {

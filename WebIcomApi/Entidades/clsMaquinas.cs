@@ -11,7 +11,7 @@ namespace WebIcomApi.Entidades
         public string noserie { get; set; }
         public int noeconomico { get; set; }
         public string marca { get; set; }
-        public int modelo { get; set; }
+        public string modelo { get; set; }
         public int aniofabricacion { get; set; }
         public int idequipo { get; set; }
         public String imagen { get; set; }
@@ -22,7 +22,7 @@ namespace WebIcomApi.Entidades
             this.noserie = obj.noserie;
             this.noeconomico = (Int32)obj.noeconomico;
             this.marca = obj.marca;
-            this.modelo = (Int32)obj.modelo;
+            this.modelo = obj.modelo;
             this.aniofabricacion = (Int32)obj.aniofabricacion;
             this.idequipo = -1;
             if (obj.idequipo != null)

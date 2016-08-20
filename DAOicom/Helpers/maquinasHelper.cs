@@ -15,6 +15,49 @@ namespace DAOicom.Helpers
             db.SaveChanges();
         }
 
+        public List<maquinas> getMaquinasByBusqueda(string busqueda)
+        {
+            int intbus;
+            try
+            {
+                intbus = Int32.Parse(busqueda);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                intbus = -1;
+            }
+
+            IOrderedQueryable<maquinas> query;
+
+            if (intbus >= 0)
+            {
+                query = from m in db.maquinas
+                            where m.noserie.Contains(busqueda) || m.noeconomico == intbus ||
+                                  m.marca.Contains(busqueda) || m.modelo.Contains(busqueda)
+                            orderby m.noserie
+                            select m;
+            }
+            else {
+                query = from m in db.maquinas
+                            where m.noserie.Contains(busqueda) ||
+                                  m.marca.Contains(busqueda) || m.modelo.Contains(busqueda)
+                            orderby m.noserie
+                            select m;
+            }
+
+            if (query.Count() > 0)
+            {
+                List<maquinas> lstmaq = new List<maquinas>();
+                lstmaq.AddRange(query.ToList());
+                return lstmaq;
+            }
+            else 
+            {
+                return null;            
+            }
+        }
+
         public List<maquinas> getTodasMaquinas()
         {
             var query = from m in db.maquinas

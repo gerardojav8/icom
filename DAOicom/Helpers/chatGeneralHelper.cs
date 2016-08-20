@@ -44,7 +44,7 @@ namespace DAOicom.Helpers
 
                 var query = from cg in db.chat_general
                             where cg.fecha >= dtAnterior
-                            orderby cg.fecha, cg.hora descending
+                            orderby cg.fecha, cg.hora ascending
                             select cg;
 
 

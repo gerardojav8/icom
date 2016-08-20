@@ -25,7 +25,7 @@ namespace DAOicom
         public string noserie { get; set; }
         public Nullable<int> noeconomico { get; set; }
         public string marca { get; set; }
-        public Nullable<int> modelo { get; set; }
+        public string modelo { get; set; }
         public Nullable<int> aniofabricacion { get; set; }
         public Nullable<int> idequipo { get; set; }
         public byte[] imagen { get; set; }
