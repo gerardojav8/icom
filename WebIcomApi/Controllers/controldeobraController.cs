@@ -9,6 +9,10 @@ using WebIcomApi.Entidades;
 using DAOicom.Helpers;
 using DAOicom;
 using Newtonsoft.Json.Linq;
+using System.Drawing;
+using System.IO;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 
 namespace WebIcomApi.Controllers
 {
@@ -16,6 +20,126 @@ namespace WebIcomApi.Controllers
     [RoutePrefix("controldeobras")]
     public class controldeobraController : ApiController
     {
+
+        [Authorize]
+        [HttpPost]
+        [Route("exportaGraficaPDF")]
+        public Object exportaGraficaPDF(JObject json)
+        {
+            String strimg64 = json["imagen"].ToString();
+            String idusuario = json["idusuario"].ToString();
+
+            Byte[] bytesimg;
+
+            if (strimg64.Equals(""))
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No se ha mandado la imagen de la grafica";
+                objerr.result = 0;
+                return objerr;
+            }
+
+            var bytes = Convert.FromBase64String(strimg64);
+            bytesimg = bytes;            
+
+            String pathpdf = "c:/pdfgrafica"+idusuario+".pdf";
+            if (!File.Exists(pathpdf))
+            {
+                File.Delete(pathpdf);
+            }
+
+            Document doc = new iTextSharp.text.Document(iTextSharp.text.PageSize.LETTER);
+            PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(pathpdf, FileMode.Create));
+            doc.Open();
+
+            iTextSharp.text.Image imgpdf = iTextSharp.text.Image.GetInstance(bytesimg);
+            imgpdf.BorderWidth = 0;
+            imgpdf.Alignment = Element.ALIGN_CENTER;
+            float perscala = 0.0f;
+            perscala = 300 / imgpdf.Width;
+            imgpdf.ScalePercent(perscala * 100);
+            doc.Add(imgpdf);
+
+            iTextSharp.text.Font _standardFont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 8, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
+
+            PdfPTable tblClasificaciones = new PdfPTable(3);
+            tblClasificaciones.WidthPercentage = 100;
+
+            // Configuramos el título de las columnas de la tabla
+            PdfPCell clColor = new PdfPCell(new Phrase("Color", _standardFont));
+            clColor.BorderWidth = 0;
+            clColor.BorderWidthBottom = 0.75f;
+
+            PdfPCell clClasificacion = new PdfPCell(new Phrase("Clasificacion", _standardFont));
+            clClasificacion.BorderWidth = 0;
+            clClasificacion.BorderWidthBottom = 0.75f;
+
+            PdfPCell clsHoras = new PdfPCell(new Phrase("Horas", _standardFont));
+            clsHoras.BorderWidth = 0;
+            clsHoras.BorderWidthBottom = 0.75f;
+
+            // Añadimos las celdas a la tabla
+            tblClasificaciones.AddCell(clColor);
+            tblClasificaciones.AddCell(clClasificacion);
+            tblClasificaciones.AddCell(clsHoras);
+
+
+            JArray jclasarr = JArray.Parse(json["clasificaciones"].ToString());            
+            foreach (var clas in jclasarr)
+            {
+                JObject jobj = (JObject)clas;
+                String strColor = jobj["color"].ToString();
+                String strClasificacion = jobj["clasificacion"].ToString();
+                String strHoras = jobj["horas"].ToString();
+
+                String[] arrcolor = strColor.Split(',');
+                int r = Int32.Parse(arrcolor[0]);
+                int g = Int32.Parse(arrcolor[1]);
+                int b = Int32.Parse(arrcolor[2]);
+
+                clColor = new PdfPCell(new Phrase("", _standardFont));
+                clColor.BackgroundColor = new BaseColor(Color.FromArgb(r, g, b));
+                clColor.BorderWidth = 0;
+
+                clClasificacion = new PdfPCell(new Phrase(strClasificacion, _standardFont));
+                clClasificacion.BorderWidth = 0;
+
+                clsHoras = new PdfPCell(new Phrase(strHoras, _standardFont));
+                clsHoras.BorderWidth = 0;
+                
+                tblClasificaciones.AddCell(clColor);
+                tblClasificaciones.AddCell(clClasificacion);
+                tblClasificaciones.AddCell(clsHoras);
+                                               
+            }
+
+            float[] columnWidths = new float[] { 5f, 30f, 30f };
+            tblClasificaciones.SetWidths(columnWidths);
+
+            doc.Add(tblClasificaciones);
+
+            doc.Close();
+
+            if (!File.Exists(pathpdf))
+            {
+                clsError objer = new clsError();
+                objer.error = "No se ha podido crear el pdf";
+                objer.result = 0;                
+                return objer;
+            }
+
+            Byte[] pdfbytes = File.ReadAllBytes(pathpdf);
+            String pdf64 = Convert.ToBase64String(pdfbytes);
+
+            Dictionary<String, String> resp = new Dictionary<string, string>();
+
+            resp.Add("pdf", pdf64);
+
+            File.Delete(pathpdf);
+
+            return resp;
+        }
+
         [Authorize]
         [HttpPost]
         [Route("GuardaMensajeconArchivo")]
