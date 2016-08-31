@@ -20,6 +20,151 @@ namespace WebIcomApi.Controllers
     [RoutePrefix("controldeobras")]
     public class controldeobraController : ApiController
     {
+        iTextSharp.text.Font _standardFont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 8, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
+        iTextSharp.text.Font _TitleFont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 15, iTextSharp.text.Font.BOLDITALIC, BaseColor.BLACK);
+
+        [Authorize]
+        [HttpPost]
+        [Route("exportaPDF")]
+        public Object exportaPDF(JObject json)
+        {
+            String strFechaini = json["fechaini"].ToString();
+            String strFechafin = json["fechafin"].ToString();
+            String idusuario = json["idusuario"].ToString();
+
+            //String pdf64 = Convert.ToBase64String(pdfbytes);
+
+            String pathpdf = "c:/pdf" + idusuario + ".pdf";
+            if (!File.Exists(pathpdf))
+            {
+                File.Delete(pathpdf);
+            }
+
+            Document doc = new iTextSharp.text.Document(iTextSharp.text.PageSize.LETTER);
+            PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(pathpdf, FileMode.Create));
+            doc.Open();
+
+            Paragraph titulo = new Paragraph("Reporte de Tareas de " + strFechaini + " a " + strFechafin, _TitleFont);
+            titulo.Alignment = Element.ALIGN_CENTER;
+
+            doc.Add(titulo);
+            doc.Add(new Paragraph("\n"));
+            PdfPTable tblReporte = new PdfPTable(6);
+            tblReporte.WidthPercentage = 100;
+
+            iTextSharp.text.Font _FechaFont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 11, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
+
+            PdfPCell clFecha = new PdfPCell(new Phrase("Fecha", _FechaFont));
+            clFecha.BorderWidth = 0;
+            clFecha.BorderWidthBottom = 0.75f;
+
+            PdfPCell clClasificacion = new PdfPCell(new Phrase("Clasificacion", _standardFont));
+            clClasificacion.BorderWidth = 0;
+            clClasificacion.BorderWidthBottom = 0.75f;
+
+            PdfPCell clInicio = new PdfPCell(new Phrase("Inicio", _standardFont));
+            clInicio.BorderWidth = 0;
+            clInicio.BorderWidthBottom = 0.75f;
+
+            PdfPCell clFin = new PdfPCell(new Phrase("Fin", _standardFont));
+            clFin.BorderWidth = 0;
+            clFin.BorderWidthBottom = 0.75f;
+
+            PdfPCell clHoras = new PdfPCell(new Phrase("Horas", _standardFont));
+            clHoras.BorderWidth = 0;
+            clHoras.BorderWidthBottom = 0.75f;
+
+            PdfPCell clPor = new PdfPCell(new Phrase("Porcentaje", _standardFont));
+            clPor.BorderWidth = 0;
+            clPor.BorderWidthBottom = 0.75f;
+            
+            tblReporte.AddCell(clFecha);
+            tblReporte.AddCell(clClasificacion);
+            tblReporte.AddCell(clInicio);
+            tblReporte.AddCell(clFin);
+            tblReporte.AddCell(clHoras);
+            tblReporte.AddCell(clPor);
+
+            clFecha = new PdfPCell(new Phrase("Evento 1", _standardFont));
+            clFecha.BorderWidth = 0;
+            clFecha.BorderWidthBottom = 0;
+
+            clClasificacion = new PdfPCell(new Phrase("Clasificacion 1", _standardFont));
+            clClasificacion.BorderWidth = 0;
+            clClasificacion.BorderWidthBottom = 0;
+
+            clInicio = new PdfPCell(new Phrase("2016-01-01 12:00:00", _standardFont));
+            clInicio.BorderWidth = 0;
+            clInicio.BorderWidthBottom = 0;
+
+            clFin = new PdfPCell(new Phrase("2016-01-01 12:00:00", _standardFont));
+            clFin.BorderWidth = 0;
+            clFin.BorderWidthBottom = 0;
+
+            clHoras = new PdfPCell(new Phrase("40", _standardFont));
+            clHoras.BorderWidth = 0;
+            clHoras.BorderWidthBottom = 0;
+
+            clPor = new PdfPCell(new Phrase("50", _standardFont));
+            clPor.BorderWidth = 0;
+            clPor.BorderWidthBottom = 0;
+
+            tblReporte.AddCell(clFecha);
+            tblReporte.AddCell(clClasificacion);
+            tblReporte.AddCell(clInicio);
+            tblReporte.AddCell(clFin);
+            tblReporte.AddCell(clHoras);
+            tblReporte.AddCell(clPor);
+
+            clFecha = new PdfPCell(new Phrase("Evento 2", _standardFont));
+            clFecha.BorderWidth = 0;
+            clFecha.BorderWidthBottom = 0;
+
+            clClasificacion = new PdfPCell(new Phrase("Clasificacion 2", _standardFont));
+            clClasificacion.BorderWidth = 0;
+            clClasificacion.BorderWidthBottom = 0;
+
+            clInicio = new PdfPCell(new Phrase("2016-01-01 12:00:00", _standardFont));
+            clInicio.BorderWidth = 0;
+            clInicio.BorderWidthBottom = 0;
+
+            clFin = new PdfPCell(new Phrase("2016-01-01 12:00:00", _standardFont));
+            clFin.BorderWidth = 0;
+            clFin.BorderWidthBottom = 0;
+
+            clHoras = new PdfPCell(new Phrase("40", _standardFont));
+            clHoras.BorderWidth = 0;
+            clHoras.BorderWidthBottom = 0;
+
+            clPor = new PdfPCell(new Phrase("50", _standardFont));
+            clPor.BorderWidth = 0;
+            clPor.BorderWidthBottom = 0;
+
+            tblReporte.AddCell(clFecha);
+            tblReporte.AddCell(clClasificacion);
+            tblReporte.AddCell(clInicio);
+            tblReporte.AddCell(clFin);
+            tblReporte.AddCell(clHoras);
+            tblReporte.AddCell(clPor);
+
+            float[] columnWidths = new float[] { 25f, 25f, 20f, 20f, 10f, 10f };
+            tblReporte.SetWidths(columnWidths);
+
+            doc.Add(tblReporte);
+
+            doc.Close();
+
+
+            Byte[] pdfbytes = File.ReadAllBytes(pathpdf);
+            String pdf64 = Convert.ToBase64String(pdfbytes);
+            Dictionary<String, String> resp = new Dictionary<string, string>();
+
+            resp.Add("pdf", pdf64);
+
+            //File.Delete(pathpdf);
+
+            return resp;
+        }
 
         [Authorize]
         [HttpPost]
@@ -60,7 +205,7 @@ namespace WebIcomApi.Controllers
             imgpdf.ScalePercent(perscala * 100);
             doc.Add(imgpdf);
 
-            iTextSharp.text.Font _standardFont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 8, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
+            
 
             PdfPTable tblClasificaciones = new PdfPTable(3);
             tblClasificaciones.WidthPercentage = 100;
@@ -132,9 +277,7 @@ namespace WebIcomApi.Controllers
             String pdf64 = Convert.ToBase64String(pdfbytes);
 
             Dictionary<String, String> resp = new Dictionary<string, string>();
-
             resp.Add("pdf", pdf64);
-
             File.Delete(pathpdf);
 
             return resp;
