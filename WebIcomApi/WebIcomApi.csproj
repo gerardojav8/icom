@@ -143,6 +143,7 @@
     <Compile Include="Controllers\reportesController.cs" />
     <Compile Include="Controllers\usuariosController.cs" />
     <Compile Include="Entidades\clsAreasobra.cs" />
+    <Compile Include="Entidades\clsCategoriasPlanificador.cs" />
     <Compile Include="Entidades\clsCmbUsuarios.cs" />
     <Compile Include="Entidades\clsEntidadFolio.cs" />
     <Compile Include="Entidades\clsError.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Entidades\clsMensajeChat.cs" />
     <Compile Include="Entidades\clsObras.cs" />
     <Compile Include="Entidades\clsReporteOperador.cs" />
+    <Compile Include="Entidades\clsTareaPlanificador.cs" />
     <Compile Include="Entidades\clsTipoFallas.cs" />
     <Compile Include="Entidades\clsTipoMnto.cs" />
     <Compile Include="Entidades\clsUsuarios.cs" />

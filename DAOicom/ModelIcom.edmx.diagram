@@ -51,7 +51,11 @@
         <AssociationConnector Association="icomModel.FK_mediciones_maquinas" />
         <AssociationConnector Association="icomModel.FK_medicionesfiltros_maquinas" />
         <AssociationConnector Association="icomModel.FK_reportes_maquinas" />
-      </Diagram>
+        <EntityTypeShape EntityType="icomModel.TareasPlanificador" Width="1.5" PointX="7.625" PointY="21.875" />
+        <EntityTypeShape EntityType="icomModel.categoriasPlanificador" Width="1.5" PointX="4.75" PointY="20.25" />
+        <AssociationConnector Association="icomModel.FK_categoriasPlanificador_usuarios" />
+        <AssociationConnector Association="icomModel.FK_TareasPlanificador_categoriasPlanificador" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

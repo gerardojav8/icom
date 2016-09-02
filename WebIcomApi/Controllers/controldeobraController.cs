@@ -32,135 +32,126 @@ namespace WebIcomApi.Controllers
             String strFechafin = json["fechafin"].ToString();
             String idusuario = json["idusuario"].ToString();
 
-            //String pdf64 = Convert.ToBase64String(pdfbytes);
+
+            DateTime dtFechain = DateTime.Parse(strFechaini);
+            DateTime dtFechafin = DateTime.Parse(strFechafin);
+
+            tareasPlanificadorHelper tphelp = new tareasPlanificadorHelper();  
+            categoriasPlanificadorHelper cphelp = new categoriasPlanificadorHelper();
+
+            List<clsTareaPlanificador> lstTareas = new List<clsTareaPlanificador>();
+            DateTime dtFechaAnalizada = dtFechain;
 
             String pathpdf = "c:/pdf" + idusuario + ".pdf";
-            if (!File.Exists(pathpdf))
-            {
-                File.Delete(pathpdf);
-            }
+            if (!File.Exists(pathpdf)){ File.Delete(pathpdf);}
 
             Document doc = new iTextSharp.text.Document(iTextSharp.text.PageSize.LETTER);
             PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(pathpdf, FileMode.Create));
             doc.Open();
+
+            iTextSharp.text.Font _FechaFont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 11, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
+            float[] columnWidths = new float[] { 25f, 25f, 20f, 20f, 10f, 10f };
 
             Paragraph titulo = new Paragraph("Reporte de Tareas de " + strFechaini + " a " + strFechafin, _TitleFont);
             titulo.Alignment = Element.ALIGN_CENTER;
 
             doc.Add(titulo);
             doc.Add(new Paragraph("\n"));
-            PdfPTable tblReporte = new PdfPTable(6);
-            tblReporte.WidthPercentage = 100;
 
-            iTextSharp.text.Font _FechaFont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 11, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
+            do
+            {
+                List<TareasPlanificador> lsttar = tphelp.getTodasTareasPlanificadorbyFecha(dtFechaAnalizada);
+                dtFechaAnalizada.AddDays(1);
 
-            PdfPCell clFecha = new PdfPCell(new Phrase("Fecha", _FechaFont));
-            clFecha.BorderWidth = 0;
-            clFecha.BorderWidthBottom = 0.75f;
+                if (lsttar == null)
+                {
+                    continue;
+                }
 
-            PdfPCell clClasificacion = new PdfPCell(new Phrase("Clasificacion", _standardFont));
-            clClasificacion.BorderWidth = 0;
-            clClasificacion.BorderWidthBottom = 0.75f;
+                PdfPTable tblReporte = new PdfPTable(6);
+                tblReporte.WidthPercentage = 100;
 
-            PdfPCell clInicio = new PdfPCell(new Phrase("Inicio", _standardFont));
-            clInicio.BorderWidth = 0;
-            clInicio.BorderWidthBottom = 0.75f;
+                PdfPCell clFecha = new PdfPCell(new Phrase(dtFechaAnalizada.ToString("yyyy-MM-dd"), _FechaFont));
+                clFecha.BorderWidth = 0;
+                clFecha.BorderWidthBottom = 0.75f;
 
-            PdfPCell clFin = new PdfPCell(new Phrase("Fin", _standardFont));
-            clFin.BorderWidth = 0;
-            clFin.BorderWidthBottom = 0.75f;
+                PdfPCell clClasificacion = new PdfPCell(new Phrase("Clasificacion", _standardFont));
+                clClasificacion.BorderWidth = 0;
+                clClasificacion.BorderWidthBottom = 0.75f;
 
-            PdfPCell clHoras = new PdfPCell(new Phrase("Horas", _standardFont));
-            clHoras.BorderWidth = 0;
-            clHoras.BorderWidthBottom = 0.75f;
+                PdfPCell clInicio = new PdfPCell(new Phrase("Inicio", _standardFont));
+                clInicio.BorderWidth = 0;
+                clInicio.BorderWidthBottom = 0.75f;
 
-            PdfPCell clPor = new PdfPCell(new Phrase("Porcentaje", _standardFont));
-            clPor.BorderWidth = 0;
-            clPor.BorderWidthBottom = 0.75f;
-            
-            tblReporte.AddCell(clFecha);
-            tblReporte.AddCell(clClasificacion);
-            tblReporte.AddCell(clInicio);
-            tblReporte.AddCell(clFin);
-            tblReporte.AddCell(clHoras);
-            tblReporte.AddCell(clPor);
+                PdfPCell clFin = new PdfPCell(new Phrase("Fin", _standardFont));
+                clFin.BorderWidth = 0;
+                clFin.BorderWidthBottom = 0.75f;
 
-            clFecha = new PdfPCell(new Phrase("Evento 1", _standardFont));
-            clFecha.BorderWidth = 0;
-            clFecha.BorderWidthBottom = 0;
+                PdfPCell clHoras = new PdfPCell(new Phrase("Horas", _standardFont));
+                clHoras.BorderWidth = 0;
+                clHoras.BorderWidthBottom = 0.75f;
 
-            clClasificacion = new PdfPCell(new Phrase("Clasificacion 1", _standardFont));
-            clClasificacion.BorderWidth = 0;
-            clClasificacion.BorderWidthBottom = 0;
+                PdfPCell clPor = new PdfPCell(new Phrase("Porcentaje", _standardFont));
+                clPor.BorderWidth = 0;
+                clPor.BorderWidthBottom = 0.75f;
 
-            clInicio = new PdfPCell(new Phrase("2016-01-01 12:00:00", _standardFont));
-            clInicio.BorderWidth = 0;
-            clInicio.BorderWidthBottom = 0;
+                tblReporte.AddCell(clFecha);
+                tblReporte.AddCell(clClasificacion);
+                tblReporte.AddCell(clInicio);
+                tblReporte.AddCell(clFin);
+                tblReporte.AddCell(clHoras);
+                tblReporte.AddCell(clPor);
 
-            clFin = new PdfPCell(new Phrase("2016-01-01 12:00:00", _standardFont));
-            clFin.BorderWidth = 0;
-            clFin.BorderWidthBottom = 0;
+                foreach (TareasPlanificador tar in lsttar) {
+                    clFecha = new PdfPCell(new Phrase(tar.titulo, _standardFont));
+                    clFecha.BorderWidth = 0;
+                    clFecha.BorderWidthBottom = 0;
 
-            clHoras = new PdfPCell(new Phrase("40", _standardFont));
-            clHoras.BorderWidth = 0;
-            clHoras.BorderWidthBottom = 0;
+                    clClasificacion = new PdfPCell(new Phrase(tar.categoriasPlanificador.nombre, _standardFont));
+                    clClasificacion.BorderWidth = 0;
+                    clClasificacion.BorderWidthBottom = 0;
+                    DateTime dtini = (DateTime)tar.fechainicio;
+                    String strInicio = dtini.Year + "-" + dtini.Month + "-" + dtini.Day + " " + tar.horainicio.ToString();
+                    clInicio = new PdfPCell(new Phrase(strInicio, _standardFont));
+                    clInicio.BorderWidth = 0;
+                    clInicio.BorderWidthBottom = 0;
 
-            clPor = new PdfPCell(new Phrase("50", _standardFont));
-            clPor.BorderWidth = 0;
-            clPor.BorderWidthBottom = 0;
+                    DateTime dtfin = (DateTime)tar.fechafin;
+                    String strFin = dtfin.Year + "-" + dtfin.Month + "-" + dtfin.Day + " " + tar.horafin.ToString();
+                    clFin = new PdfPCell(new Phrase(strFin, _standardFont));
+                    clFin.BorderWidth = 0;
+                    clFin.BorderWidthBottom = 0;
 
-            tblReporte.AddCell(clFecha);
-            tblReporte.AddCell(clClasificacion);
-            tblReporte.AddCell(clInicio);
-            tblReporte.AddCell(clFin);
-            tblReporte.AddCell(clHoras);
-            tblReporte.AddCell(clPor);
+                    clHoras = new PdfPCell(new Phrase(tar.horas.ToString(), _standardFont));
+                    clHoras.BorderWidth = 0;
+                    clHoras.BorderWidthBottom = 0;
 
-            clFecha = new PdfPCell(new Phrase("Evento 2", _standardFont));
-            clFecha.BorderWidth = 0;
-            clFecha.BorderWidthBottom = 0;
+                    clPor = new PdfPCell(new Phrase(tar.porcentaje.ToString(), _standardFont));
+                    clPor.BorderWidth = 0;
+                    clPor.BorderWidthBottom = 0;
 
-            clClasificacion = new PdfPCell(new Phrase("Clasificacion 2", _standardFont));
-            clClasificacion.BorderWidth = 0;
-            clClasificacion.BorderWidthBottom = 0;
-
-            clInicio = new PdfPCell(new Phrase("2016-01-01 12:00:00", _standardFont));
-            clInicio.BorderWidth = 0;
-            clInicio.BorderWidthBottom = 0;
-
-            clFin = new PdfPCell(new Phrase("2016-01-01 12:00:00", _standardFont));
-            clFin.BorderWidth = 0;
-            clFin.BorderWidthBottom = 0;
-
-            clHoras = new PdfPCell(new Phrase("40", _standardFont));
-            clHoras.BorderWidth = 0;
-            clHoras.BorderWidthBottom = 0;
-
-            clPor = new PdfPCell(new Phrase("50", _standardFont));
-            clPor.BorderWidth = 0;
-            clPor.BorderWidthBottom = 0;
-
-            tblReporte.AddCell(clFecha);
-            tblReporte.AddCell(clClasificacion);
-            tblReporte.AddCell(clInicio);
-            tblReporte.AddCell(clFin);
-            tblReporte.AddCell(clHoras);
-            tblReporte.AddCell(clPor);
-
-            float[] columnWidths = new float[] { 25f, 25f, 20f, 20f, 10f, 10f };
-            tblReporte.SetWidths(columnWidths);
-
-            doc.Add(tblReporte);
-
+                    tblReporte.AddCell(clFecha);
+                    tblReporte.AddCell(clClasificacion);
+                    tblReporte.AddCell(clInicio);
+                    tblReporte.AddCell(clFin);
+                    tblReporte.AddCell(clHoras);
+                    tblReporte.AddCell(clPor);
+                }
+                
+                tblReporte.SetWidths(columnWidths);
+                doc.Add(tblReporte);
+                doc.Add(new Paragraph("\n"));
+                doc.Add(new Paragraph("\n"));
+                               
+            } while (dtFechaAnalizada <= dtFechafin);
+                                              
             doc.Close();
-
 
             Byte[] pdfbytes = File.ReadAllBytes(pathpdf);
             String pdf64 = Convert.ToBase64String(pdfbytes);
             Dictionary<String, String> resp = new Dictionary<string, string>();
 
             resp.Add("pdf", pdf64);
-
             //File.Delete(pathpdf);
 
             return resp;

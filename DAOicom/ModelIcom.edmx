@@ -15,6 +15,17 @@
           <Property Name="latitud" Type="decimal" Precision="14" Scale="7" />
           <Property Name="longitud" Type="decimal" Precision="14" Scale="7" />
         </EntityType>
+        <EntityType Name="categoriasPlanificador">
+          <Key>
+            <PropertyRef Name="idcategoria" />
+          </Key>
+          <Property Name="idcategoria" Type="bigint" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="100" />
+          <Property Name="comentario" Type="varchar" MaxLength="255" />
+          <Property Name="fecha" Type="date" />
+          <Property Name="hora" Type="time" Precision="7" />
+          <Property Name="idusuario" Type="int" />
+        </EntityType>
         <EntityType Name="chat_eventos">
           <Key>
             <PropertyRef Name="idevento" />
@@ -195,6 +206,22 @@
           <Property Name="nombre" Type="varchar" MaxLength="50" />
           <Property Name="descripcion" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="TareasPlanificador">
+          <Key>
+            <PropertyRef Name="idtarea" />
+          </Key>
+          <Property Name="idtarea" Type="bigint" Nullable="false" />
+          <Property Name="idcategoria" Type="bigint" />
+          <Property Name="titulo" Type="varchar" MaxLength="200" />
+          <Property Name="todoDia" Type="tinyint" />
+          <Property Name="fechainicio" Type="date" />
+          <Property Name="horainicio" Type="time" Precision="7" />
+          <Property Name="fechafin" Type="date" />
+          <Property Name="horafin" Type="time" Precision="7" />
+          <Property Name="porcentaje" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="horas" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="notas" Type="varchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="tipofallas">
           <Key>
             <PropertyRef Name="idtipofalla" />
@@ -242,6 +269,18 @@
           <Property Name="idevento" Type="bigint" Nullable="false" />
           <Property Name="idusuario" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_categoriasPlanificador_usuarios">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="0..1" />
+          <End Role="categoriasPlanificador" Type="Self.categoriasPlanificador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="idusuario" />
+            </Principal>
+            <Dependent Role="categoriasPlanificador">
+              <PropertyRef Name="idusuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_chat_eventos_eventosagenda">
           <End Role="eventosagenda" Type="Self.eventosagenda" Multiplicity="1" />
           <End Role="chat_eventos" Type="Self.chat_eventos" Multiplicity="*" />
@@ -506,6 +545,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TareasPlanificador_categoriasPlanificador">
+          <End Role="categoriasPlanificador" Type="Self.categoriasPlanificador" Multiplicity="0..1" />
+          <End Role="TareasPlanificador" Type="Self.TareasPlanificador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categoriasPlanificador">
+              <PropertyRef Name="idcategoria" />
+            </Principal>
+            <Dependent Role="TareasPlanificador">
+              <PropertyRef Name="idcategoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_usuarios_evento_eventosagenda">
           <End Role="eventosagenda" Type="Self.eventosagenda" Multiplicity="1" />
           <End Role="usuarios_evento" Type="Self.usuarios_evento" Multiplicity="*" />
@@ -544,6 +595,7 @@
         </Association>
         <EntityContainer Name="icomModelStoreContainer">
           <EntitySet Name="areasobra" EntityType="Self.areasobra" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="categoriasPlanificador" EntityType="Self.categoriasPlanificador" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="chat_eventos" EntityType="Self.chat_eventos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="chat_general" EntityType="Self.chat_general" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="componentes" EntityType="Self.componentes" Schema="dbo" store:Type="Tables" />
@@ -560,11 +612,16 @@
           <EntitySet Name="requerimientos_solicitudes" EntityType="Self.requerimientos_solicitudes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="solicitudmaquinaria" EntityType="Self.solicitudmaquinaria" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="statusreporte" EntityType="Self.statusreporte" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TareasPlanificador" EntityType="Self.TareasPlanificador" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipofallas" EntityType="Self.tipofallas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipomantenimientos" EntityType="Self.tipomantenimientos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipomaquina" EntityType="Self.tipomaquina" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="usuarios" EntityType="Self.usuarios" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="usuarios_evento" EntityType="Self.usuarios_evento" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_categoriasPlanificador_usuarios" Association="Self.FK_categoriasPlanificador_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="categoriasPlanificador" EntitySet="categoriasPlanificador" />
+          </AssociationSet>
           <AssociationSet Name="FK_chat_eventos_eventosagenda" Association="Self.FK_chat_eventos_eventosagenda">
             <End Role="eventosagenda" EntitySet="eventosagenda" />
             <End Role="chat_eventos" EntitySet="chat_eventos" />
@@ -652,6 +709,10 @@
           <AssociationSet Name="FK_solicitudmaquinaria_usuarios" Association="Self.FK_solicitudmaquinaria_usuarios">
             <End Role="usuarios" EntitySet="usuarios" />
             <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TareasPlanificador_categoriasPlanificador" Association="Self.FK_TareasPlanificador_categoriasPlanificador">
+            <End Role="categoriasPlanificador" EntitySet="categoriasPlanificador" />
+            <End Role="TareasPlanificador" EntitySet="TareasPlanificador" />
           </AssociationSet>
           <AssociationSet Name="FK_usuarios_evento_eventosagenda" Association="Self.FK_usuarios_evento_eventosagenda">
             <End Role="eventosagenda" EntitySet="eventosagenda" />
@@ -788,6 +849,7 @@
           <NavigationProperty Name="eventosagenda" Relationship="icomModel.usuarios_evento" FromRole="usuarios" ToRole="eventosagenda" />
           <NavigationProperty Name="chat_eventos" Relationship="icomModel.FK_chat_eventos_usuarios" FromRole="usuarios" ToRole="chat_eventos" />
           <NavigationProperty Name="chat_general" Relationship="icomModel.FK_chat_general_usuarios" FromRole="usuarios" ToRole="chat_general" />
+          <NavigationProperty Name="categoriasPlanificador" Relationship="icomModel.FK_categoriasPlanificador_usuarios" FromRole="usuarios" ToRole="categoriasPlanificador" />
         </EntityType>
         <Association Name="FK_medicionesfiltros_filtros">
           <End Role="filtros" Type="Self.filtros" Multiplicity="1" />
@@ -1002,6 +1064,16 @@
           <AssociationSet Name="FK_reportes_maquinas" Association="icomModel.FK_reportes_maquinas">
             <End Role="maquinas" EntitySet="maquinas" />
             <End Role="reportes" EntitySet="reportes" />
+          </AssociationSet>
+          <EntitySet Name="TareasPlanificador" EntityType="icomModel.TareasPlanificador" />
+          <EntitySet Name="categoriasPlanificador" EntityType="icomModel.categoriasPlanificador" />
+          <AssociationSet Name="FK_categoriasPlanificador_usuarios" Association="icomModel.FK_categoriasPlanificador_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="categoriasPlanificador" EntitySet="categoriasPlanificador" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TareasPlanificador_categoriasPlanificador" Association="icomModel.FK_TareasPlanificador_categoriasPlanificador">
+            <End Role="categoriasPlanificador" EntitySet="categoriasPlanificador" />
+            <End Role="TareasPlanificador" EntitySet="TareasPlanificador" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="tipomaquina">
@@ -1346,6 +1418,60 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TareasPlanificador">
+          <Key>
+            <PropertyRef Name="idtarea" />
+          </Key>
+          <Property Name="idtarea" Type="Int64" Nullable="false" />
+          <Property Name="idcategoria" Type="Int64" />
+          <Property Name="titulo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="todoDia" Type="Byte" />
+          <Property Name="fechainicio" Type="DateTime" Precision="0" />
+          <Property Name="horainicio" Type="Time" Precision="7" />
+          <Property Name="fechafin" Type="DateTime" Precision="0" />
+          <Property Name="horafin" Type="Time" Precision="7" />
+          <Property Name="porcentaje" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="horas" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="notas" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="categoriasPlanificador" Relationship="icomModel.FK_TareasPlanificador_categoriasPlanificador" FromRole="TareasPlanificador" ToRole="categoriasPlanificador" />
+        </EntityType>
+        <EntityType Name="categoriasPlanificador">
+          <Key>
+            <PropertyRef Name="idcategoria" />
+          </Key>
+          <Property Name="idcategoria" Type="Int64" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="comentario" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="fecha" Type="DateTime" Precision="0" />
+          <Property Name="hora" Type="Time" Precision="7" />
+          <Property Name="idusuario" Type="Int32" />
+          <NavigationProperty Name="usuarios" Relationship="icomModel.FK_categoriasPlanificador_usuarios" FromRole="categoriasPlanificador" ToRole="usuarios" />
+          <NavigationProperty Name="TareasPlanificador" Relationship="icomModel.FK_TareasPlanificador_categoriasPlanificador" FromRole="categoriasPlanificador" ToRole="TareasPlanificador" />
+        </EntityType>
+        <Association Name="FK_categoriasPlanificador_usuarios">
+          <End Type="icomModel.usuarios" Role="usuarios" Multiplicity="0..1" />
+          <End Type="icomModel.categoriasPlanificador" Role="categoriasPlanificador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="idusuario" />
+            </Principal>
+            <Dependent Role="categoriasPlanificador">
+              <PropertyRef Name="idusuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TareasPlanificador_categoriasPlanificador">
+          <End Type="icomModel.categoriasPlanificador" Role="categoriasPlanificador" Multiplicity="0..1" />
+          <End Type="icomModel.TareasPlanificador" Role="TareasPlanificador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categoriasPlanificador">
+              <PropertyRef Name="idcategoria" />
+            </Principal>
+            <Dependent Role="TareasPlanificador">
+              <PropertyRef Name="idcategoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1602,6 +1728,35 @@
                 <ScalarProperty Name="marca" ColumnName="marca" />
                 <ScalarProperty Name="noeconomico" ColumnName="noeconomico" />
                 <ScalarProperty Name="noserie" ColumnName="noserie" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TareasPlanificador">
+            <EntityTypeMapping TypeName="icomModel.TareasPlanificador">
+              <MappingFragment StoreEntitySet="TareasPlanificador">
+                <ScalarProperty Name="notas" ColumnName="notas" />
+                <ScalarProperty Name="horas" ColumnName="horas" />
+                <ScalarProperty Name="porcentaje" ColumnName="porcentaje" />
+                <ScalarProperty Name="horafin" ColumnName="horafin" />
+                <ScalarProperty Name="fechafin" ColumnName="fechafin" />
+                <ScalarProperty Name="horainicio" ColumnName="horainicio" />
+                <ScalarProperty Name="fechainicio" ColumnName="fechainicio" />
+                <ScalarProperty Name="todoDia" ColumnName="todoDia" />
+                <ScalarProperty Name="titulo" ColumnName="titulo" />
+                <ScalarProperty Name="idcategoria" ColumnName="idcategoria" />
+                <ScalarProperty Name="idtarea" ColumnName="idtarea" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="categoriasPlanificador">
+            <EntityTypeMapping TypeName="icomModel.categoriasPlanificador">
+              <MappingFragment StoreEntitySet="categoriasPlanificador">
+                <ScalarProperty Name="idusuario" ColumnName="idusuario" />
+                <ScalarProperty Name="hora" ColumnName="hora" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="comentario" ColumnName="comentario" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="idcategoria" ColumnName="idcategoria" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

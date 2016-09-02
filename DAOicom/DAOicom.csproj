@@ -53,6 +53,9 @@
     <Compile Include="areasobra.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
+    <Compile Include="categoriasPlanificador.cs">
+      <DependentUpon>ModelIcom.tt</DependentUpon>
+    </Compile>
     <Compile Include="chat_eventos.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
@@ -72,6 +75,7 @@
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\areasObraHelper.cs" />
+    <Compile Include="Helpers\categoriasPlanificadorHelper.cs" />
     <Compile Include="Helpers\chatEventosHelper.cs" />
     <Compile Include="Helpers\chatGeneralHelper.cs" />
     <Compile Include="Helpers\componentesHelper.cs" />
@@ -86,6 +90,7 @@
     <Compile Include="Helpers\reportesHelper.cs" />
     <Compile Include="Helpers\requerimientosSolicitudesHelper.cs" />
     <Compile Include="Helpers\solicitudMaquinariaHelper.cs" />
+    <Compile Include="Helpers\tareasPlanificadorHelper.cs" />
     <Compile Include="Helpers\tipoFallasHelper.cs" />
     <Compile Include="Helpers\tiposMntoHelper.cs" />
     <Compile Include="Helpers\usuariosHelper.cs" />
@@ -133,6 +138,9 @@
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
     <Compile Include="statusreporte.cs">
+      <DependentUpon>ModelIcom.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TareasPlanificador.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
     <Compile Include="tipofallas.cs">
