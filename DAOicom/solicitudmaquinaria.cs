@@ -21,15 +21,15 @@ namespace DAOicom
         }
     
         public int folio { get; set; }
+        public Nullable<int> idobra { get; set; }
         public Nullable<System.DateTime> fecha { get; set; }
         public Nullable<System.TimeSpan> time { get; set; }
         public Nullable<System.DateTime> requeridopara { get; set; }
-        public Nullable<int> idareaobra { get; set; }
         public Nullable<int> idresponsable { get; set; }
     
-        public virtual areasobra areasobra { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<requerimientos_solicitudes> requerimientos_solicitudes { get; set; }
         public virtual usuarios usuarios { get; set; }
+        public virtual obras obras { get; set; }
     }
 }

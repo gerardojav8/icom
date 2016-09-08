@@ -36,10 +36,7 @@ namespace DAOicom
         public virtual DbSet<usuarios> usuarios { get; set; }
         public virtual DbSet<tipomaquina> tipomaquina { get; set; }
         public virtual DbSet<statusreporte> statusreporte { get; set; }
-        public virtual DbSet<areasobra> areasobra { get; set; }
-        public virtual DbSet<obras> obras { get; set; }
         public virtual DbSet<requerimientos_solicitudes> requerimientos_solicitudes { get; set; }
-        public virtual DbSet<solicitudmaquinaria> solicitudmaquinaria { get; set; }
         public virtual DbSet<equipoauxiliar> equipoauxiliar { get; set; }
         public virtual DbSet<mediciones> mediciones { get; set; }
         public virtual DbSet<eventosagenda> eventosagenda { get; set; }
@@ -48,5 +45,7 @@ namespace DAOicom
         public virtual DbSet<maquinas> maquinas { get; set; }
         public virtual DbSet<TareasPlanificador> TareasPlanificador { get; set; }
         public virtual DbSet<categoriasPlanificador> categoriasPlanificador { get; set; }
+        public virtual DbSet<solicitudmaquinaria> solicitudmaquinaria { get; set; }
+        public virtual DbSet<obras> obras { get; set; }
     }
 }

@@ -7,10 +7,10 @@ namespace WebIcomApi.Entidades
 {
     public class clsCategoriasPlanificador
     {
-        public int idcategoria { get; set; }
+        public String idcategoria { get; set; }
         public String nombre { get; set; }
         public String comentario { get; set; }
-        public DateTime fechahora { get; set; }        
+        public String fechahora { get; set; }        
         public int idusuario { get; set; }
 
     }

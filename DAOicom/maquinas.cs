@@ -34,7 +34,6 @@ namespace DAOicom
         public string descripcion { get; set; }
     
         public virtual equipoauxiliar equipoauxiliar { get; set; }
-        public virtual obras obras { get; set; }
         public virtual tipomaquina tipomaquina { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<mediciones> mediciones { get; set; }
@@ -42,5 +41,6 @@ namespace DAOicom
         public virtual ICollection<medicionesfiltros> medicionesfiltros { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<reportes> reportes { get; set; }
+        public virtual obras obras { get; set; }
     }
 }

@@ -160,6 +160,7 @@
     <Compile Include="Entidades\clsObras.cs" />
     <Compile Include="Entidades\clsReporteOperador.cs" />
     <Compile Include="Entidades\clsTareaPlanificador.cs" />
+    <Compile Include="Entidades\clsTareasPlanificadorListado.cs" />
     <Compile Include="Entidades\clsTipoFallas.cs" />
     <Compile Include="Entidades\clsTipoMnto.cs" />
     <Compile Include="Entidades\clsUsuarios.cs" />

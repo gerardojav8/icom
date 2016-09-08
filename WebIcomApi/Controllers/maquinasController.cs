@@ -458,7 +458,7 @@ namespace WebIcomApi.Controllers
             solicitudmaquinaria objsm = new solicitudmaquinaria();
                         
             String requeridopara = json["requeridopara"].ToString();
-            String idareaobra = json["idareaobra"].ToString();
+            String idobra = json["idobra"].ToString();
             String idresponsable = json["idresponsable"].ToString();
             
             DateTime dtrequeridopara = DateTime.ParseExact( requeridopara, "yyyy-MM-dd", System.Globalization.CultureInfo.InstalledUICulture);
@@ -467,7 +467,7 @@ namespace WebIcomApi.Controllers
             objsm.fecha = DateTime.Now;
             objsm.time = DateTime.Now.TimeOfDay;
             objsm.requeridopara = dtrequeridopara;
-            objsm.idareaobra = Int32.Parse(idareaobra);
+            objsm.idobra = Int32.Parse(idobra);
             objsm.idresponsable = Int32.Parse(idresponsable);
 
 

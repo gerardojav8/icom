@@ -6,7 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="9c73e928682043dfaaf192a1d3ba172d" Name="Diagram1">
         <EntityTypeShape EntityType="icomModel.componentes" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="icomModel.filtros" Width="1.5" PointX="6" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="icomModel.filtros" Width="1.5" PointX="9.75" PointY="10.875" IsExpanded="true" />
         <EntityTypeShape EntityType="icomModel.medicionesfiltros" Width="1.5" PointX="8.25" PointY="7.5" IsExpanded="true" />
         <EntityTypeShape EntityType="icomModel.puestos" Width="1.5" PointX="0.75" PointY="15.25" IsExpanded="true" />
         <EntityTypeShape EntityType="icomModel.refacciones_reporte" Width="1.5" PointX="7.5" PointY="2.75" IsExpanded="true" />
@@ -25,14 +25,7 @@
         <EntityTypeShape EntityType="icomModel.tipomaquina" Width="1.5" PointX="0.75" PointY="4.25" />
         <EntityTypeShape EntityType="icomModel.statusreporte" Width="1.5" PointX="10.375" PointY="0.875" />
         <AssociationConnector Association="icomModel.FK_reportes_statusreporte" />
-        <EntityTypeShape EntityType="icomModel.areasobra" Width="1.5" PointX="0.75" PointY="10.375" />
-        <EntityTypeShape EntityType="icomModel.obras" Width="1.5" PointX="8.25" PointY="10.5" />
         <EntityTypeShape EntityType="icomModel.requerimientos_solicitudes" Width="1.5" PointX="10" PointY="15.125" />
-        <EntityTypeShape EntityType="icomModel.solicitudmaquinaria" Width="1.5" PointX="7.75" PointY="14.875" />
-        <AssociationConnector Association="icomModel.FK_obras_areasobra" />
-        <AssociationConnector Association="icomModel.FK_solicitudmaquinaria_areasobra" />
-        <AssociationConnector Association="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria" />
-        <AssociationConnector Association="icomModel.FK_solicitudmaquinaria_usuarios" />
         <EntityTypeShape EntityType="icomModel.equipoauxiliar" Width="1.5" PointX="0.625" PointY="6.75" />
         <EntityTypeShape EntityType="icomModel.mediciones" Width="1.5" PointX="5.25" PointY="7.375" />
         <AssociationConnector Association="icomModel.FK_mediciones_componentes" />
@@ -46,15 +39,21 @@
         <AssociationConnector Association="icomModel.FK_chat_general_usuarios" />
         <EntityTypeShape EntityType="icomModel.maquinas" Width="1.5" PointX="2.625" PointY="6.75" />
         <AssociationConnector Association="icomModel.FK_maquinas_equipoauxiliar" />
-        <AssociationConnector Association="icomModel.FK_maquinas_obras" />
         <AssociationConnector Association="icomModel.FK_maquinas_tipomaquina" />
         <AssociationConnector Association="icomModel.FK_mediciones_maquinas" />
         <AssociationConnector Association="icomModel.FK_medicionesfiltros_maquinas" />
         <AssociationConnector Association="icomModel.FK_reportes_maquinas" />
         <EntityTypeShape EntityType="icomModel.TareasPlanificador" Width="1.5" PointX="7.625" PointY="21.875" />
-        <EntityTypeShape EntityType="icomModel.categoriasPlanificador" Width="1.5" PointX="4.75" PointY="20.25" />
+        <EntityTypeShape EntityType="icomModel.categoriasPlanificador" Width="1.5" PointX="5.125" PointY="19.75" />
         <AssociationConnector Association="icomModel.FK_categoriasPlanificador_usuarios" />
         <AssociationConnector Association="icomModel.FK_TareasPlanificador_categoriasPlanificador" />
+        <EntityTypeShape EntityType="icomModel.solicitudmaquinaria" Width="1.5" PointX="7.75" PointY="13.625" />
+        <AssociationConnector Association="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria" />
+        <AssociationConnector Association="icomModel.FK_solicitudmaquinaria_usuarios" />
+        <EntityTypeShape EntityType="icomModel.obras" Width="1.5" PointX="7.75" PointY="10.25" />
+        <AssociationConnector Association="icomModel.FK_categoriasPlanificador_obras" />
+        <AssociationConnector Association="icomModel.FK_maquinas_obras" />
+        <AssociationConnector Association="icomModel.FK_solicitudmaquinaria_obras" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

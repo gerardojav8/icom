@@ -43,6 +43,21 @@ namespace DAOicom.Helpers
             }
         }
 
+        public int getNoTareasByIdCategoria(long idcategoria)
+        {
+            var query = from t in db.TareasPlanificador where t.idcategoria == idcategoria select t;
+
+
+            if (query == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return query.Count();
+            }
+        }
+
         public TareasPlanificador getTareasPlanificadorById(int id)
         {
             var query = from t in db.TareasPlanificador

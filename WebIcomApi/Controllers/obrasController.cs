@@ -15,40 +15,7 @@ namespace WebIcomApi.Controllers
     [RoutePrefix("obras")]
     public class obrasController : ApiController
     {
-
-        [Authorize]
-        [HttpPost]
-        [Route("getAreasObras")]
-        public Object getAreaObras()
-        {
-            areasObraHelper objaohelp = new areasObraHelper();
-            List<areasobra> lstareasobras = objaohelp.getTodasAreasObra();
-
-            if (lstareasobras.Count == 0)
-            {
-                clsError objerr = new clsError();
-                objerr.error = "No se han Encontrado Areas de Obras";
-                objerr.result = 0;
-                return objerr;
-            }
-            else
-            {
-                List<clsAreasobra> lst = new List<clsAreasobra>();
-                foreach (areasobra a in lstareasobras)
-                {
-                    clsAreasobra objareaobra = new clsAreasobra();
-                    objareaobra.idareaobra = a.idareaobra;
-                    objareaobra.nombre = a.nombre;
-                    objareaobra.descripcion = a.descripcion;
-                    objareaobra.latitud = (Decimal)a.latitud;
-                    objareaobra.longitud = (Decimal)a.longitud;
-                    lst.Add(objareaobra);
-                }
-
-                return lst;
-            }
-        }
-
+       
         [Authorize]
         [HttpPost]
         [Route("getObras")]
@@ -72,8 +39,7 @@ namespace WebIcomApi.Controllers
                     clsObras objobra = new clsObras();
                     objobra.idobra = a.idobra;
                     objobra.nombre = a.nombre;
-                    objobra.descripcion = a.descripcion;
-                    objobra.idareaobra = (Int32)a.idareaobra;
+                    objobra.descripcion = a.descripcion;                    
                     lst.Add(objobra);
                 }
 

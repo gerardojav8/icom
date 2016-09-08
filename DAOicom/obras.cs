@@ -17,16 +17,20 @@ namespace DAOicom
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public obras()
         {
+            this.categoriasPlanificador = new HashSet<categoriasPlanificador>();
             this.maquinas = new HashSet<maquinas>();
+            this.solicitudmaquinaria = new HashSet<solicitudmaquinaria>();
         }
     
         public int idobra { get; set; }
         public string nombre { get; set; }
         public string descripcion { get; set; }
-        public Nullable<int> idareaobra { get; set; }
     
-        public virtual areasobra areasobra { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<categoriasPlanificador> categoriasPlanificador { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<maquinas> maquinas { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<solicitudmaquinaria> solicitudmaquinaria { get; set; }
     }
 }

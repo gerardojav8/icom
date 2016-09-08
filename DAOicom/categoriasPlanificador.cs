@@ -26,9 +26,11 @@ namespace DAOicom
         public Nullable<System.DateTime> fecha { get; set; }
         public Nullable<System.TimeSpan> hora { get; set; }
         public Nullable<int> idusuario { get; set; }
+        public Nullable<int> idobra { get; set; }
     
         public virtual usuarios usuarios { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TareasPlanificador> TareasPlanificador { get; set; }
+        public virtual obras obras { get; set; }
     }
 }

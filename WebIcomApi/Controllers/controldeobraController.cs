@@ -276,6 +276,503 @@ namespace WebIcomApi.Controllers
 
         [Authorize]
         [HttpPost]
+        [Route("getCategoriasListado")]
+        public Object getCategoriasListado()
+        {
+            try
+            {                
+                categoriasPlanificadorHelper cathelp = new categoriasPlanificadorHelper();
+                tareasPlanificadorHelper thelp = new tareasPlanificadorHelper();
+
+
+                List<categoriasPlanificador> lstcat = cathelp.getTodascategoriasPlanificador();
+                List<Dictionary<String, String>> categorias = new List<Dictionary<string, string>>();
+
+                if (lstcat.Count == 0)
+                {
+                    clsError objer = new clsError();
+                    objer.error = "No se encontraron categorias";
+                    objer.result = 0;
+                    return objer;
+                }
+
+                foreach (categoriasPlanificador cat in lstcat)
+                {
+                    Dictionary<String, String> respcat = new Dictionary<string, string>();
+                    respcat.Add("idcategoria", cat.idcategoria.ToString());
+                    respcat.Add("nombre", cat.nombre);
+                    int notar = thelp.getNoTareasByIdCategoria(cat.idcategoria);
+                    respcat.Add("notareas", notar.ToString());
+                    double porcentaje_categoria = cathelp.getPorcentajeCategoria(cat.idcategoria);
+                    respcat.Add("porcentaje", porcentaje_categoria.ToString());
+                    categorias.Add(respcat);
+                }
+
+                Dictionary<String, List<Dictionary<String, String>>> resp = new Dictionary<string, List<Dictionary<string, string>>>();
+                resp.Add("categorias", categorias);
+
+                return resp;
+            }
+            catch (Exception e)
+            {
+                clsError objer = new clsError();
+                objer.error = "Error al traer las categorias actuales " + e.ToString();
+                objer.result = -1;
+                return objer;
+            }
+
+
+
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("BuscarCategorias")]
+        public Object BuscarCategorias(JObject json)
+        {
+            try
+            {
+                String strBusqueda = json["strBusqueda"].ToString();
+
+                categoriasPlanificadorHelper cathelp = new categoriasPlanificadorHelper();
+                tareasPlanificadorHelper thelp = new tareasPlanificadorHelper();
+
+
+                List<categoriasPlanificador> lstcat = cathelp.getCategoriasBySearch(strBusqueda);
+                List<Dictionary<String, String>> categorias = new List<Dictionary<string, string>>();
+
+                if (lstcat.Count == 0)
+                {
+                    clsError objer = new clsError();
+                    objer.error = "No se encontraron categorias";
+                    objer.result = 0;
+                    return objer;
+                }
+
+                foreach (categoriasPlanificador cat in lstcat)
+                {
+                    Dictionary<String, String> respcat = new Dictionary<string, string>();
+                    respcat.Add("idcategoria", cat.idcategoria.ToString());
+                    respcat.Add("nombre", cat.nombre);
+                    int notar = thelp.getNoTareasByIdCategoria(cat.idcategoria);
+                    respcat.Add("notareas", notar.ToString());
+                    double porcentaje_categoria = cathelp.getPorcentajeCategoria(cat.idcategoria);
+                    respcat.Add("porcentaje", porcentaje_categoria.ToString());
+                    categorias.Add(respcat);
+                }
+
+                Dictionary<String, List<Dictionary<String, String>>> resp = new Dictionary<string, List<Dictionary<string, string>>>();
+                resp.Add("categorias", categorias);
+
+                return resp;
+            }
+            catch (Exception e)
+            {
+                clsError objer = new clsError();
+                objer.error = "Error al traer las categorias actuales " + e.ToString();
+                objer.result = -1;
+                return objer;
+            }
+
+
+
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getObrasListado")]
+        public Object getObrasListado()
+        {
+            try
+            {
+                obrasHelper obhelper = new obrasHelper();
+                categoriasPlanificadorHelper cathelp = new categoriasPlanificadorHelper();
+
+
+                List<obras> lstob = obhelper.getTodasobras();
+                List<Dictionary<String, String>> obras = new List<Dictionary<string, string>>();
+                
+                if (lstob.Count == 0)
+                {
+                    clsError objer = new clsError();
+                    objer.error = "No se encontraron obras";
+                    objer.result = 0;
+                    return objer;
+                }
+
+                foreach (obras ob in lstob)
+                {
+                    Dictionary<String, String> respob = new Dictionary<string, string>();
+                    respob.Add("idobra", ob.idobra.ToString());
+                    respob.Add("nombre", ob.nombre);
+                    int nocat = cathelp.getNoCategoriasByObra(ob.idobra);
+                    respob.Add("noclasificaciones", nocat.ToString());
+                    double porcentaje_obra = obhelper.getPorcentajeObra(ob.idobra);
+                    respob.Add("porcentaje", porcentaje_obra.ToString());
+                    obras.Add(respob);
+                }
+
+                Dictionary<String, List<Dictionary<String, String>>> resp = new Dictionary<string, List<Dictionary<string, string>>>();
+                resp.Add("obras", obras);
+
+                return resp;
+            }
+            catch (Exception e) {
+                clsError objer = new clsError();
+                objer.error = "Error al traer las obras actuales " + e.ToString();
+                objer.result = -1;
+                return objer;
+            }
+            
+
+            
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("BuscaObras")]
+        public Object BuscaObras(JObject json)
+        {
+            try
+            {
+                String strBusqueda = json["strBusqueda"].ToString();
+
+
+                obrasHelper obhelper = new obrasHelper();
+                categoriasPlanificadorHelper cathelp = new categoriasPlanificadorHelper();
+
+
+                List<obras> lstob = obhelper.getObrasBySearch(strBusqueda);
+                List<Dictionary<String, String>> obras = new List<Dictionary<string, string>>();
+
+                if (lstob.Count == 0) {
+                    clsError objer = new clsError();
+                    objer.error = "No se encontraron obras";
+                    objer.result = 0;
+                    return objer;
+                }
+
+                foreach (obras ob in lstob)
+                {
+                    Dictionary<String, String> respob = new Dictionary<string, string>();
+                    respob.Add("idobra", ob.idobra.ToString());
+                    respob.Add("nombre", ob.nombre);
+                    int nocat = cathelp.getNoCategoriasByObra(ob.idobra);
+                    respob.Add("noclasificaciones", nocat.ToString());
+                    double porcentaje_obra = obhelper.getPorcentajeObra(ob.idobra);
+                    respob.Add("porcentaje", porcentaje_obra.ToString());
+                    obras.Add(respob);
+                }
+
+                Dictionary<String, List<Dictionary<String, String>>> resp = new Dictionary<string, List<Dictionary<string, string>>>();
+                resp.Add("obras", obras);
+
+                return resp;
+            }
+            catch (Exception e)
+            {
+                clsError objer = new clsError();
+                objer.error = "Error al traer las obras actuales " + e.ToString();
+                objer.result = -1;
+                return objer;
+            }
+
+
+
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getObraById")]
+        public Object getObraById(JObject json)
+        {
+            try
+            {
+                String idobra = json["idobra"].ToString();
+                obrasHelper ohelp = new obrasHelper();
+
+                obras ob = ohelp.getobrasById(Int32.Parse(idobra));
+
+                if (ob != null)
+                {
+                    clsObras objobra = new clsObras();
+                    objobra.idobra = ob.idobra;
+                    objobra.nombre = ob.nombre;
+                    objobra.descripcion = ob.descripcion;
+
+                    return objobra;
+                }
+                else
+                {
+                    clsError objer = new clsError();
+                    objer.error = "No se encontro la obra requerida";
+                    objer.result = 0;
+                    return objer;
+                }
+            }
+            catch (Exception e) {
+                clsError objex = new clsError();
+                objex.error = "Error al traer las obras actuales " + e.ToString();
+                objex.result = 0;
+                return objex;
+            }
+
+            
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getCategoriaById")]
+        public Object getObraById(JObject json)
+        {
+            try
+            {
+                String idcategoria = json["idcategoria"].ToString();
+                categoriasPlanificadorHelper cathelp = new categoriasPlanificadorHelper();
+
+                categoriasPlanificador cat = cathelp.getcategoriasPlanificadorById(Int32.Parse(idcategoria));
+
+                if (cat != null)
+                {
+                    clsCategoriasPlanificador objcat = new clsCategoriasPlanificador();
+                    objcat.idcategoria = cat.idcategoria.ToString();
+                    objcat.nombre = cat.nombre;
+                    objcat.comentario = cat.comentario;
+                    DateTime fech = (DateTime) cat.fecha;
+                    objcat.fechahora = fech.Year + "-" + fech.Month + "-" + fech.Day + " " + cat.hora.ToString();
+                    objcat.idusuario = (int)cat.idusuario;
+
+                    return objcat;
+                }
+                else
+                {
+                    clsError objer = new clsError();
+                    objer.error = "No se encontro la categoria requerida";
+                    objer.result = 0;
+                    return objer;
+                }
+            }
+            catch (Exception e)
+            {
+                clsError objex = new clsError();
+                objex.error = "Error al traer los datos de la categoria " + e.ToString();
+                objex.result = 0;
+                return objex;
+            }
+
+
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("NuevaObra")]
+        public Object NuevaObra(JObject json)
+        {
+            try
+            {
+
+                String nombre = json["nombre"].ToString();
+                String descripcion = json["descripcion"].ToString();
+
+                obrasHelper obHelp = new obrasHelper();
+                obras ob = new obras();
+                ob.nombre = nombre;
+                ob.descripcion = descripcion;
+                obHelp.insertObra(ob);
+
+                clsError objer = new clsError();
+                objer.error = "Se ha insertado la obra";
+                objer.result = 1;
+                return objer;
+            }
+            catch (Exception e)
+            {
+                clsError objex = new clsError();
+                objex.error = "Error al traer las obras actuales " + e.ToString();
+                objex.result = 0;
+                return objex;
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("NuevaCategoria")]
+        public Object NuevaCategoria(JObject json)
+        {
+            try
+            {
+
+                String nombre = json["nombre"].ToString();
+                String comentarios = json["comentarios"].ToString();
+                String idobra = json["idobra"].ToString();
+                String idusuario = json["idusuario"].ToString();
+
+                categoriasPlanificadorHelper catHelp = new categoriasPlanificadorHelper();
+                categoriasPlanificador cat = new categoriasPlanificador();
+                cat.nombre = nombre;
+                cat.comentario = comentarios;
+                cat.idobra = Int32.Parse(idobra);
+                cat.idusuario = Int32.Parse(idusuario);
+                catHelp.insertcategoriasPlanificador(cat);
+
+                clsError objer = new clsError();
+                objer.error = "Se ha insertado la categoria";
+                objer.result = 1;
+                return objer;
+            }
+            catch (Exception e)
+            {
+                clsError objex = new clsError();
+                objex.error = "Error insertar la categoria " + e.ToString();
+                objex.result = 0;
+                return objex;
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("ModificaCategoria")]
+        public Object ModificaCategoria(JObject json)
+        {
+            try
+            {
+
+                String nombre = json["nombre"].ToString();
+                String comentarios = json["comentarios"].ToString();
+                String idcategoria = json["idcategoria"].ToString();
+                String idusuario = json["idusuario"].ToString();
+
+                categoriasPlanificadorHelper catHelp = new categoriasPlanificadorHelper();
+                categoriasPlanificador cat = new categoriasPlanificador();
+                cat.nombre = nombre;
+                cat.comentario = comentarios;
+                cat.idcategoria = Int32.Parse(idcategoria);
+                cat.idusuario = Int32.Parse(idusuario);
+                catHelp.updatecategoriasPlanificador(cat);
+
+                clsError objer = new clsError();
+                objer.error = "Se ha modificado la categoria";
+                objer.result = 1;
+                return objer;
+            }
+            catch (Exception e)
+            {
+                clsError objex = new clsError();
+                objex.error = "Error al modificar la categoria " + e.ToString();
+                objex.result = 0;
+                return objex;
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("ModificaObra")]
+        public Object ModificaObra(JObject json)
+        {
+            try
+            {
+                String idobra = json["idobra"].ToString();
+                String nombre = json["nombre"].ToString();
+                String descripcion = json["descripcion"].ToString();
+
+                obrasHelper obHelp = new obrasHelper();
+                obras ob = new obras();
+                ob.idobra = Int32.Parse(idobra);
+                ob.nombre = nombre;
+                ob.descripcion = descripcion;
+                String resp = obHelp.updateobras(ob);
+
+                if (!resp.Equals("")) {
+                    clsError objer = new clsError();
+                    objer.error = "Error al actualizar los datos " + resp;
+                    objer.result = 0;
+                    return objer;
+                }
+
+                clsError objresp = new clsError();
+                objresp.error = "Se ha insertado la obra";
+                objresp.result = 1;
+                return objresp;
+            }
+            catch (Exception e)
+            {
+                clsError objex = new clsError();
+                objex.error = "Error al traer las obras actuales " + e.ToString();
+                objex.result = 0;
+                return objex;
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("EliminarCategoria")]
+        public Object EliminarCategoria(JObject json)
+        {
+            try
+            {
+                String idcategoria = json["idcategoria"].ToString();
+
+                categoriasPlanificadorHelper catHelp = new categoriasPlanificadorHelper();
+                String resp = catHelp.deleteCategoria(Int64.Parse(idcategoria));
+
+                if (!resp.Equals(""))
+                {
+                    clsError objer = new clsError();
+                    objer.error = "Error al borrar los datos " + resp;
+                    objer.result = 0;
+                    return objer;
+                }
+
+                clsError objresp = new clsError();
+                objresp.error = "Se ha eliminado la categoria";
+                objresp.result = 1;
+                return objresp;
+            }
+            catch (Exception e)
+            {
+                clsError objex = new clsError();
+                objex.error = "Error al tratar de eliminar la categoria " + e.ToString();
+                objex.result = 0;
+                return objex;
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("EliminarObra")]
+        public Object EliminarObra(JObject json)
+        {
+            try
+            {
+                String idobra = json["idobra"].ToString();               
+
+                obrasHelper obHelp = new obrasHelper();                               
+                String resp = obHelp.deleteObra(Int32.Parse(idobra));
+
+                if (!resp.Equals(""))
+                {
+                    clsError objer = new clsError();
+                    objer.error = "Error al borrar los datos " + resp;
+                    objer.result = 0;
+                    return objer;
+                }
+
+                clsError objresp = new clsError();
+                objresp.error = "Se ha eliminado la obra";
+                objresp.result = 1;
+                return objresp;
+            }
+            catch (Exception e)
+            {
+                clsError objex = new clsError();
+                objex.error = "Error al tratar de eliminar las obras actuales " + e.ToString();
+                objex.result = 0;
+                return objex;
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
         [Route("GuardaMensajeconArchivo")]
         public Object GuardaMensajeconArchivo(JObject json)
         {

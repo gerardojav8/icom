@@ -50,9 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="areasobra.cs">
-      <DependentUpon>ModelIcom.tt</DependentUpon>
-    </Compile>
     <Compile Include="categoriasPlanificador.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
@@ -74,7 +71,6 @@
     <Compile Include="filtros.cs">
       <DependentUpon>ModelIcom.tt</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\areasObraHelper.cs" />
     <Compile Include="Helpers\categoriasPlanificadorHelper.cs" />
     <Compile Include="Helpers\chatEventosHelper.cs" />
     <Compile Include="Helpers\chatGeneralHelper.cs" />

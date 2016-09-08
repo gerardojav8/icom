@@ -128,7 +128,7 @@ namespace DAOicom.Helpers
             objsm.fecha = obj.fecha;
             objsm.time = obj.time;
             objsm.requeridopara = obj.requeridopara;
-            objsm.idareaobra = obj.idareaobra;
+            objsm.idobra = obj.idobra;
             objsm.idresponsable = obj.idresponsable;
 
             try
