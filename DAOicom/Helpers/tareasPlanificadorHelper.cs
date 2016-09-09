@@ -25,6 +25,17 @@ namespace DAOicom.Helpers
             return lstTareasPlanificador;
         }
 
+        public List<TareasPlanificador> getTareasPlanificadorByIdCategoria(long idcategoria)
+        {
+            var query = from tf in db.TareasPlanificador
+                        where tf.idcategoria == idcategoria
+                        select tf;
+
+            List<TareasPlanificador> lstTareasPlanificador = new List<TareasPlanificador>();
+            lstTareasPlanificador.AddRange(query.ToList());
+            return lstTareasPlanificador;
+        }
+
         public List<TareasPlanificador> getTodasTareasPlanificadorbyFecha(DateTime fecha)
         {
             var query = from tf in db.TareasPlanificador
@@ -80,8 +91,7 @@ namespace DAOicom.Helpers
             TareasPlanificador objtf = (from t in db.TareasPlanificador
                              where t.idtarea == obj.idtarea
                              select t).FirstOrDefault();
-
-            objtf.idcategoria = obj.idcategoria;
+            
             objtf.titulo = obj.titulo;
             objtf.todoDia = obj.todoDia;
             objtf.fechainicio = obj.fechainicio;
@@ -102,6 +112,30 @@ namespace DAOicom.Helpers
                 return e.ToString();
             }
 
+        }
+        public string deleteTarea(long idtarea)
+        {
+            var query = from a in db.TareasPlanificador
+                        where a.idtarea == idtarea
+                        select a;
+
+            if (query.Count() > 0)
+            {
+                try
+                {
+                    db.TareasPlanificador.Remove(query.First());
+                    db.SaveChanges();
+                    return "";
+
+                }catch (Exception e)
+                {
+                    return e.ToString();
+                }
+            }
+            else
+            {
+                return "no se ha encontrado el registro a eliminar";
+            }
         }
     }
 }

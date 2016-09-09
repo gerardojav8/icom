@@ -327,6 +327,65 @@ namespace WebIcomApi.Controllers
 
         [Authorize]
         [HttpPost]
+        [Route("getTareasPlanificadorByIdCategoria")]
+        public Object getTareasPlanificadorByIdCategoria(JObject json)
+        {
+            try
+            {
+                String idcategoria = json["idcategoria"].ToString();                
+                tareasPlanificadorHelper thelp = new tareasPlanificadorHelper();
+
+
+                List<TareasPlanificador> lsttar = thelp.getTareasPlanificadorByIdCategoria(Int64.Parse(idcategoria));
+                List<Dictionary<String, String>> tareas = new List<Dictionary<string, string>>();
+
+                if (lsttar.Count == 0)
+                {
+                    clsError objer = new clsError();
+                    objer.error = "No se encontraron tareas";
+                    objer.result = 0;
+                    return objer;
+                }
+
+                foreach (TareasPlanificador tar in lsttar)
+                {
+                    Dictionary<String, String> resptar = new Dictionary<string, string>();
+
+                    resptar.Add("titulo", tar.titulo);
+                    DateTime dtinicio = (DateTime) tar.fechainicio;
+                    DateTime dtfin = (DateTime) tar.fechafin;
+
+                    String strInicio = dtinicio.Year + "-" + dtinicio.Month + "-" + dtinicio.Day + " " + tar.horainicio.ToString();                    
+                    String strFin = dtfin.Year + "-" + dtfin.Month + "-" + dtfin.Day + " " + tar.horafin.ToString();
+                    
+                    resptar.Add("horas", tar.horas.ToString());
+                    String lapso = "de " + strInicio + " a " + strFin;
+                    resptar.Add("lapso", lapso);
+                    resptar.Add("porcentaje", tar.porcentaje.ToString());
+
+                    tareas.Add(resptar);
+
+                }
+
+                Dictionary<String, List<Dictionary<String, String>>> resp = new Dictionary<string, List<Dictionary<string, string>>>();
+                resp.Add("tareas", tareas);
+
+                return resp;
+            }
+            catch (Exception e)
+            {
+                clsError objer = new clsError();
+                objer.error = "Error al traer las categorias actuales " + e.ToString();
+                objer.result = -1;
+                return objer;
+            }
+
+
+
+        }
+
+        [Authorize]
+        [HttpPost]
         [Route("BuscarCategorias")]
         public Object BuscarCategorias(JObject json)
         {
@@ -376,6 +435,160 @@ namespace WebIcomApi.Controllers
 
 
 
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("NuevaTarea")]
+        public Object NuevaTarea(JObject json)
+        {
+            try
+            {
+                String idcategoria = json["idcategoria"].ToString();
+                String titulo = json["titulo"].ToString();
+                String todoDia = json["todoDia"].ToString();
+                String inicio = json["inicio"].ToString();
+                String fin = json["fin"].ToString();
+                String porcentaje = json["porcentaje"].ToString();
+                String notas = json["notas"].ToString();
+
+                tareasPlanificadorHelper thelp = new tareasPlanificadorHelper();
+                TareasPlanificador tar = new TareasPlanificador();
+
+                tar.idcategoria = Int64.Parse(idcategoria);
+                tar.titulo = titulo;
+                tar.todoDia = (byte)Int32.Parse(todoDia);
+                
+                DateTime dtFechaHoraIni = DateTime.ParseExact(inicio, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InstalledUICulture);
+                DateTime dtFechaHoraFin = DateTime.ParseExact(inicio, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InstalledUICulture);
+
+                tar.fechainicio = (DateTime)dtFechaHoraIni;
+                tar.horainicio = dtFechaHoraIni.TimeOfDay;
+                tar.fechafin = (DateTime)dtFechaHoraFin;
+                tar.horafin = dtFechaHoraFin.TimeOfDay;
+
+                TimeSpan ts = dtFechaHoraFin - dtFechaHoraIni;
+                int horas = ts.Hours;
+                tar.horas = horas; 
+                tar.notas = notas;
+
+                thelp.insertTareasPlanificador(tar);
+
+                clsError objer = new clsError();
+                objer.error = "La tarea se ha insertado correctamente";
+                objer.result = 1;
+                return objer;
+
+
+                
+            }
+            catch (Exception e)
+            {
+                clsError objer = new clsError();
+                objer.error = "Error Insertar la tarea " + e.ToString();
+                objer.result = 0;
+                return objer;
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("ModificarTarea")]
+        public Object ModificarTarea(JObject json)
+        {
+            try
+            {
+                String idtarea = json["idtarea"].ToString();                
+                String titulo = json["titulo"].ToString();
+                String todoDia = json["todoDia"].ToString();
+                String inicio = json["inicio"].ToString();
+                String fin = json["fin"].ToString();
+                String porcentaje = json["porcentaje"].ToString();
+                String notas = json["notas"].ToString();
+
+                tareasPlanificadorHelper thelp = new tareasPlanificadorHelper();
+                TareasPlanificador tar = new TareasPlanificador();
+
+                tar.idtarea = Int64.Parse(idtarea);
+                tar.titulo = titulo;
+                tar.todoDia = (byte)Int32.Parse(todoDia);
+
+                DateTime dtFechaHoraIni = DateTime.ParseExact(inicio, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InstalledUICulture);
+                DateTime dtFechaHoraFin = DateTime.ParseExact(inicio, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InstalledUICulture);
+
+                tar.fechainicio = (DateTime)dtFechaHoraIni;
+                tar.horainicio = dtFechaHoraIni.TimeOfDay;
+                tar.fechafin = (DateTime)dtFechaHoraFin;
+                tar.horafin = dtFechaHoraFin.TimeOfDay;
+
+                TimeSpan ts = dtFechaHoraFin - dtFechaHoraIni;
+                int horas = ts.Hours;
+                tar.horas = horas;
+                tar.notas = notas;
+
+                thelp.updateTareasPlanificador(tar);
+
+                clsError objer = new clsError();
+                objer.error = "La tarea se ha modificado correctamente";
+                objer.result = 1;
+                return objer;
+
+
+
+            }
+            catch (Exception e)
+            {
+                clsError objer = new clsError();
+                objer.error = "Error al modificar la tarea " + e.ToString();
+                objer.result = -1;
+                return objer;
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getTareaById")]
+        public Object getTareaById(JObject json)
+        {
+            try
+            {
+                String idtarea = json["idtarea"].ToString();
+                clsTareaPlanificador objtar = new clsTareaPlanificador();
+                tareasPlanificadorHelper thelp = new tareasPlanificadorHelper();
+                TareasPlanificador tar = thelp.getTareasPlanificadorById(Int32.Parse(idtarea));
+
+                if (tar == null)
+                {
+                    clsError objer = new clsError();
+                    objer.error = "Error no se ha encontrado la tarea requerida";
+                    objer.result = 0;
+                    return objer;
+                }
+
+                objtar.idcategoria = tar.idcategoria.ToString();
+                objtar.idtarea = tar.idtarea.ToString();
+                objtar.titulo = tar.titulo;
+                objtar.todoDia = tar.todoDia.ToString();
+                DateTime dtini = (DateTime) tar.fechainicio;
+                String mes = dtini.Month.ToString().Length < 2 ? "0" + dtini.Month.ToString() : dtini.Month.ToString();
+                String dia = dtini.Day.ToString().Length < 2 ? "0" + dtini.Day.ToString() : dtini.Day.ToString();
+                objtar.inicio = dtini.Year + "-" + mes + "-" + dia + " " + tar.horainicio.ToString();
+
+                DateTime dtfin = (DateTime)tar.fechafin;
+                String mesfin = dtfin.Month.ToString().Length < 2 ? "0" + dtfin.Month.ToString() : dtfin.Month.ToString();
+                String diafin = dtfin.Day.ToString().Length < 2 ? "0" + dtfin.Day.ToString() : dtfin.Day.ToString();
+                objtar.fin = dtfin.Year + "-" + mesfin + "-" + diafin + " " + tar.horafin.ToString();
+
+                objtar.porcentaje = tar.porcentaje.ToString();
+                objtar.notas = tar.notas;
+                return objtar;
+
+            }catch (Exception e) {
+                clsError objer = new clsError();
+                objer.error = "Error al tratar de obtener la tarea " + e.ToString();
+                objer.result = 0;
+                return objer;
+            }
         }
 
         [Authorize]
@@ -732,6 +945,40 @@ namespace WebIcomApi.Controllers
             {
                 clsError objex = new clsError();
                 objex.error = "Error al tratar de eliminar la categoria " + e.ToString();
+                objex.result = 0;
+                return objex;
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("EliminarTarea")]
+        public Object EliminarTarea(JObject json)
+        {
+            try
+            {
+                String idtarea = json["idtarea"].ToString();
+
+                tareasPlanificadorHelper tHelp = new tareasPlanificadorHelper();
+                String resp = tHelp.deleteTarea(Int64.Parse(idtarea));
+
+                if (!resp.Equals(""))
+                {
+                    clsError objer = new clsError();
+                    objer.error = "Error al borrar los datos " + resp;
+                    objer.result = 0;
+                    return objer;
+                }
+
+                clsError objresp = new clsError();
+                objresp.error = "Se ha eliminado la tarea";
+                objresp.result = 1;
+                return objresp;
+            }
+            catch (Exception e)
+            {
+                clsError objex = new clsError();
+                objex.error = "Error al tratar de eliminar la tarea " + e.ToString();
                 objex.result = 0;
                 return objex;
             }
