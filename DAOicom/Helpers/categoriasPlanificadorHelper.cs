@@ -27,10 +27,21 @@ namespace DAOicom.Helpers
             return lstcategoriasPlanificador;
         }
 
-        public List<categoriasPlanificador> getCategoriasBySearch(String strBusqueda)
+        public List<categoriasPlanificador> getCategoriasByIdObra(int idobra)
+        {
+            var query = from tf in db.categoriasPlanificador
+                        where tf.idobra == idobra
+                        select tf;
+
+            List<categoriasPlanificador> lstcategoriasPlanificador = new List<categoriasPlanificador>();
+            lstcategoriasPlanificador.AddRange(query.ToList());
+            return lstcategoriasPlanificador;
+        }
+
+        public List<categoriasPlanificador> getCategoriasBySearch(int idobra, String strBusqueda)
         {
             var query = from cat in db.categoriasPlanificador
-                        where cat.nombre.Contains(strBusqueda)
+                        where cat.nombre.Contains(strBusqueda) && cat.idobra == idobra
                         select cat;
 
             List<categoriasPlanificador> lstcategoriasPlanificador = new List<categoriasPlanificador>();
@@ -102,8 +113,8 @@ namespace DAOicom.Helpers
 
             objtf.comentario = obj.comentario;
             objtf.nombre = obj.nombre;
-            objtf.fecha = obj.fecha;
-            objtf.hora = obj.hora;
+            objtf.fecha = DateTime.Now; ;
+            objtf.hora = DateTime.Now.TimeOfDay;
             objtf.idusuario = obj.idusuario;
            
 

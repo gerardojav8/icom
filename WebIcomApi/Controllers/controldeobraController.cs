@@ -277,15 +277,17 @@ namespace WebIcomApi.Controllers
         [Authorize]
         [HttpPost]
         [Route("getCategoriasListado")]
-        public Object getCategoriasListado()
+        public Object getCategoriasListado(JObject json)
         {
             try
-            {                
+            {
+                String idobra = json["idobra"].ToString();
+
                 categoriasPlanificadorHelper cathelp = new categoriasPlanificadorHelper();
                 tareasPlanificadorHelper thelp = new tareasPlanificadorHelper();
 
 
-                List<categoriasPlanificador> lstcat = cathelp.getTodascategoriasPlanificador();
+                List<categoriasPlanificador> lstcat = cathelp.getCategoriasByIdObra(Int32.Parse(idobra));
                 List<Dictionary<String, String>> categorias = new List<Dictionary<string, string>>();
 
                 if (lstcat.Count == 0)
@@ -392,12 +394,13 @@ namespace WebIcomApi.Controllers
             try
             {
                 String strBusqueda = json["strBusqueda"].ToString();
+                String idobra = json["idobra"].ToString();
 
                 categoriasPlanificadorHelper cathelp = new categoriasPlanificadorHelper();
                 tareasPlanificadorHelper thelp = new tareasPlanificadorHelper();
 
 
-                List<categoriasPlanificador> lstcat = cathelp.getCategoriasBySearch(strBusqueda);
+                List<categoriasPlanificador> lstcat = cathelp.getCategoriasBySearch(Int32.Parse(idobra), strBusqueda);
                 List<Dictionary<String, String>> categorias = new List<Dictionary<string, string>>();
 
                 if (lstcat.Count == 0)
@@ -460,7 +463,7 @@ namespace WebIcomApi.Controllers
                 tar.todoDia = (byte)Int32.Parse(todoDia);
                 
                 DateTime dtFechaHoraIni = DateTime.ParseExact(inicio, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InstalledUICulture);
-                DateTime dtFechaHoraFin = DateTime.ParseExact(inicio, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InstalledUICulture);
+                DateTime dtFechaHoraFin = DateTime.ParseExact(fin, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InstalledUICulture);
 
                 tar.fechainicio = (DateTime)dtFechaHoraIni;
                 tar.horainicio = dtFechaHoraIni.TimeOfDay;
@@ -469,7 +472,8 @@ namespace WebIcomApi.Controllers
 
                 TimeSpan ts = dtFechaHoraFin - dtFechaHoraIni;
                 int horas = ts.Hours;
-                tar.horas = horas; 
+                tar.horas = horas;
+                tar.porcentaje = Decimal.Parse(porcentaje);
                 tar.notas = notas;
 
                 thelp.insertTareasPlanificador(tar);
@@ -514,7 +518,7 @@ namespace WebIcomApi.Controllers
                 tar.todoDia = (byte)Int32.Parse(todoDia);
 
                 DateTime dtFechaHoraIni = DateTime.ParseExact(inicio, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InstalledUICulture);
-                DateTime dtFechaHoraFin = DateTime.ParseExact(inicio, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InstalledUICulture);
+                DateTime dtFechaHoraFin = DateTime.ParseExact(fin, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InstalledUICulture);
 
                 tar.fechainicio = (DateTime)dtFechaHoraIni;
                 tar.horainicio = dtFechaHoraIni.TimeOfDay;
@@ -524,6 +528,7 @@ namespace WebIcomApi.Controllers
                 TimeSpan ts = dtFechaHoraFin - dtFechaHoraIni;
                 int horas = ts.Hours;
                 tar.horas = horas;
+                tar.porcentaje = Decimal.Parse(porcentaje);
                 tar.notas = notas;
 
                 thelp.updateTareasPlanificador(tar);
@@ -555,6 +560,8 @@ namespace WebIcomApi.Controllers
                 String idtarea = json["idtarea"].ToString();
                 clsTareaPlanificador objtar = new clsTareaPlanificador();
                 tareasPlanificadorHelper thelp = new tareasPlanificadorHelper();
+                obrasHelper ohelp = new obrasHelper();
+                categoriasPlanificadorHelper chelp = new categoriasPlanificadorHelper();
                 TareasPlanificador tar = thelp.getTareasPlanificadorById(Int32.Parse(idtarea));
 
                 if (tar == null)
@@ -581,6 +588,18 @@ namespace WebIcomApi.Controllers
 
                 objtar.porcentaje = tar.porcentaje.ToString();
                 objtar.notas = tar.notas;
+
+                categoriasPlanificador cat = chelp.getcategoriasPlanificadorById((long)tar.idcategoria);
+                if (cat != null) {
+                    objtar.nombrecategoria = cat.nombre;
+                    obras ob = ohelp.getobrasById((int)cat.idobra);
+                    if (ob != null) {
+                        objtar.idobra = ob.idobra.ToString();
+                        objtar.nombreobra = ob.nombre;
+                    }
+
+                }
+
                 return objtar;
 
             }catch (Exception e) {
@@ -736,7 +755,7 @@ namespace WebIcomApi.Controllers
         [Authorize]
         [HttpPost]
         [Route("getCategoriaById")]
-        public Object getObraById(JObject json)
+        public Object getCategoriaById(JObject json)
         {
             try
             {
@@ -903,14 +922,14 @@ namespace WebIcomApi.Controllers
                 }
 
                 clsError objresp = new clsError();
-                objresp.error = "Se ha insertado la obra";
+                objresp.error = "Se ha modificado la obra";
                 objresp.result = 1;
                 return objresp;
             }
             catch (Exception e)
             {
                 clsError objex = new clsError();
-                objex.error = "Error al traer las obras actuales " + e.ToString();
+                objex.error = "Error al Modificar la obra " + e.ToString();
                 objex.result = 0;
                 return objex;
             }
@@ -991,16 +1010,16 @@ namespace WebIcomApi.Controllers
         {
             try
             {
-                String idobra = json["idobra"].ToString();               
+                String idobra = json["idobra"].ToString();
 
-                obrasHelper obHelp = new obrasHelper();                               
+                obrasHelper obHelp = new obrasHelper();
                 String resp = obHelp.deleteObra(Int32.Parse(idobra));
 
                 if (!resp.Equals(""))
                 {
                     clsError objer = new clsError();
                     objer.error = "Error al borrar los datos " + resp;
-                    objer.result = 0;
+                    objer.result = 2;
                     return objer;
                 }
 
@@ -1008,11 +1027,11 @@ namespace WebIcomApi.Controllers
                 objresp.error = "Se ha eliminado la obra";
                 objresp.result = 1;
                 return objresp;
-            }
+            }           
             catch (Exception e)
             {
                 clsError objex = new clsError();
-                objex.error = "Error al tratar de eliminar las obras actuales " + e.ToString();
+                objex.error = "Error al tratar de eliminar la obra " + e.ToString();
                 objex.result = 0;
                 return objex;
             }

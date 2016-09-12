@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="idcategoria" />
           </Key>
-          <Property Name="idcategoria" Type="bigint" Nullable="false" />
+          <Property Name="idcategoria" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="idobra" Type="int" />
           <Property Name="nombre" Type="varchar" MaxLength="100" />
           <Property Name="comentario" Type="varchar" MaxLength="255" />
@@ -200,7 +200,7 @@
           <Key>
             <PropertyRef Name="idtarea" />
           </Key>
-          <Property Name="idtarea" Type="bigint" Nullable="false" />
+          <Property Name="idtarea" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="idcategoria" Type="bigint" />
           <Property Name="titulo" Type="varchar" MaxLength="200" />
           <Property Name="todoDia" Type="tinyint" />
@@ -837,8 +837,8 @@
           <NavigationProperty Name="eventosagenda" Relationship="icomModel.usuarios_evento" FromRole="usuarios" ToRole="eventosagenda" />
           <NavigationProperty Name="chat_eventos" Relationship="icomModel.FK_chat_eventos_usuarios" FromRole="usuarios" ToRole="chat_eventos" />
           <NavigationProperty Name="chat_general" Relationship="icomModel.FK_chat_general_usuarios" FromRole="usuarios" ToRole="chat_general" />
-          <NavigationProperty Name="categoriasPlanificador" Relationship="icomModel.FK_categoriasPlanificador_usuarios" FromRole="usuarios" ToRole="categoriasPlanificador" />
           <NavigationProperty Name="solicitudmaquinaria" Relationship="icomModel.FK_solicitudmaquinaria_usuarios" FromRole="usuarios" ToRole="solicitudmaquinaria" />
+          <NavigationProperty Name="categoriasPlanificador" Relationship="icomModel.FK_categoriasPlanificador_usuarios" FromRole="usuarios" ToRole="categoriasPlanificador" />
         </EntityType>
         <Association Name="FK_medicionesfiltros_filtros">
           <End Role="filtros" Type="Self.filtros" Multiplicity="1" />
@@ -1031,16 +1031,6 @@
             <End Role="maquinas" EntitySet="maquinas" />
             <End Role="reportes" EntitySet="reportes" />
           </AssociationSet>
-          <EntitySet Name="TareasPlanificador" EntityType="icomModel.TareasPlanificador" />
-          <EntitySet Name="categoriasPlanificador" EntityType="icomModel.categoriasPlanificador" />
-          <AssociationSet Name="FK_categoriasPlanificador_usuarios" Association="icomModel.FK_categoriasPlanificador_usuarios">
-            <End Role="usuarios" EntitySet="usuarios" />
-            <End Role="categoriasPlanificador" EntitySet="categoriasPlanificador" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TareasPlanificador_categoriasPlanificador" Association="icomModel.FK_TareasPlanificador_categoriasPlanificador">
-            <End Role="categoriasPlanificador" EntitySet="categoriasPlanificador" />
-            <End Role="TareasPlanificador" EntitySet="TareasPlanificador" />
-          </AssociationSet>
           <EntitySet Name="solicitudmaquinaria" EntityType="icomModel.solicitudmaquinaria" />
           <AssociationSet Name="FK_requerimientos_solicitudes_solicitudmaquinaria" Association="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria">
             <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
@@ -1051,10 +1041,6 @@
             <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
           </AssociationSet>
           <EntitySet Name="obras" EntityType="icomModel.obras" />
-          <AssociationSet Name="FK_categoriasPlanificador_obras" Association="icomModel.FK_categoriasPlanificador_obras">
-            <End Role="obras" EntitySet="obras" />
-            <End Role="categoriasPlanificador" EntitySet="categoriasPlanificador" />
-          </AssociationSet>
           <AssociationSet Name="FK_maquinas_obras" Association="icomModel.FK_maquinas_obras">
             <End Role="obras" EntitySet="obras" />
             <End Role="maquinas" EntitySet="maquinas" />
@@ -1062,6 +1048,20 @@
           <AssociationSet Name="FK_solicitudmaquinaria_obras" Association="icomModel.FK_solicitudmaquinaria_obras">
             <End Role="obras" EntitySet="obras" />
             <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
+          </AssociationSet>
+          <EntitySet Name="categoriasPlanificador" EntityType="icomModel.categoriasPlanificador" />
+          <EntitySet Name="TareasPlanificador" EntityType="icomModel.TareasPlanificador" />
+          <AssociationSet Name="FK_categoriasPlanificador_obras" Association="icomModel.FK_categoriasPlanificador_obras">
+            <End Role="obras" EntitySet="obras" />
+            <End Role="categoriasPlanificador" EntitySet="categoriasPlanificador" />
+          </AssociationSet>
+          <AssociationSet Name="FK_categoriasPlanificador_usuarios" Association="icomModel.FK_categoriasPlanificador_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="categoriasPlanificador" EntitySet="categoriasPlanificador" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TareasPlanificador_categoriasPlanificador" Association="icomModel.FK_TareasPlanificador_categoriasPlanificador">
+            <End Role="categoriasPlanificador" EntitySet="categoriasPlanificador" />
+            <End Role="TareasPlanificador" EntitySet="TareasPlanificador" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="tipomaquina">
@@ -1309,62 +1309,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="TareasPlanificador">
-          <Key>
-            <PropertyRef Name="idtarea" />
-          </Key>
-          <Property Name="idtarea" Type="Int64" Nullable="false" />
-          <Property Name="idcategoria" Type="Int64" />
-          <Property Name="titulo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="todoDia" Type="Byte" />
-          <Property Name="fechainicio" Type="DateTime" Precision="0" />
-          <Property Name="horainicio" Type="Time" Precision="7" />
-          <Property Name="fechafin" Type="DateTime" Precision="0" />
-          <Property Name="horafin" Type="Time" Precision="7" />
-          <Property Name="porcentaje" Type="Decimal" Precision="14" Scale="2" />
-          <Property Name="horas" Type="Decimal" Precision="14" Scale="2" />
-          <Property Name="notas" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="categoriasPlanificador" Relationship="icomModel.FK_TareasPlanificador_categoriasPlanificador" FromRole="TareasPlanificador" ToRole="categoriasPlanificador" />
-        </EntityType>
-        <EntityType Name="categoriasPlanificador">
-          <Key>
-            <PropertyRef Name="idcategoria" />
-          </Key>
-          <Property Name="idcategoria" Type="Int64" Nullable="false" />
-          <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="comentario" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="fecha" Type="DateTime" Precision="0" />
-          <Property Name="hora" Type="Time" Precision="7" />
-          <Property Name="idusuario" Type="Int32" />
-          <NavigationProperty Name="usuarios" Relationship="icomModel.FK_categoriasPlanificador_usuarios" FromRole="categoriasPlanificador" ToRole="usuarios" />
-          <NavigationProperty Name="TareasPlanificador" Relationship="icomModel.FK_TareasPlanificador_categoriasPlanificador" FromRole="categoriasPlanificador" ToRole="TareasPlanificador" />
-          <Property Name="idobra" Type="Int32" />
-          <NavigationProperty Name="obras" Relationship="icomModel.FK_categoriasPlanificador_obras" FromRole="categoriasPlanificador" ToRole="obras" />
-        </EntityType>
-        <Association Name="FK_categoriasPlanificador_usuarios">
-          <End Type="icomModel.usuarios" Role="usuarios" Multiplicity="0..1" />
-          <End Type="icomModel.categoriasPlanificador" Role="categoriasPlanificador" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="usuarios">
-              <PropertyRef Name="idusuario" />
-            </Principal>
-            <Dependent Role="categoriasPlanificador">
-              <PropertyRef Name="idusuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TareasPlanificador_categoriasPlanificador">
-          <End Type="icomModel.categoriasPlanificador" Role="categoriasPlanificador" Multiplicity="0..1" />
-          <End Type="icomModel.TareasPlanificador" Role="TareasPlanificador" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="categoriasPlanificador">
-              <PropertyRef Name="idcategoria" />
-            </Principal>
-            <Dependent Role="TareasPlanificador">
-              <PropertyRef Name="idcategoria" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="solicitudmaquinaria">
           <Key>
             <PropertyRef Name="folio" />
@@ -1410,22 +1354,10 @@
           <Property Name="idobra" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="categoriasPlanificador" Relationship="icomModel.FK_categoriasPlanificador_obras" FromRole="obras" ToRole="categoriasPlanificador" />
           <NavigationProperty Name="maquinas" Relationship="icomModel.FK_maquinas_obras" FromRole="obras" ToRole="maquinas" />
           <NavigationProperty Name="solicitudmaquinaria" Relationship="icomModel.FK_solicitudmaquinaria_obras" FromRole="obras" ToRole="solicitudmaquinaria" />
+          <NavigationProperty Name="categoriasPlanificador" Relationship="icomModel.FK_categoriasPlanificador_obras" FromRole="obras" ToRole="categoriasPlanificador" />
         </EntityType>
-        <Association Name="FK_categoriasPlanificador_obras">
-          <End Type="icomModel.obras" Role="obras" Multiplicity="0..1" />
-          <End Type="icomModel.categoriasPlanificador" Role="categoriasPlanificador" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="obras">
-              <PropertyRef Name="idobra" />
-            </Principal>
-            <Dependent Role="categoriasPlanificador">
-              <PropertyRef Name="idobra" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_maquinas_obras">
           <End Type="icomModel.obras" Role="obras" Multiplicity="0..1" />
           <End Type="icomModel.maquinas" Role="maquinas" Multiplicity="*" />
@@ -1447,6 +1379,74 @@
             </Principal>
             <Dependent Role="solicitudmaquinaria">
               <PropertyRef Name="idobra" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="categoriasPlanificador">
+          <Key>
+            <PropertyRef Name="idcategoria" />
+          </Key>
+          <Property Name="idcategoria" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idobra" Type="Int32" />
+          <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="comentario" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="fecha" Type="DateTime" Precision="0" />
+          <Property Name="hora" Type="Time" Precision="7" />
+          <Property Name="idusuario" Type="Int32" />
+          <NavigationProperty Name="obras" Relationship="icomModel.FK_categoriasPlanificador_obras" FromRole="categoriasPlanificador" ToRole="obras" />
+          <NavigationProperty Name="usuarios" Relationship="icomModel.FK_categoriasPlanificador_usuarios" FromRole="categoriasPlanificador" ToRole="usuarios" />
+          <NavigationProperty Name="TareasPlanificador" Relationship="icomModel.FK_TareasPlanificador_categoriasPlanificador" FromRole="categoriasPlanificador" ToRole="TareasPlanificador" />
+        </EntityType>
+        <EntityType Name="TareasPlanificador">
+          <Key>
+            <PropertyRef Name="idtarea" />
+          </Key>
+          <Property Name="idtarea" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idcategoria" Type="Int64" />
+          <Property Name="titulo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="todoDia" Type="Byte" />
+          <Property Name="fechainicio" Type="DateTime" Precision="0" />
+          <Property Name="horainicio" Type="Time" Precision="7" />
+          <Property Name="fechafin" Type="DateTime" Precision="0" />
+          <Property Name="horafin" Type="Time" Precision="7" />
+          <Property Name="porcentaje" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="horas" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="notas" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="categoriasPlanificador" Relationship="icomModel.FK_TareasPlanificador_categoriasPlanificador" FromRole="TareasPlanificador" ToRole="categoriasPlanificador" />
+        </EntityType>
+        <Association Name="FK_categoriasPlanificador_obras">
+          <End Type="icomModel.obras" Role="obras" Multiplicity="0..1" />
+          <End Type="icomModel.categoriasPlanificador" Role="categoriasPlanificador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="obras">
+              <PropertyRef Name="idobra" />
+            </Principal>
+            <Dependent Role="categoriasPlanificador">
+              <PropertyRef Name="idobra" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_categoriasPlanificador_usuarios">
+          <End Type="icomModel.usuarios" Role="usuarios" Multiplicity="0..1" />
+          <End Type="icomModel.categoriasPlanificador" Role="categoriasPlanificador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="idusuario" />
+            </Principal>
+            <Dependent Role="categoriasPlanificador">
+              <PropertyRef Name="idusuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TareasPlanificador_categoriasPlanificador">
+          <End Type="icomModel.categoriasPlanificador" Role="categoriasPlanificador" Multiplicity="0..1" />
+          <End Type="icomModel.TareasPlanificador" Role="TareasPlanificador" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categoriasPlanificador">
+              <PropertyRef Name="idcategoria" />
+            </Principal>
+            <Dependent Role="TareasPlanificador">
+              <PropertyRef Name="idcategoria" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1676,36 +1676,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TareasPlanificador">
-            <EntityTypeMapping TypeName="icomModel.TareasPlanificador">
-              <MappingFragment StoreEntitySet="TareasPlanificador">
-                <ScalarProperty Name="notas" ColumnName="notas" />
-                <ScalarProperty Name="horas" ColumnName="horas" />
-                <ScalarProperty Name="porcentaje" ColumnName="porcentaje" />
-                <ScalarProperty Name="horafin" ColumnName="horafin" />
-                <ScalarProperty Name="fechafin" ColumnName="fechafin" />
-                <ScalarProperty Name="horainicio" ColumnName="horainicio" />
-                <ScalarProperty Name="fechainicio" ColumnName="fechainicio" />
-                <ScalarProperty Name="todoDia" ColumnName="todoDia" />
-                <ScalarProperty Name="titulo" ColumnName="titulo" />
-                <ScalarProperty Name="idcategoria" ColumnName="idcategoria" />
-                <ScalarProperty Name="idtarea" ColumnName="idtarea" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="categoriasPlanificador">
-            <EntityTypeMapping TypeName="icomModel.categoriasPlanificador">
-              <MappingFragment StoreEntitySet="categoriasPlanificador">
-                <ScalarProperty Name="idobra" ColumnName="idobra" />
-                <ScalarProperty Name="idusuario" ColumnName="idusuario" />
-                <ScalarProperty Name="hora" ColumnName="hora" />
-                <ScalarProperty Name="fecha" ColumnName="fecha" />
-                <ScalarProperty Name="comentario" ColumnName="comentario" />
-                <ScalarProperty Name="nombre" ColumnName="nombre" />
-                <ScalarProperty Name="idcategoria" ColumnName="idcategoria" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="solicitudmaquinaria">
             <EntityTypeMapping TypeName="icomModel.solicitudmaquinaria">
               <MappingFragment StoreEntitySet="solicitudmaquinaria">
@@ -1724,6 +1694,36 @@
                 <ScalarProperty Name="descripcion" ColumnName="descripcion" />
                 <ScalarProperty Name="nombre" ColumnName="nombre" />
                 <ScalarProperty Name="idobra" ColumnName="idobra" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="categoriasPlanificador">
+            <EntityTypeMapping TypeName="icomModel.categoriasPlanificador">
+              <MappingFragment StoreEntitySet="categoriasPlanificador">
+                <ScalarProperty Name="idusuario" ColumnName="idusuario" />
+                <ScalarProperty Name="hora" ColumnName="hora" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="comentario" ColumnName="comentario" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="idobra" ColumnName="idobra" />
+                <ScalarProperty Name="idcategoria" ColumnName="idcategoria" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TareasPlanificador">
+            <EntityTypeMapping TypeName="icomModel.TareasPlanificador">
+              <MappingFragment StoreEntitySet="TareasPlanificador">
+                <ScalarProperty Name="notas" ColumnName="notas" />
+                <ScalarProperty Name="horas" ColumnName="horas" />
+                <ScalarProperty Name="porcentaje" ColumnName="porcentaje" />
+                <ScalarProperty Name="horafin" ColumnName="horafin" />
+                <ScalarProperty Name="fechafin" ColumnName="fechafin" />
+                <ScalarProperty Name="horainicio" ColumnName="horainicio" />
+                <ScalarProperty Name="fechainicio" ColumnName="fechainicio" />
+                <ScalarProperty Name="todoDia" ColumnName="todoDia" />
+                <ScalarProperty Name="titulo" ColumnName="titulo" />
+                <ScalarProperty Name="idcategoria" ColumnName="idcategoria" />
+                <ScalarProperty Name="idtarea" ColumnName="idtarea" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
