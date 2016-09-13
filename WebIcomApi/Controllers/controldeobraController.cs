@@ -306,7 +306,7 @@ namespace WebIcomApi.Controllers
                     int notar = thelp.getNoTareasByIdCategoria(cat.idcategoria);
                     respcat.Add("notareas", notar.ToString());
                     double porcentaje_categoria = cathelp.getPorcentajeCategoria(cat.idcategoria);
-                    respcat.Add("porcentaje", porcentaje_categoria.ToString());
+                    respcat.Add("porcentaje", Math.Round(porcentaje_categoria, 2).ToString().Replace(',', '.'));
                     categorias.Add(respcat);
                 }
 
@@ -357,13 +357,19 @@ namespace WebIcomApi.Controllers
                     DateTime dtinicio = (DateTime) tar.fechainicio;
                     DateTime dtfin = (DateTime) tar.fechafin;
 
-                    String strInicio = dtinicio.Year + "-" + dtinicio.Month + "-" + dtinicio.Day + " " + tar.horainicio.ToString();                    
-                    String strFin = dtfin.Year + "-" + dtfin.Month + "-" + dtfin.Day + " " + tar.horafin.ToString();
+                    string mesini = dtinicio.Month.ToString().Length < 2 ? "0" + dtinicio.Month.ToString() : dtinicio.Month.ToString();
+                    string diaini = dtinicio.Day.ToString().Length < 2 ? "0" + dtinicio.Day.ToString() : dtinicio.Day.ToString();
+
+                    string mesfin = dtfin.Month.ToString().Length < 2 ? "0" + dtfin.Month.ToString() : dtfin.Month.ToString();
+                    string diafin = dtfin.Day.ToString().Length < 2 ? "0" + dtfin.Day.ToString() : dtfin.Day.ToString();
+
+                    String strInicio = dtinicio.Year + "-" + mesini + "-" + diaini + " " + tar.horainicio.ToString().Substring(0, 8);
+                    String strFin = dtfin.Year + "-" + mesfin + "-" + diafin + " " + tar.horafin.ToString().Substring(0, 8);
                     
                     resptar.Add("horas", tar.horas.ToString());
                     String lapso = "de " + strInicio + " a " + strFin;
                     resptar.Add("lapso", lapso);
-                    resptar.Add("porcentaje", tar.porcentaje.ToString());
+                    resptar.Add("porcentaje", Math.Round((double)tar.porcentaje, 2).ToString().Replace(',', '.'));
 
                     tareas.Add(resptar);
 
@@ -419,7 +425,7 @@ namespace WebIcomApi.Controllers
                     int notar = thelp.getNoTareasByIdCategoria(cat.idcategoria);
                     respcat.Add("notareas", notar.ToString());
                     double porcentaje_categoria = cathelp.getPorcentajeCategoria(cat.idcategoria);
-                    respcat.Add("porcentaje", porcentaje_categoria.ToString());
+                    respcat.Add("porcentaje", Math.Round(porcentaje_categoria, 2).ToString().Replace(',', '.'));
                     categorias.Add(respcat);
                 }
 
@@ -579,14 +585,14 @@ namespace WebIcomApi.Controllers
                 DateTime dtini = (DateTime) tar.fechainicio;
                 String mes = dtini.Month.ToString().Length < 2 ? "0" + dtini.Month.ToString() : dtini.Month.ToString();
                 String dia = dtini.Day.ToString().Length < 2 ? "0" + dtini.Day.ToString() : dtini.Day.ToString();
-                objtar.inicio = dtini.Year + "-" + mes + "-" + dia + " " + tar.horainicio.ToString();
+                objtar.inicio = dtini.Year + "-" + mes + "-" + dia + " " + tar.horainicio.ToString().Substring(0,8);
 
                 DateTime dtfin = (DateTime)tar.fechafin;
                 String mesfin = dtfin.Month.ToString().Length < 2 ? "0" + dtfin.Month.ToString() : dtfin.Month.ToString();
                 String diafin = dtfin.Day.ToString().Length < 2 ? "0" + dtfin.Day.ToString() : dtfin.Day.ToString();
-                objtar.fin = dtfin.Year + "-" + mesfin + "-" + diafin + " " + tar.horafin.ToString();
+                objtar.fin = dtfin.Year + "-" + mesfin + "-" + diafin + " " + tar.horafin.ToString().Substring(0, 8);
 
-                objtar.porcentaje = tar.porcentaje.ToString();
+                objtar.porcentaje = Math.Round((double)tar.porcentaje, 2).ToString().Replace(',', '.');
                 objtar.notas = tar.notas;
 
                 categoriasPlanificador cat = chelp.getcategoriasPlanificadorById((long)tar.idcategoria);
@@ -640,7 +646,7 @@ namespace WebIcomApi.Controllers
                     int nocat = cathelp.getNoCategoriasByObra(ob.idobra);
                     respob.Add("noclasificaciones", nocat.ToString());
                     double porcentaje_obra = obhelper.getPorcentajeObra(ob.idobra);
-                    respob.Add("porcentaje", porcentaje_obra.ToString());
+                    respob.Add("porcentaje", Math.Round(porcentaje_obra, 2).ToString().Replace(',', '.'));
                     obras.Add(respob);
                 }
 
@@ -692,7 +698,7 @@ namespace WebIcomApi.Controllers
                     int nocat = cathelp.getNoCategoriasByObra(ob.idobra);
                     respob.Add("noclasificaciones", nocat.ToString());
                     double porcentaje_obra = obhelper.getPorcentajeObra(ob.idobra);
-                    respob.Add("porcentaje", porcentaje_obra.ToString());
+                    respob.Add("porcentaje", Math.Round(porcentaje_obra, 2).ToString().Replace(',', '.'));
                     obras.Add(respob);
                 }
 
@@ -771,7 +777,9 @@ namespace WebIcomApi.Controllers
                     objcat.nombre = cat.nombre;
                     objcat.comentario = cat.comentario;
                     DateTime fech = (DateTime) cat.fecha;
-                    objcat.fechahora = fech.Year + "-" + fech.Month + "-" + fech.Day + " " + cat.hora.ToString();
+                    string mes = fech.Month.ToString().Length < 2 ? "0" + fech.Month.ToString() : fech.Month.ToString();
+                    string dia = fech.Day.ToString().Length < 2 ? "0" + fech.Day.ToString() : fech.Day.ToString();
+                    objcat.fechahora = fech.Year + "-" + mes + "-" + dia + " " + cat.hora.ToString().Substring(0, 8);
                     objcat.idusuario = (int)cat.idusuario;
 
                     return objcat;
