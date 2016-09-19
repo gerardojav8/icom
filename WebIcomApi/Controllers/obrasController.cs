@@ -37,7 +37,7 @@ namespace WebIcomApi.Controllers
                 foreach (obras a in lstobras)
                 {
                     clsObras objobra = new clsObras();
-                    objobra.idobra = a.idobra;
+                    objobra.idobra = a.idobra.ToString();
                     objobra.nombre = a.nombre;
                     objobra.descripcion = a.descripcion;                    
                     lst.Add(objobra);

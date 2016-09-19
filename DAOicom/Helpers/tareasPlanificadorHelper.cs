@@ -36,6 +36,17 @@ namespace DAOicom.Helpers
             return lstTareasPlanificador;
         }
 
+        public List<TareasPlanificador> busquedaTareasPlanificador(long idcategoria, string search)
+        {
+            var query = from tf in db.TareasPlanificador
+                        where tf.idcategoria == idcategoria && (tf.titulo.Contains(search) || tf.notas.Contains(search))
+                        select tf;
+
+            List<TareasPlanificador> lstTareasPlanificador = new List<TareasPlanificador>();
+            lstTareasPlanificador.AddRange(query.ToList());
+            return lstTareasPlanificador;
+        }
+
         public List<TareasPlanificador> getTodasTareasPlanificadorbyFecha(DateTime fecha)
         {
             var query = from tf in db.TareasPlanificador

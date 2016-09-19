@@ -27,73 +27,101 @@ namespace WebIcomApi.Controllers
         [HttpPost]
         [Route("exportaPDF")]
         public Object exportaPDF(JObject json)
-        {
-            String strFechaini = json["fechaini"].ToString();
-            String strFechafin = json["fechafin"].ToString();
+        {            
             String idusuario = json["idusuario"].ToString();
+            String idcategoria = json["idcategoria"].ToString();
 
 
-            DateTime dtFechain = DateTime.Parse(strFechaini);
-            DateTime dtFechafin = DateTime.Parse(strFechafin);
+            //DateTime dtFechain = DateTime.Parse(strFechaini);
+            //DateTime dtFechafin = DateTime.Parse(strFechafin);
 
             tareasPlanificadorHelper tphelp = new tareasPlanificadorHelper();  
             categoriasPlanificadorHelper cphelp = new categoriasPlanificadorHelper();
 
-            List<clsTareaPlanificador> lstTareas = new List<clsTareaPlanificador>();
-            DateTime dtFechaAnalizada = dtFechain;
+            categoriasPlanificador cat = cphelp.getcategoriasPlanificadorById(Int64.Parse(idcategoria));
+            
+            //DateTime dtFechaAnalizada = dtFechain;
 
-            String pathpdf = "c:/pdf" + idusuario + ".pdf";
-            if (!File.Exists(pathpdf)){ File.Delete(pathpdf);}
+            MemoryStream ms = new MemoryStream();
 
             Document doc = new iTextSharp.text.Document(iTextSharp.text.PageSize.LETTER);
-            PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(pathpdf, FileMode.Create));
+            PdfWriter writer = PdfWriter.GetInstance(doc, ms);
             doc.Open();
 
             iTextSharp.text.Font _FechaFont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 11, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
             float[] columnWidths = new float[] { 25f, 25f, 20f, 20f, 10f, 10f };
 
-            Paragraph titulo = new Paragraph("Reporte de Tareas de " + strFechaini + " a " + strFechafin, _TitleFont);
+            
+
+            Paragraph titulo = new Paragraph("Reporte de Tareas de " + cat.nombre, _TitleFont);
             titulo.Alignment = Element.ALIGN_CENTER;
 
             doc.Add(titulo);
             doc.Add(new Paragraph("\n"));
 
-            do
+            List<TareasPlanificador> lsttar = tphelp.getTareasPlanificadorByIdCategoria(Int64.Parse(idcategoria));
+            PdfPTable tblReporte = new PdfPTable(6);
+            tblReporte.WidthPercentage = 100;
+
+            PdfPCell clFecha = new PdfPCell(new Phrase("Tarea", _FechaFont));
+            clFecha.BorderWidth = 0;
+            clFecha.BorderWidthBottom = 0.75f;
+
+            PdfPCell clClasificacion = new PdfPCell(new Phrase("Clasificacion", _standardFont));
+            clClasificacion.BorderWidth = 0;
+            clClasificacion.BorderWidthBottom = 0.75f;
+
+            PdfPCell clInicio = new PdfPCell(new Phrase("Inicio", _standardFont));
+            clInicio.BorderWidth = 0;
+            clInicio.BorderWidthBottom = 0.75f;
+
+            PdfPCell clFin = new PdfPCell(new Phrase("Fin", _standardFont));
+            clFin.BorderWidth = 0;
+            clFin.BorderWidthBottom = 0.75f;
+
+            PdfPCell clHoras = new PdfPCell(new Phrase("Horas", _standardFont));
+            clHoras.BorderWidth = 0;
+            clHoras.BorderWidthBottom = 0.75f;
+
+            PdfPCell clPor = new PdfPCell(new Phrase("Porcentaje", _standardFont));
+            clPor.BorderWidth = 0;
+            clPor.BorderWidthBottom = 0.75f;
+
+            tblReporte.AddCell(clFecha);
+            tblReporte.AddCell(clClasificacion);
+            tblReporte.AddCell(clInicio);
+            tblReporte.AddCell(clFin);
+            tblReporte.AddCell(clHoras);
+            tblReporte.AddCell(clPor);
+
+            foreach (TareasPlanificador tar in lsttar)
             {
-                List<TareasPlanificador> lsttar = tphelp.getTodasTareasPlanificadorbyFecha(dtFechaAnalizada);
-                dtFechaAnalizada.AddDays(1);
-
-                if (lsttar == null)
-                {
-                    continue;
-                }
-
-                PdfPTable tblReporte = new PdfPTable(6);
-                tblReporte.WidthPercentage = 100;
-
-                PdfPCell clFecha = new PdfPCell(new Phrase(dtFechaAnalizada.ToString("yyyy-MM-dd"), _FechaFont));
+                clFecha = new PdfPCell(new Phrase(tar.titulo, _standardFont));
                 clFecha.BorderWidth = 0;
-                clFecha.BorderWidthBottom = 0.75f;
+                clFecha.BorderWidthBottom = 0;
 
-                PdfPCell clClasificacion = new PdfPCell(new Phrase("Clasificacion", _standardFont));
+                clClasificacion = new PdfPCell(new Phrase(tar.categoriasPlanificador.nombre, _standardFont));
                 clClasificacion.BorderWidth = 0;
-                clClasificacion.BorderWidthBottom = 0.75f;
-
-                PdfPCell clInicio = new PdfPCell(new Phrase("Inicio", _standardFont));
+                clClasificacion.BorderWidthBottom = 0;
+                DateTime dtini = (DateTime)tar.fechainicio;
+                String strInicio = dtini.Year + "-" + dtini.Month + "-" + dtini.Day + " " + tar.horainicio.ToString();
+                clInicio = new PdfPCell(new Phrase(strInicio, _standardFont));
                 clInicio.BorderWidth = 0;
-                clInicio.BorderWidthBottom = 0.75f;
+                clInicio.BorderWidthBottom = 0;
 
-                PdfPCell clFin = new PdfPCell(new Phrase("Fin", _standardFont));
+                DateTime dtfin = (DateTime)tar.fechafin;
+                String strFin = dtfin.Year + "-" + dtfin.Month + "-" + dtfin.Day + " " + tar.horafin.ToString();
+                clFin = new PdfPCell(new Phrase(strFin, _standardFont));
                 clFin.BorderWidth = 0;
-                clFin.BorderWidthBottom = 0.75f;
+                clFin.BorderWidthBottom = 0;
 
-                PdfPCell clHoras = new PdfPCell(new Phrase("Horas", _standardFont));
+                clHoras = new PdfPCell(new Phrase(tar.horas.ToString(), _standardFont));
                 clHoras.BorderWidth = 0;
-                clHoras.BorderWidthBottom = 0.75f;
+                clHoras.BorderWidthBottom = 0;
 
-                PdfPCell clPor = new PdfPCell(new Phrase("Porcentaje", _standardFont));
+                clPor = new PdfPCell(new Phrase(tar.porcentaje.ToString(), _standardFont));
                 clPor.BorderWidth = 0;
-                clPor.BorderWidthBottom = 0.75f;
+                clPor.BorderWidthBottom = 0;
 
                 tblReporte.AddCell(clFecha);
                 tblReporte.AddCell(clClasificacion);
@@ -101,58 +129,19 @@ namespace WebIcomApi.Controllers
                 tblReporte.AddCell(clFin);
                 tblReporte.AddCell(clHoras);
                 tblReporte.AddCell(clPor);
+            }
 
-                foreach (TareasPlanificador tar in lsttar) {
-                    clFecha = new PdfPCell(new Phrase(tar.titulo, _standardFont));
-                    clFecha.BorderWidth = 0;
-                    clFecha.BorderWidthBottom = 0;
+            tblReporte.SetWidths(columnWidths);
 
-                    clClasificacion = new PdfPCell(new Phrase(tar.categoriasPlanificador.nombre, _standardFont));
-                    clClasificacion.BorderWidth = 0;
-                    clClasificacion.BorderWidthBottom = 0;
-                    DateTime dtini = (DateTime)tar.fechainicio;
-                    String strInicio = dtini.Year + "-" + dtini.Month + "-" + dtini.Day + " " + tar.horainicio.ToString();
-                    clInicio = new PdfPCell(new Phrase(strInicio, _standardFont));
-                    clInicio.BorderWidth = 0;
-                    clInicio.BorderWidthBottom = 0;
-
-                    DateTime dtfin = (DateTime)tar.fechafin;
-                    String strFin = dtfin.Year + "-" + dtfin.Month + "-" + dtfin.Day + " " + tar.horafin.ToString();
-                    clFin = new PdfPCell(new Phrase(strFin, _standardFont));
-                    clFin.BorderWidth = 0;
-                    clFin.BorderWidthBottom = 0;
-
-                    clHoras = new PdfPCell(new Phrase(tar.horas.ToString(), _standardFont));
-                    clHoras.BorderWidth = 0;
-                    clHoras.BorderWidthBottom = 0;
-
-                    clPor = new PdfPCell(new Phrase(tar.porcentaje.ToString(), _standardFont));
-                    clPor.BorderWidth = 0;
-                    clPor.BorderWidthBottom = 0;
-
-                    tblReporte.AddCell(clFecha);
-                    tblReporte.AddCell(clClasificacion);
-                    tblReporte.AddCell(clInicio);
-                    tblReporte.AddCell(clFin);
-                    tblReporte.AddCell(clHoras);
-                    tblReporte.AddCell(clPor);
-                }
-                
-                tblReporte.SetWidths(columnWidths);
-                doc.Add(tblReporte);
-                doc.Add(new Paragraph("\n"));
-                doc.Add(new Paragraph("\n"));
-                               
-            } while (dtFechaAnalizada <= dtFechafin);
-                                              
+            doc.Add(tblReporte);
+                                                         
             doc.Close();
 
-            Byte[] pdfbytes = File.ReadAllBytes(pathpdf);
+            Byte[] pdfbytes = ms.ToArray();
             String pdf64 = Convert.ToBase64String(pdfbytes);
             Dictionary<String, String> resp = new Dictionary<string, string>();
 
             resp.Add("pdf", pdf64);
-            //File.Delete(pathpdf);
 
             return resp;
         }
@@ -177,15 +166,11 @@ namespace WebIcomApi.Controllers
 
             var bytes = Convert.FromBase64String(strimg64);
             bytesimg = bytes;            
+            
+            MemoryStream ms = new MemoryStream();
 
-            String pathpdf = "c:/pdfgrafica"+idusuario+".pdf";
-            if (!File.Exists(pathpdf))
-            {
-                File.Delete(pathpdf);
-            }
-
-            Document doc = new iTextSharp.text.Document(iTextSharp.text.PageSize.LETTER);
-            PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(pathpdf, FileMode.Create));
+            Document doc = new iTextSharp.text.Document(iTextSharp.text.PageSize.LETTER);            
+            PdfWriter writer = PdfWriter.GetInstance(doc, ms);
             doc.Open();
 
             iTextSharp.text.Image imgpdf = iTextSharp.text.Image.GetInstance(bytesimg);
@@ -210,7 +195,7 @@ namespace WebIcomApi.Controllers
             clClasificacion.BorderWidth = 0;
             clClasificacion.BorderWidthBottom = 0.75f;
 
-            PdfPCell clsHoras = new PdfPCell(new Phrase("Horas", _standardFont));
+            PdfPCell clsHoras = new PdfPCell(new Phrase("Porcentaje", _standardFont));
             clsHoras.BorderWidth = 0;
             clsHoras.BorderWidthBottom = 0.75f;
 
@@ -226,13 +211,14 @@ namespace WebIcomApi.Controllers
                 JObject jobj = (JObject)clas;
                 String strColor = jobj["color"].ToString();
                 String strClasificacion = jobj["clasificacion"].ToString();
-                String strHoras = jobj["horas"].ToString();
+                String strPorcentaje = jobj["porcentaje"].ToString();
 
                 String[] arrcolor = strColor.Split(',');
                 int r = Int32.Parse(arrcolor[0]);
                 int g = Int32.Parse(arrcolor[1]);
                 int b = Int32.Parse(arrcolor[2]);
 
+                
                 clColor = new PdfPCell(new Phrase("", _standardFont));
                 clColor.BackgroundColor = new BaseColor(Color.FromArgb(r, g, b));
                 clColor.BorderWidth = 0;
@@ -240,7 +226,7 @@ namespace WebIcomApi.Controllers
                 clClasificacion = new PdfPCell(new Phrase(strClasificacion, _standardFont));
                 clClasificacion.BorderWidth = 0;
 
-                clsHoras = new PdfPCell(new Phrase(strHoras, _standardFont));
+                clsHoras = new PdfPCell(new Phrase(strPorcentaje, _standardFont));
                 clsHoras.BorderWidth = 0;
                 
                 tblClasificaciones.AddCell(clColor);
@@ -255,21 +241,12 @@ namespace WebIcomApi.Controllers
             doc.Add(tblClasificaciones);
 
             doc.Close();
-
-            if (!File.Exists(pathpdf))
-            {
-                clsError objer = new clsError();
-                objer.error = "No se ha podido crear el pdf";
-                objer.result = 0;                
-                return objer;
-            }
-
-            Byte[] pdfbytes = File.ReadAllBytes(pathpdf);
+                        
+            Byte[] pdfbytes = ms.ToArray();
             String pdf64 = Convert.ToBase64String(pdfbytes);
 
             Dictionary<String, String> resp = new Dictionary<string, string>();
-            resp.Add("pdf", pdf64);
-            File.Delete(pathpdf);
+            resp.Add("pdf", pdf64);            
 
             return resp;
         }
@@ -353,6 +330,7 @@ namespace WebIcomApi.Controllers
                 {
                     Dictionary<String, String> resptar = new Dictionary<string, string>();
 
+                    resptar.Add("idtarea", tar.idtarea.ToString());
                     resptar.Add("titulo", tar.titulo);
                     DateTime dtinicio = (DateTime) tar.fechainicio;
                     DateTime dtfin = (DateTime) tar.fechafin;
@@ -365,8 +343,75 @@ namespace WebIcomApi.Controllers
 
                     String strInicio = dtinicio.Year + "-" + mesini + "-" + diaini + " " + tar.horainicio.ToString().Substring(0, 8);
                     String strFin = dtfin.Year + "-" + mesfin + "-" + diafin + " " + tar.horafin.ToString().Substring(0, 8);
-                    
-                    resptar.Add("horas", tar.horas.ToString());
+
+                    resptar.Add("horas", tar.horas.ToString().Replace(',', '.'));
+                    String lapso = "de " + strInicio + " a " + strFin;
+                    resptar.Add("lapso", lapso);
+                    resptar.Add("porcentaje", Math.Round((double)tar.porcentaje, 2).ToString().Replace(',', '.'));
+
+                    tareas.Add(resptar);
+
+                }
+
+                Dictionary<String, List<Dictionary<String, String>>> resp = new Dictionary<string, List<Dictionary<string, string>>>();
+                resp.Add("tareas", tareas);
+
+                return resp;
+            }
+            catch (Exception e)
+            {
+                clsError objer = new clsError();
+                objer.error = "Error al traer las categorias actuales " + e.ToString();
+                objer.result = -1;
+                return objer;
+            }
+
+
+
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("busquedaTareasPlanificador")]
+        public Object busquedaTareasPlanificador(JObject json)
+        {
+            try
+            {
+                String idcategoria = json["idcategoria"].ToString();
+                String strBusqueda = json["strBusqueda"].ToString();
+                tareasPlanificadorHelper thelp = new tareasPlanificadorHelper();
+
+
+                List<TareasPlanificador> lsttar = thelp.busquedaTareasPlanificador(Int64.Parse(idcategoria), strBusqueda);
+                List<Dictionary<String, String>> tareas = new List<Dictionary<string, string>>();
+
+                if (lsttar.Count == 0)
+                {
+                    clsError objer = new clsError();
+                    objer.error = "No se encontraron tareas";
+                    objer.result = 0;
+                    return objer;
+                }
+
+                foreach (TareasPlanificador tar in lsttar)
+                {
+                    Dictionary<String, String> resptar = new Dictionary<string, string>();
+
+                    resptar.Add("idtarea", tar.idtarea.ToString());
+                    resptar.Add("titulo", tar.titulo);
+                    DateTime dtinicio = (DateTime)tar.fechainicio;
+                    DateTime dtfin = (DateTime)tar.fechafin;
+
+                    string mesini = dtinicio.Month.ToString().Length < 2 ? "0" + dtinicio.Month.ToString() : dtinicio.Month.ToString();
+                    string diaini = dtinicio.Day.ToString().Length < 2 ? "0" + dtinicio.Day.ToString() : dtinicio.Day.ToString();
+
+                    string mesfin = dtfin.Month.ToString().Length < 2 ? "0" + dtfin.Month.ToString() : dtfin.Month.ToString();
+                    string diafin = dtfin.Day.ToString().Length < 2 ? "0" + dtfin.Day.ToString() : dtfin.Day.ToString();
+
+                    String strInicio = dtinicio.Year + "-" + mesini + "-" + diaini + " " + tar.horainicio.ToString().Substring(0, 8);
+                    String strFin = dtfin.Year + "-" + mesfin + "-" + diafin + " " + tar.horafin.ToString().Substring(0, 8);
+
+                    resptar.Add("horas", tar.horas.ToString().Replace(',', '.'));
                     String lapso = "de " + strInicio + " a " + strFin;
                     resptar.Add("lapso", lapso);
                     resptar.Add("porcentaje", Math.Round((double)tar.porcentaje, 2).ToString().Replace(',', '.'));
@@ -558,6 +603,53 @@ namespace WebIcomApi.Controllers
 
         [Authorize]
         [HttpPost]
+        [Route("getNombreObraCategoria")]
+        public Object getNombreObraCategoria(JObject json)
+        {
+            try
+            {
+                String idcategoria = json["idcategoria"].ToString();
+
+                categoriasPlanificadorHelper chelp = new categoriasPlanificadorHelper();
+
+                categoriasPlanificador cat = chelp.getcategoriasPlanificadorById(Int64.Parse(idcategoria));
+
+                if (cat == null) {
+                    clsError objer = new clsError();
+                    objer.error = "No se ha encontrado los datos de la categoria";
+                    objer.result = 0;
+                    return objer;
+                }
+
+                Dictionary<string, string> resp = new Dictionary<string, string>();
+                resp.Add("nombrecategoria", cat.nombre);                
+
+
+                obrasHelper obhelp = new obrasHelper();
+                obras o = obhelp.getobrasById((int)cat.idobra);
+
+                if (o == null)
+                {
+                    resp.Add("nombreobra", "No encontrada");
+                }
+                else {
+                    resp.Add("nombreobra", o.nombre);
+                }
+
+                return resp;
+               
+            }
+            catch (Exception e)
+            {
+                clsError objer = new clsError();
+                objer.error = "Error al tratar de obtener los datos " + e.ToString();
+                objer.result = 0;
+                return objer;
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
         [Route("getTareaById")]
         public Object getTareaById(JObject json)
         {
@@ -734,7 +826,7 @@ namespace WebIcomApi.Controllers
                 if (ob != null)
                 {
                     clsObras objobra = new clsObras();
-                    objobra.idobra = ob.idobra;
+                    objobra.idobra = ob.idobra.ToString();
                     objobra.nombre = ob.nombre;
                     objobra.descripcion = ob.descripcion;
 
