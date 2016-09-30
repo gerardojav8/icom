@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\CompiledicomToken.pubxml" />
     <None Include="Properties\PublishProfiles\icomToken.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -38,7 +38,7 @@
           <Property Name="fecha" Type="date" />
           <Property Name="hora" Type="time" Precision="7" />
           <Property Name="comentario" Type="varchar" MaxLength="255" />
-          <Property Name="archivo" Type="varbinary(max)" />
+          <Property Name="archivo" Type="image" />
           <Property Name="nombrearchivo" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="componentes">
@@ -126,6 +126,17 @@
           <Property Name="idobra" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="nombre" Type="varchar" MaxLength="100" />
           <Property Name="descripcion" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="produccion">
+          <Key>
+            <PropertyRef Name="folio" />
+          </Key>
+          <Property Name="folio" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="material" Type="varchar" MaxLength="100" />
+          <Property Name="cantidad" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="unidad" Type="varchar" MaxLength="20" />
+          <Property Name="cliente" Type="varchar" MaxLength="200" />
+          <Property Name="fecha" Type="date" />
         </EntityType>
         <EntityType Name="puestos">
           <Key>
@@ -595,6 +606,7 @@
           <EntitySet Name="mediciones" EntityType="Self.mediciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="medicionesfiltros" EntityType="Self.medicionesfiltros" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="obras" EntityType="Self.obras" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="produccion" EntityType="Self.produccion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="puestos" EntityType="Self.puestos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="refacciones_reporte" EntityType="Self.refacciones_reporte" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="reportes" EntityType="Self.reportes" Schema="dbo" store:Type="Tables" />
@@ -836,9 +848,9 @@
           <NavigationProperty Name="reportes2" Relationship="Self.FK_reportes_usuarios_reporto" FromRole="usuarios" ToRole="reportes" />
           <NavigationProperty Name="eventosagenda" Relationship="icomModel.usuarios_evento" FromRole="usuarios" ToRole="eventosagenda" />
           <NavigationProperty Name="chat_eventos" Relationship="icomModel.FK_chat_eventos_usuarios" FromRole="usuarios" ToRole="chat_eventos" />
-          <NavigationProperty Name="chat_general" Relationship="icomModel.FK_chat_general_usuarios" FromRole="usuarios" ToRole="chat_general" />
           <NavigationProperty Name="solicitudmaquinaria" Relationship="icomModel.FK_solicitudmaquinaria_usuarios" FromRole="usuarios" ToRole="solicitudmaquinaria" />
           <NavigationProperty Name="categoriasPlanificador" Relationship="icomModel.FK_categoriasPlanificador_usuarios" FromRole="usuarios" ToRole="categoriasPlanificador" />
+          <NavigationProperty Name="chat_general" Relationship="icomModel.FK_chat_general_usuarios" FromRole="usuarios" ToRole="chat_general" />
         </EntityType>
         <Association Name="FK_medicionesfiltros_filtros">
           <End Role="filtros" Type="Self.filtros" Multiplicity="1" />
@@ -1005,11 +1017,6 @@
             <End Role="usuarios" EntitySet="usuarios" />
             <End Role="chat_eventos" EntitySet="chat_eventos" />
           </AssociationSet>
-          <EntitySet Name="chat_general" EntityType="icomModel.chat_general" />
-          <AssociationSet Name="FK_chat_general_usuarios" Association="icomModel.FK_chat_general_usuarios">
-            <End Role="usuarios" EntitySet="usuarios" />
-            <End Role="chat_general" EntitySet="chat_general" />
-          </AssociationSet>
           <EntitySet Name="maquinas" EntityType="icomModel.maquinas" />
           <AssociationSet Name="FK_maquinas_equipoauxiliar" Association="icomModel.FK_maquinas_equipoauxiliar">
             <End Role="equipoauxiliar" EntitySet="equipoauxiliar" />
@@ -1063,6 +1070,12 @@
             <End Role="categoriasPlanificador" EntitySet="categoriasPlanificador" />
             <End Role="TareasPlanificador" EntitySet="TareasPlanificador" />
           </AssociationSet>
+          <EntitySet Name="chat_general" EntityType="icomModel.chat_general" />
+          <AssociationSet Name="FK_chat_general_usuarios" Association="icomModel.FK_chat_general_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="chat_general" EntitySet="chat_general" />
+          </AssociationSet>
+          <EntitySet Name="produccion" EntityType="icomModel.produccion" />
           </EntityContainer>
         <EntityType Name="tipomaquina">
           <Key>
@@ -1199,31 +1212,6 @@
               <PropertyRef Name="idusuario" />
             </Principal>
             <Dependent Role="chat_eventos">
-              <PropertyRef Name="idusuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="chat_general">
-          <Key>
-            <PropertyRef Name="idmensaje" />
-          </Key>
-          <Property Name="idmensaje" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="idusuario" Type="Int32" />
-          <Property Name="fecha" Type="DateTime" Precision="0" />
-          <Property Name="hora" Type="Time" Precision="7" />
-          <Property Name="comentario" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="archivo" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="nombrearchivo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="usuarios" Relationship="icomModel.FK_chat_general_usuarios" FromRole="chat_general" ToRole="usuarios" />
-        </EntityType>
-        <Association Name="FK_chat_general_usuarios">
-          <End Type="icomModel.usuarios" Role="usuarios" Multiplicity="0..1" />
-          <End Type="icomModel.chat_general" Role="chat_general" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="usuarios">
-              <PropertyRef Name="idusuario" />
-            </Principal>
-            <Dependent Role="chat_general">
               <PropertyRef Name="idusuario" />
             </Dependent>
           </ReferentialConstraint>
@@ -1450,6 +1438,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="chat_general">
+          <Key>
+            <PropertyRef Name="idmensaje" />
+          </Key>
+          <Property Name="idmensaje" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idusuario" Type="Int32" />
+          <Property Name="fecha" Type="DateTime" Precision="0" />
+          <Property Name="hora" Type="Time" Precision="7" />
+          <Property Name="comentario" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="archivo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="nombrearchivo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="usuarios" Relationship="icomModel.FK_chat_general_usuarios" FromRole="chat_general" ToRole="usuarios" />
+        </EntityType>
+        <Association Name="FK_chat_general_usuarios">
+          <End Type="icomModel.usuarios" Role="usuarios" Multiplicity="0..1" />
+          <End Type="icomModel.chat_general" Role="chat_general" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="idusuario" />
+            </Principal>
+            <Dependent Role="chat_general">
+              <PropertyRef Name="idusuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="produccion">
+          <Key>
+            <PropertyRef Name="folio" />
+          </Key>
+          <Property Name="folio" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="material" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="cantidad" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="unidad" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="cliente" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="fecha" Type="DateTime" Precision="0" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1647,19 +1671,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="chat_general">
-            <EntityTypeMapping TypeName="icomModel.chat_general">
-              <MappingFragment StoreEntitySet="chat_general">
-                <ScalarProperty Name="nombrearchivo" ColumnName="nombrearchivo" />
-                <ScalarProperty Name="archivo" ColumnName="archivo" />
-                <ScalarProperty Name="comentario" ColumnName="comentario" />
-                <ScalarProperty Name="hora" ColumnName="hora" />
-                <ScalarProperty Name="fecha" ColumnName="fecha" />
-                <ScalarProperty Name="idusuario" ColumnName="idusuario" />
-                <ScalarProperty Name="idmensaje" ColumnName="idmensaje" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="maquinas">
             <EntityTypeMapping TypeName="icomModel.maquinas">
               <MappingFragment StoreEntitySet="maquinas">
@@ -1724,6 +1735,31 @@
                 <ScalarProperty Name="titulo" ColumnName="titulo" />
                 <ScalarProperty Name="idcategoria" ColumnName="idcategoria" />
                 <ScalarProperty Name="idtarea" ColumnName="idtarea" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="chat_general">
+            <EntityTypeMapping TypeName="icomModel.chat_general">
+              <MappingFragment StoreEntitySet="chat_general">
+                <ScalarProperty Name="nombrearchivo" ColumnName="nombrearchivo" />
+                <ScalarProperty Name="archivo" ColumnName="archivo" />
+                <ScalarProperty Name="comentario" ColumnName="comentario" />
+                <ScalarProperty Name="hora" ColumnName="hora" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="idusuario" ColumnName="idusuario" />
+                <ScalarProperty Name="idmensaje" ColumnName="idmensaje" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="produccion">
+            <EntityTypeMapping TypeName="icomModel.produccion">
+              <MappingFragment StoreEntitySet="produccion">
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="cliente" ColumnName="cliente" />
+                <ScalarProperty Name="unidad" ColumnName="unidad" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="material" ColumnName="material" />
+                <ScalarProperty Name="folio" ColumnName="folio" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

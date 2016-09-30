@@ -286,6 +286,64 @@ namespace WebIcomApi.Controllers
            
         }
 
+        [Authorize]
+        [HttpPost]
+        [Route("getReporteProduccion")]
+        public Object getReporteProduccion(JObject json)
+        {
+            String folio = json["folio"].ToString();
+            String material = json["material"].ToString();
+            String strcantidad = json["cantidad"].ToString();
+            String unidad = json["unidad"].ToString();
+            String cliente = json["cliente"].ToString();
+            String strfecha = json["fecha"].ToString();
+            String strfechafin = json["fechafin"].ToString();
+
+            DateTime? fecha = !strfecha.Equals("") ? DateTime.ParseExact(strfecha, "yyyy-MM-dd", System.Globalization.CultureInfo.InstalledUICulture) : (DateTime?)null;
+            DateTime? fechafin = !strfechafin.Equals("") ? DateTime.ParseExact(strfechafin, "yyyy-MM-dd", System.Globalization.CultureInfo.InstalledUICulture) : (DateTime?)null;
+            Decimal cantidad = !strcantidad.Equals("") ? Decimal.Parse(strcantidad): -1;
+
+            produccionHelper phelp = new produccionHelper();
+            List<produccion> lstp;
+
+            if(folio.Equals("") && material.Equals("") && strcantidad.Equals("") && unidad.Equals("") && cliente.Equals("") && strfecha.Equals("")){
+                lstp = phelp.getTodasproduccion();
+            }else{
+                lstp = phelp.getProduccionByFiltros(folio, material, unidad, cantidad, cliente, fecha, fechafin);
+            }
+
+            if (lstp.Count() <= 0) {
+                clsError objerr = new clsError();
+                objerr.error = "No se encontraron datos para mostrar";
+                objerr.result = 0;
+                return objerr;
+            }
+
+            List<clsProduccion> lstresp = new List<clsProduccion>();
+            foreach (produccion i in lstp) {
+                clsProduccion p = new clsProduccion();
+                p.folio = i.folio;
+                p.material = i.material;
+                p.cantidad = i.cantidad.ToString();
+                p.undiad = i.unidad;
+                p.cliente = i.cliente;
+
+                DateTime fech = (DateTime)i.fecha;
+                String mes = fech.Month.ToString().Length < 2 ? "0" + fech.Month.ToString() : fech.Month.ToString();
+                String dia = fech.Day.ToString().Length < 2 ? "0" + fech.Day.ToString() : fech.Day.ToString();
+                String strFech = fech.Year.ToString() + "-" + mes + "-" + dia;
+
+                p.fecha = strFech;
+
+                lstresp.Add(p);
+            }
+
+            return lstresp;
+
+
+            
+        }
+
         
     }
 }

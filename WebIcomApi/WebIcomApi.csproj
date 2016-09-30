@@ -158,6 +158,7 @@
     <Compile Include="Entidades\clsMaquinas.cs" />
     <Compile Include="Entidades\clsMensajeChat.cs" />
     <Compile Include="Entidades\clsObras.cs" />
+    <Compile Include="Entidades\clsProduccion.cs" />
     <Compile Include="Entidades\clsReporteOperador.cs" />
     <Compile Include="Entidades\clsTareaPlanificador.cs" />
     <Compile Include="Entidades\clsTareasPlanificadorListado.cs" />
@@ -172,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\CompiledicomApi.pubxml" />
     <None Include="Properties\PublishProfiles\icomApi.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
