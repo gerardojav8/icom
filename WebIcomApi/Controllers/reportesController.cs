@@ -324,7 +324,7 @@ namespace WebIcomApi.Controllers
                 clsProduccion p = new clsProduccion();
                 p.folio = i.folio;
                 p.material = i.material;
-                p.cantidad = i.cantidad.ToString();
+                p.cantidad = i.cantidad.ToString().Replace(",", ".");
                 p.undiad = i.unidad;
                 p.cliente = i.cliente;
 
