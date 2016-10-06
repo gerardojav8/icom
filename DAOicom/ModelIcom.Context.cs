@@ -42,11 +42,11 @@ namespace DAOicom
         public virtual DbSet<eventosagenda> eventosagenda { get; set; }
         public virtual DbSet<chat_eventos> chat_eventos { get; set; }
         public virtual DbSet<maquinas> maquinas { get; set; }
-        public virtual DbSet<solicitudmaquinaria> solicitudmaquinaria { get; set; }
         public virtual DbSet<obras> obras { get; set; }
         public virtual DbSet<categoriasPlanificador> categoriasPlanificador { get; set; }
         public virtual DbSet<TareasPlanificador> TareasPlanificador { get; set; }
         public virtual DbSet<chat_general> chat_general { get; set; }
         public virtual DbSet<produccion> produccion { get; set; }
+        public virtual DbSet<solicitudmaquinaria> solicitudmaquinaria { get; set; }
     }
 }

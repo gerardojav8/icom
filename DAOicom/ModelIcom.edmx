@@ -198,6 +198,7 @@
           <Property Name="time" Type="time" Precision="7" />
           <Property Name="requeridopara" Type="date" />
           <Property Name="idresponsable" Type="int" />
+          <Property Name="idsolicitadopor" Type="int" />
         </EntityType>
         <EntityType Name="statusreporte">
           <Key>
@@ -546,6 +547,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_solicitudmaquinaria_usuarios1">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="0..1" />
+          <End Role="solicitudmaquinaria" Type="Self.solicitudmaquinaria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="idusuario" />
+            </Principal>
+            <Dependent Role="solicitudmaquinaria">
+              <PropertyRef Name="idsolicitadopor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TareasPlanificador_categoriasPlanificador">
           <End Role="categoriasPlanificador" Type="Self.categoriasPlanificador" Multiplicity="0..1" />
           <End Role="TareasPlanificador" Type="Self.TareasPlanificador" Multiplicity="*" />
@@ -711,6 +724,10 @@
             <End Role="usuarios" EntitySet="usuarios" />
             <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
           </AssociationSet>
+          <AssociationSet Name="FK_solicitudmaquinaria_usuarios1" Association="Self.FK_solicitudmaquinaria_usuarios1">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
+          </AssociationSet>
           <AssociationSet Name="FK_TareasPlanificador_categoriasPlanificador" Association="Self.FK_TareasPlanificador_categoriasPlanificador">
             <End Role="categoriasPlanificador" EntitySet="categoriasPlanificador" />
             <End Role="TareasPlanificador" EntitySet="TareasPlanificador" />
@@ -848,9 +865,10 @@
           <NavigationProperty Name="reportes2" Relationship="Self.FK_reportes_usuarios_reporto" FromRole="usuarios" ToRole="reportes" />
           <NavigationProperty Name="eventosagenda" Relationship="icomModel.usuarios_evento" FromRole="usuarios" ToRole="eventosagenda" />
           <NavigationProperty Name="chat_eventos" Relationship="icomModel.FK_chat_eventos_usuarios" FromRole="usuarios" ToRole="chat_eventos" />
-          <NavigationProperty Name="solicitudmaquinaria" Relationship="icomModel.FK_solicitudmaquinaria_usuarios" FromRole="usuarios" ToRole="solicitudmaquinaria" />
           <NavigationProperty Name="categoriasPlanificador" Relationship="icomModel.FK_categoriasPlanificador_usuarios" FromRole="usuarios" ToRole="categoriasPlanificador" />
           <NavigationProperty Name="chat_general" Relationship="icomModel.FK_chat_general_usuarios" FromRole="usuarios" ToRole="chat_general" />
+          <NavigationProperty Name="solicitudmaquinaria" Relationship="icomModel.FK_solicitudmaquinaria_usuarios" FromRole="usuarios" ToRole="solicitudmaquinaria" />
+          <NavigationProperty Name="solicitudmaquinaria1" Relationship="icomModel.FK_solicitudmaquinaria_usuarios1" FromRole="usuarios" ToRole="solicitudmaquinaria" />
         </EntityType>
         <Association Name="FK_medicionesfiltros_filtros">
           <End Role="filtros" Type="Self.filtros" Multiplicity="1" />
@@ -1038,23 +1056,10 @@
             <End Role="maquinas" EntitySet="maquinas" />
             <End Role="reportes" EntitySet="reportes" />
           </AssociationSet>
-          <EntitySet Name="solicitudmaquinaria" EntityType="icomModel.solicitudmaquinaria" />
-          <AssociationSet Name="FK_requerimientos_solicitudes_solicitudmaquinaria" Association="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria">
-            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
-            <End Role="requerimientos_solicitudes" EntitySet="requerimientos_solicitudes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_solicitudmaquinaria_usuarios" Association="icomModel.FK_solicitudmaquinaria_usuarios">
-            <End Role="usuarios" EntitySet="usuarios" />
-            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
-          </AssociationSet>
           <EntitySet Name="obras" EntityType="icomModel.obras" />
           <AssociationSet Name="FK_maquinas_obras" Association="icomModel.FK_maquinas_obras">
             <End Role="obras" EntitySet="obras" />
             <End Role="maquinas" EntitySet="maquinas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_solicitudmaquinaria_obras" Association="icomModel.FK_solicitudmaquinaria_obras">
-            <End Role="obras" EntitySet="obras" />
-            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
           </AssociationSet>
           <EntitySet Name="categoriasPlanificador" EntityType="icomModel.categoriasPlanificador" />
           <EntitySet Name="TareasPlanificador" EntityType="icomModel.TareasPlanificador" />
@@ -1076,6 +1081,23 @@
             <End Role="chat_general" EntitySet="chat_general" />
           </AssociationSet>
           <EntitySet Name="produccion" EntityType="icomModel.produccion" />
+          <EntitySet Name="solicitudmaquinaria" EntityType="icomModel.solicitudmaquinaria" />
+          <AssociationSet Name="FK_solicitudmaquinaria_obras" Association="icomModel.FK_solicitudmaquinaria_obras">
+            <End Role="obras" EntitySet="obras" />
+            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
+          </AssociationSet>
+          <AssociationSet Name="FK_requerimientos_solicitudes_solicitudmaquinaria" Association="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria">
+            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
+            <End Role="requerimientos_solicitudes" EntitySet="requerimientos_solicitudes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_solicitudmaquinaria_usuarios" Association="icomModel.FK_solicitudmaquinaria_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
+          </AssociationSet>
+          <AssociationSet Name="FK_solicitudmaquinaria_usuarios1" Association="icomModel.FK_solicitudmaquinaria_usuarios1">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="solicitudmaquinaria" EntitySet="solicitudmaquinaria" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="tipomaquina">
           <Key>
@@ -1297,44 +1319,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="solicitudmaquinaria">
-          <Key>
-            <PropertyRef Name="folio" />
-          </Key>
-          <Property Name="folio" Type="Int32" Nullable="false" />
-          <Property Name="idobra" Type="Int32" />
-          <Property Name="fecha" Type="DateTime" Precision="0" />
-          <Property Name="time" Type="Time" Precision="7" />
-          <Property Name="requeridopara" Type="DateTime" Precision="0" />
-          <Property Name="idresponsable" Type="Int32" />
-          <NavigationProperty Name="requerimientos_solicitudes" Relationship="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria" FromRole="solicitudmaquinaria" ToRole="requerimientos_solicitudes" />
-          <NavigationProperty Name="usuarios" Relationship="icomModel.FK_solicitudmaquinaria_usuarios" FromRole="solicitudmaquinaria" ToRole="usuarios" />
-          <NavigationProperty Name="obras" Relationship="icomModel.FK_solicitudmaquinaria_obras" FromRole="solicitudmaquinaria" ToRole="obras" />
-        </EntityType>
-        <Association Name="FK_requerimientos_solicitudes_solicitudmaquinaria">
-          <End Type="icomModel.solicitudmaquinaria" Role="solicitudmaquinaria" Multiplicity="1" />
-          <End Type="icomModel.requerimientos_solicitudes" Role="requerimientos_solicitudes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="solicitudmaquinaria">
-              <PropertyRef Name="folio" />
-            </Principal>
-            <Dependent Role="requerimientos_solicitudes">
-              <PropertyRef Name="foliosolicitud" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_solicitudmaquinaria_usuarios">
-          <End Type="icomModel.usuarios" Role="usuarios" Multiplicity="0..1" />
-          <End Type="icomModel.solicitudmaquinaria" Role="solicitudmaquinaria" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="usuarios">
-              <PropertyRef Name="idusuario" />
-            </Principal>
-            <Dependent Role="solicitudmaquinaria">
-              <PropertyRef Name="idresponsable" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="obras">
           <Key>
             <PropertyRef Name="idobra" />
@@ -1343,8 +1327,8 @@
           <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="maquinas" Relationship="icomModel.FK_maquinas_obras" FromRole="obras" ToRole="maquinas" />
-          <NavigationProperty Name="solicitudmaquinaria" Relationship="icomModel.FK_solicitudmaquinaria_obras" FromRole="obras" ToRole="solicitudmaquinaria" />
           <NavigationProperty Name="categoriasPlanificador" Relationship="icomModel.FK_categoriasPlanificador_obras" FromRole="obras" ToRole="categoriasPlanificador" />
+          <NavigationProperty Name="solicitudmaquinaria" Relationship="icomModel.FK_solicitudmaquinaria_obras" FromRole="obras" ToRole="solicitudmaquinaria" />
         </EntityType>
         <Association Name="FK_maquinas_obras">
           <End Type="icomModel.obras" Role="obras" Multiplicity="0..1" />
@@ -1354,18 +1338,6 @@
               <PropertyRef Name="idobra" />
             </Principal>
             <Dependent Role="maquinas">
-              <PropertyRef Name="idobra" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_solicitudmaquinaria_obras">
-          <End Type="icomModel.obras" Role="obras" Multiplicity="0..1" />
-          <End Type="icomModel.solicitudmaquinaria" Role="solicitudmaquinaria" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="obras">
-              <PropertyRef Name="idobra" />
-            </Principal>
-            <Dependent Role="solicitudmaquinaria">
               <PropertyRef Name="idobra" />
             </Dependent>
           </ReferentialConstraint>
@@ -1474,6 +1446,70 @@
           <Property Name="cliente" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="fecha" Type="DateTime" Precision="0" />
         </EntityType>
+        <EntityType Name="solicitudmaquinaria">
+          <Key>
+            <PropertyRef Name="folio" />
+          </Key>
+          <Property Name="folio" Type="Int32" Nullable="false" />
+          <Property Name="idobra" Type="Int32" />
+          <Property Name="fecha" Type="DateTime" Precision="0" />
+          <Property Name="time" Type="Time" Precision="7" />
+          <Property Name="requeridopara" Type="DateTime" Precision="0" />
+          <Property Name="idresponsable" Type="Int32" />
+          <Property Name="idsolicitadopor" Type="Int32" />
+          <NavigationProperty Name="obras" Relationship="icomModel.FK_solicitudmaquinaria_obras" FromRole="solicitudmaquinaria" ToRole="obras" />
+          <NavigationProperty Name="requerimientos_solicitudes" Relationship="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria" FromRole="solicitudmaquinaria" ToRole="requerimientos_solicitudes" />
+          <NavigationProperty Name="usuarios" Relationship="icomModel.FK_solicitudmaquinaria_usuarios" FromRole="solicitudmaquinaria" ToRole="usuarios" />
+          <NavigationProperty Name="usuarios1" Relationship="icomModel.FK_solicitudmaquinaria_usuarios1" FromRole="solicitudmaquinaria" ToRole="usuarios" />
+        </EntityType>
+        <Association Name="FK_solicitudmaquinaria_obras">
+          <End Type="icomModel.obras" Role="obras" Multiplicity="0..1" />
+          <End Type="icomModel.solicitudmaquinaria" Role="solicitudmaquinaria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="obras">
+              <PropertyRef Name="idobra" />
+            </Principal>
+            <Dependent Role="solicitudmaquinaria">
+              <PropertyRef Name="idobra" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_requerimientos_solicitudes_solicitudmaquinaria">
+          <End Type="icomModel.solicitudmaquinaria" Role="solicitudmaquinaria" Multiplicity="1" />
+          <End Type="icomModel.requerimientos_solicitudes" Role="requerimientos_solicitudes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="solicitudmaquinaria">
+              <PropertyRef Name="folio" />
+            </Principal>
+            <Dependent Role="requerimientos_solicitudes">
+              <PropertyRef Name="foliosolicitud" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_solicitudmaquinaria_usuarios">
+          <End Type="icomModel.usuarios" Role="usuarios" Multiplicity="0..1" />
+          <End Type="icomModel.solicitudmaquinaria" Role="solicitudmaquinaria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="idusuario" />
+            </Principal>
+            <Dependent Role="solicitudmaquinaria">
+              <PropertyRef Name="idresponsable" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_solicitudmaquinaria_usuarios1">
+          <End Type="icomModel.usuarios" Role="usuarios" Multiplicity="0..1" />
+          <End Type="icomModel.solicitudmaquinaria" Role="solicitudmaquinaria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="idusuario" />
+            </Principal>
+            <Dependent Role="solicitudmaquinaria">
+              <PropertyRef Name="idsolicitadopor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1687,18 +1723,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="solicitudmaquinaria">
-            <EntityTypeMapping TypeName="icomModel.solicitudmaquinaria">
-              <MappingFragment StoreEntitySet="solicitudmaquinaria">
-                <ScalarProperty Name="idresponsable" ColumnName="idresponsable" />
-                <ScalarProperty Name="requeridopara" ColumnName="requeridopara" />
-                <ScalarProperty Name="time" ColumnName="time" />
-                <ScalarProperty Name="fecha" ColumnName="fecha" />
-                <ScalarProperty Name="idobra" ColumnName="idobra" />
-                <ScalarProperty Name="folio" ColumnName="folio" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="obras">
             <EntityTypeMapping TypeName="icomModel.obras">
               <MappingFragment StoreEntitySet="obras">
@@ -1759,6 +1783,19 @@
                 <ScalarProperty Name="unidad" ColumnName="unidad" />
                 <ScalarProperty Name="cantidad" ColumnName="cantidad" />
                 <ScalarProperty Name="material" ColumnName="material" />
+                <ScalarProperty Name="folio" ColumnName="folio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="solicitudmaquinaria">
+            <EntityTypeMapping TypeName="icomModel.solicitudmaquinaria">
+              <MappingFragment StoreEntitySet="solicitudmaquinaria">
+                <ScalarProperty Name="idsolicitadopor" ColumnName="idsolicitadopor" />
+                <ScalarProperty Name="idresponsable" ColumnName="idresponsable" />
+                <ScalarProperty Name="requeridopara" ColumnName="requeridopara" />
+                <ScalarProperty Name="time" ColumnName="time" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="idobra" ColumnName="idobra" />
                 <ScalarProperty Name="folio" ColumnName="folio" />
               </MappingFragment>
             </EntityTypeMapping>

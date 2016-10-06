@@ -13,6 +13,7 @@ using System.Drawing;
 using System.IO;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
+using System.Net.Mail;
 
 namespace WebIcomApi.Controllers
 {
@@ -1556,9 +1557,7 @@ namespace WebIcomApi.Controllers
             String strnotificaasistentes = json["notificaasistentes"].ToString();
             int intnotificaasistentes = Int32.Parse(strnotificaasistentes);
 
-            /*if (intnotificaasistentes == 1) { 
-                //Mandar correo a usuarios
-            }*/
+           
            
             JArray jlstasistentes = JArray.Parse(json["asistentes"].ToString());
 
@@ -1571,6 +1570,9 @@ namespace WebIcomApi.Controllers
                 int idusuario = Int32.Parse(jobj["idusuario"].ToString());
                 usuarios.Add(idusuario);
             }
+
+
+           
 
             eventosagenda objea = new eventosagenda();
             objea.mes = dtfechaini.Month;
@@ -1586,19 +1588,70 @@ namespace WebIcomApi.Controllers
             eventosAgendaHelper eaHelp = new eventosAgendaHelper();
             String resp = eaHelp.inserteventosagenda(objea, usuarios);
 
-            if (resp.Equals(""))
+            if (!resp.Equals(""))
             {
-                clsError objerr = new clsError();
-                objerr.error = "Evento guardado con exito";
-                objerr.result = 0;
-                return objerr;
-            }
-            else {
                 clsError objerr = new clsError();
                 objerr.error = "Error " + resp;
                 objerr.result = 1;
-                return objerr;
+                return objerr;              
             }
+
+            //Envio de correo a usuarios
+            usuariosHelper ushelp = new usuariosHelper();
+            if (intnotificaasistentes == 1)
+            {
+
+                try
+                {
+                    String titulomsg = "Union a evento " + titulo;
+                    String bodymsg = "Usted ha sido registrado para participar en el evento " + titulo + " que tendra lugar del " + strfechaini + " " + strhoraini + " a " + strfechafin + " " + strhorafin + "\n\r\n\r" +
+                                      "Notas : " + notas + "\n\r\n\r" +
+                                      "Para poder interactuar con dicho evento por favor ingrese a la aplicacion iphone e ingrese a Control de Obra y despues a la opcion Agenda";
+
+
+                    String strsmtp = "mail.proyextra.com";
+                    String emisor = "icom@proyextra.com";                    
+                    String pass = "ICOM2017*";
+                    int puerto = 26;
+                    Boolean blnssl = false;
+
+                    /*String strsmtp = "smtp.gmail.com";
+                    String emisor = "jav8586@gmail.com";
+                    String receptor = "jav8586@hotmail.com";
+                    String pass = "toluca";
+                    int puerto = 587;
+                    Boolean blnssl = true;*/
+                    
+                    MailMessage msg = new MailMessage();
+                    msg.From = new MailAddress(emisor);                    
+                    msg.Subject=  titulomsg;
+                    msg.Body = bodymsg;
+
+                    foreach (int idus in usuarios)
+                    {
+                        usuarios us = ushelp.getUsuarioByID(idus);
+                        if (us == null) { continue; }
+                        if (us.mail.Equals("")) { continue; }
+                        msg.To.Add(us.mail);
+                        
+                    }
+                    
+                    funciones.sendMail(msg, strsmtp, emisor, pass, puerto, blnssl);
+
+                }
+                catch (Exception e)
+                {
+                    clsError objerr = new clsError();
+                    objerr.error = "Se ha guardado el evento sin embago existio un error al mandar el correo a los usuarios " + e.ToString();
+                    objerr.result = 0;
+                    return objerr;
+                }
+            }
+
+            clsError objresp = new clsError();
+            objresp.error = "Evento guardado con exito";
+            objresp.result = 0;
+            return objresp;
         }
     }
 }

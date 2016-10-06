@@ -12,6 +12,9 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using WebIcomApi.Entidades;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using System.Net.Mail;
 
 namespace WebIcomApi.Controllers
 {
@@ -19,6 +22,8 @@ namespace WebIcomApi.Controllers
     [RoutePrefix("maquinas")]
     public class maquinasController : ApiController
     {
+        iTextSharp.text.Font _standardFont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 8, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
+        iTextSharp.text.Font _TitleFont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 15, iTextSharp.text.Font.BOLDITALIC, BaseColor.BLACK);
 
         [Authorize]
         [HttpPost]
@@ -460,6 +465,7 @@ namespace WebIcomApi.Controllers
             String requeridopara = json["requeridopara"].ToString();
             String idobra = json["idobra"].ToString();
             String idresponsable = json["idresponsable"].ToString();
+            String idsolicitadopor = json["idsolicitadopor"].ToString();
             
             DateTime dtrequeridopara = DateTime.ParseExact( requeridopara, "yyyy-MM-dd", System.Globalization.CultureInfo.InstalledUICulture);
             
@@ -469,6 +475,7 @@ namespace WebIcomApi.Controllers
             objsm.requeridopara = dtrequeridopara;
             objsm.idobra = Int32.Parse(idobra);
             objsm.idresponsable = Int32.Parse(idresponsable);
+            objsm.idsolicitadopor = Int32.Parse(idsolicitadopor);
 
 
             JArray jlstreq = JArray.Parse(json["requerimientos"].ToString());
@@ -500,12 +507,246 @@ namespace WebIcomApi.Controllers
                 objerr.result = 0;
                 return objerr;
             }
-            else
-            {
-                Dictionary<String, String> dresp = new Dictionary<string, string>();
-                dresp.Add("respuesta", "exito");
-                return dresp;
+           
+           
+            //MandarMail 
+
+            //Se crea pdf a mandar de la solicitud
+
+            MemoryStream ms = new MemoryStream();
+
+            Document doc = new iTextSharp.text.Document(iTextSharp.text.PageSize.LETTER);
+            PdfWriter writer = PdfWriter.GetInstance(doc, ms);
+            doc.Open();
+
+            iTextSharp.text.Font _FechaFont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 11, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
+            float[] columnWidths = new float[] { 25f, 25f };
+
+
+            Paragraph titulo = new Paragraph("Solicitud de Maquinaria", _TitleFont);
+            titulo.Alignment = Element.ALIGN_CENTER;
+
+            doc.Add(titulo);
+            doc.Add(new Paragraph("\n"));
+            
+            PdfPTable tblReporte = new PdfPTable(2);
+            tblReporte.WidthPercentage = 100;
+
+            PdfPCell clConcepto = new PdfPCell(new Phrase("Concepto", _standardFont));
+            clConcepto.BorderWidth = 0;
+            clConcepto.BorderWidthBottom = 0.75f;
+
+            PdfPCell clValor = new PdfPCell(new Phrase("Valor", _standardFont));
+            clValor.BorderWidth = 0;
+            clValor.BorderWidthBottom = 0.75f;
+            
+
+            tblReporte.AddCell(clConcepto);
+            tblReporte.AddCell(clValor);
+
+            //Folio----------------------------------------------
+            clConcepto = new PdfPCell(new Phrase("Folio", _standardFont));
+            clConcepto.BorderWidth = 0;
+            clConcepto.BorderWidthBottom = 0;
+
+            clValor = new PdfPCell(new Phrase(folio.ToString(), _standardFont));
+            clValor.BorderWidth = 0;
+            clValor.BorderWidthBottom = 0;
+
+            tblReporte.AddCell(clConcepto);
+            tblReporte.AddCell(clValor);
+
+            //Fecha----------------------------------------------
+            clConcepto = new PdfPCell(new Phrase("Fecha", _standardFont));
+            clConcepto.BorderWidth = 0;
+            clConcepto.BorderWidthBottom = 0;
+
+            clValor = new PdfPCell(new Phrase(objsm.fecha.ToString(), _standardFont));
+            clValor.BorderWidth = 0;
+            clValor.BorderWidthBottom = 0;
+
+            tblReporte.AddCell(clConcepto);
+            tblReporte.AddCell(clValor);
+
+            //Fecha----------------------------------------------
+            clConcepto = new PdfPCell(new Phrase("Requerido para", _standardFont));
+            clConcepto.BorderWidth = 0;
+            clConcepto.BorderWidthBottom = 0;
+
+            clValor = new PdfPCell(new Phrase(requeridopara, _standardFont));
+            clValor.BorderWidth = 0;
+            clValor.BorderWidthBottom = 0;
+
+            tblReporte.AddCell(clConcepto);
+            tblReporte.AddCell(clValor);
+
+            //Obra----------------------------------------------
+            clConcepto = new PdfPCell(new Phrase("Obra", _standardFont));
+            clConcepto.BorderWidth = 0;
+            clConcepto.BorderWidthBottom = 0;
+
+            obrasHelper obhelp = new obrasHelper();
+            obras ob = obhelp.getobrasById(Int32.Parse(idobra));
+            String nombreobra = "no encontrado";
+            if (ob != null) {
+                nombreobra = ob.nombre;
             }
+
+            clValor = new PdfPCell(new Phrase(nombreobra, _standardFont));
+            clValor.BorderWidth = 0;
+            clValor.BorderWidthBottom = 0;
+
+            tblReporte.AddCell(clConcepto);
+            tblReporte.AddCell(clValor);
+
+            //Responsable----------------------------------------------
+            clConcepto = new PdfPCell(new Phrase("Responsable", _standardFont));
+            clConcepto.BorderWidth = 0;
+            clConcepto.BorderWidthBottom = 0;
+
+            usuariosHelper ushelp = new usuariosHelper();
+            usuarios us = ushelp.getUsuarioByID(Int32.Parse(idresponsable));
+            String nombreresponsable = "no encontrado";
+            if (us != null) {
+                nombreresponsable = us.nombre;
+            }
+
+            clValor = new PdfPCell(new Phrase(nombreresponsable, _standardFont));
+            clValor.BorderWidth = 0;
+            clValor.BorderWidthBottom = 0;
+
+            tblReporte.AddCell(clConcepto);
+            tblReporte.AddCell(clValor);
+
+            //Solicitado por----------------------------------------------
+            clConcepto = new PdfPCell(new Phrase("Solicitado Por", _standardFont));
+            clConcepto.BorderWidth = 0;
+            clConcepto.BorderWidthBottom = 0;
+           
+            usuarios ussol = ushelp.getUsuarioByID(Int32.Parse(idsolicitadopor));
+            String nombresolicitadopor = "no encontrado";
+            if (ussol != null)
+            {
+                nombresolicitadopor = ussol.nombre;
+            }
+
+            clValor = new PdfPCell(new Phrase(nombresolicitadopor, _standardFont));
+            clValor.BorderWidth = 0;
+            clValor.BorderWidthBottom = 0;
+
+            tblReporte.AddCell(clConcepto);
+            tblReporte.AddCell(clValor);  
+                      
+            tblReporte.SetWidths(columnWidths);
+
+            doc.Add(tblReporte);
+
+            doc.Add(new Paragraph("\n"));
+            Paragraph tituloreq = new Paragraph("Requerimientos", _TitleFont);
+            doc.Add(tituloreq);
+            doc.Add(new Paragraph("\n"));
+
+            PdfPTable tblrequerimientos = new PdfPTable(4);
+            tblrequerimientos.WidthPercentage = 100;
+
+            PdfPCell clsEquipo = new PdfPCell(new Phrase("Equipo", _standardFont));
+            clsEquipo.BorderWidth = 0;
+            clsEquipo.BorderWidthBottom = 0.75f;
+
+            PdfPCell clMarca = new PdfPCell(new Phrase("Marca", _standardFont));
+            clMarca.BorderWidth = 0;
+            clMarca.BorderWidthBottom = 0.75f;
+
+            PdfPCell clModelo = new PdfPCell(new Phrase("Modelo", _standardFont));
+            clModelo.BorderWidth = 0;
+            clModelo.BorderWidthBottom = 0.75f;
+
+            PdfPCell clCantidad = new PdfPCell(new Phrase("Cantidad", _standardFont));
+            clCantidad.BorderWidth = 0;
+            clCantidad.BorderWidthBottom = 0.75f;
+
+            tblrequerimientos.AddCell(clsEquipo);
+            tblrequerimientos.AddCell(clMarca);
+            tblrequerimientos.AddCell(clModelo);
+            tblrequerimientos.AddCell(clCantidad);
+
+            foreach (var jref in jlstreq)
+            {
+                JObject jobj = (JObject)jref;                
+
+                clsEquipo = new PdfPCell(new Phrase(jobj["equipo"].ToString(), _standardFont));
+                clsEquipo.BorderWidth = 0;
+                clsEquipo.BorderWidthBottom = 0;
+
+                clMarca = new PdfPCell(new Phrase(jobj["marca"].ToString(), _standardFont));
+                clMarca.BorderWidth = 0;
+                clMarca.BorderWidthBottom = 0;
+
+                clModelo = new PdfPCell(new Phrase(jobj["modelo"].ToString(), _standardFont));
+                clModelo.BorderWidth = 0;
+                clModelo.BorderWidthBottom = 0;
+
+                clCantidad = new PdfPCell(new Phrase(jobj["cantidad"].ToString(), _standardFont));
+                clCantidad.BorderWidth = 0;
+                clCantidad.BorderWidthBottom = 0;
+
+                tblrequerimientos.AddCell(clsEquipo);
+                tblrequerimientos.AddCell(clMarca);
+                tblrequerimientos.AddCell(clModelo);
+                tblrequerimientos.AddCell(clCantidad);
+                
+            }
+
+            doc.Add(tblrequerimientos);
+            doc.Close();
+           
+            try
+            {
+                
+
+                String titulomsg = "Solicitud de Maquinaria " + folio;
+                String bodymsg = "Solicitud de Maquinaria " + folio;
+
+
+                String strsmtp = "mail.proyextra.com";
+                String emisor = "icom@proyextra.com";
+                String receptor = "jav8586@gmail.com";
+                String pass = "ICOM2017*";
+                int puerto = 26;
+                Boolean blnssl = false;
+
+                /*String strsmtp = "smtp.gmail.com";
+                String emisor = "jav8586@gmail.com";
+                String receptor = "jav8586@hotmail.com";
+                String pass = "toluca";
+                int puerto = 587;
+                Boolean blnssl = true;*/
+
+                MailMessage msg = new MailMessage();
+                msg.From = new MailAddress(emisor);
+                msg.Subject = titulomsg;
+                msg.Body = bodymsg;
+                msg.To.Add(receptor);
+
+                Stream pdfstream = new MemoryStream(ms.ToArray());
+                msg.Attachments.Add(new Attachment(pdfstream, "SolicitudMaquinaria.pdf"));
+                                   
+                funciones.sendMail(msg, strsmtp, emisor, pass, puerto, blnssl);
+
+            }
+            catch (Exception e)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "Se ha guardado la solicitud sin embago existio un error al mandar el correo electronico " + e.ToString();
+                objerr.result = 0;
+                return objerr;
+            }
+            
+            
+            Dictionary<String, String> dresp = new Dictionary<string, string>();
+            dresp.Add("respuesta", "exito");
+            return dresp;
+           
 
         }
 

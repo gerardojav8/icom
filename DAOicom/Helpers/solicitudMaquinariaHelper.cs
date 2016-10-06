@@ -130,6 +130,7 @@ namespace DAOicom.Helpers
             objsm.requeridopara = obj.requeridopara;
             objsm.idobra = obj.idobra;
             objsm.idresponsable = obj.idresponsable;
+            objsm.idsolicitadopor = obj.idsolicitadopor;
 
             try
             {

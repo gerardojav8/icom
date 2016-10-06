@@ -165,6 +165,7 @@
     <Compile Include="Entidades\clsTipoFallas.cs" />
     <Compile Include="Entidades\clsTipoMnto.cs" />
     <Compile Include="Entidades\clsUsuarios.cs" />
+    <Compile Include="funciones.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

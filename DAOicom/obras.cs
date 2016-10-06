@@ -18,8 +18,8 @@ namespace DAOicom
         public obras()
         {
             this.maquinas = new HashSet<maquinas>();
-            this.solicitudmaquinaria = new HashSet<solicitudmaquinaria>();
             this.categoriasPlanificador = new HashSet<categoriasPlanificador>();
+            this.solicitudmaquinaria = new HashSet<solicitudmaquinaria>();
         }
     
         public int idobra { get; set; }
@@ -29,8 +29,8 @@ namespace DAOicom
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<maquinas> maquinas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<solicitudmaquinaria> solicitudmaquinaria { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<categoriasPlanificador> categoriasPlanificador { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<solicitudmaquinaria> solicitudmaquinaria { get; set; }
     }
 }

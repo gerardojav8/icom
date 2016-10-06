@@ -325,7 +325,7 @@ namespace WebIcomApi.Controllers
                 p.folio = i.folio;
                 p.material = i.material;
                 p.cantidad = i.cantidad.ToString().Replace(",", ".");
-                p.undiad = i.unidad;
+                p.unidad = i.unidad;
                 p.cliente = i.cliente;
 
                 DateTime fech = (DateTime)i.fecha;
