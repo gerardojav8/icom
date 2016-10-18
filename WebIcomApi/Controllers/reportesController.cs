@@ -119,7 +119,7 @@ namespace WebIcomApi.Controllers
 
             objrep.no_serie = no_serie;
             objrep.km_horometro = System.Convert.ToDecimal(kmho, System.Globalization.CultureInfo.CreateSpecificCulture("en-US"));
-            objrep.modelo = Int32.Parse(modelo);
+            objrep.modelo = modelo;
             objrep.idreporto = Int32.Parse(idreporto);
             objrep.idtipofalla = Int32.Parse(idtipofalla);
             objrep.idatiende = Int32.Parse(idatiende);
@@ -130,10 +130,10 @@ namespace WebIcomApi.Controllers
             
             String folio = objrephelp.insertaReporte(objrep);
 
-            if (folio == "")
+            if (folio.Length > 9)
             {
                 clsError objerr = new clsError();
-                objerr.error = "No ha podido insertar el reporte, notifiquelo a su administrador TI";
+                objerr.error = "No ha podido insertar el reporte, notifiquelo a su administrador TI error : " + folio;
                 objerr.result = 0;
                 return objerr;
             }

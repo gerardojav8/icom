@@ -21,7 +21,7 @@ namespace DAOicom.Helpers
             }
             catch (Exception e)
             {
-                return "";
+                return e.ToString();
             }
 
         }

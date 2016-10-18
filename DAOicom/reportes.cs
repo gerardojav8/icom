@@ -25,7 +25,7 @@ namespace DAOicom
         public Nullable<System.TimeSpan> hora { get; set; }
         public string no_serie { get; set; }
         public Nullable<decimal> km_horometro { get; set; }
-        public Nullable<int> modelo { get; set; }
+        public string modelo { get; set; }
         public Nullable<int> idreporto { get; set; }
         public Nullable<int> idtipofalla { get; set; }
         public Nullable<int> idatiende { get; set; }
@@ -37,14 +37,14 @@ namespace DAOicom
         public string observaciones { get; set; }
         public Nullable<byte> idstatus { get; set; }
     
+        public virtual maquinas maquinas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<refacciones_reporte> refacciones_reporte { get; set; }
+        public virtual statusreporte statusreporte { get; set; }
         public virtual tipofallas tipofallas { get; set; }
         public virtual tipomantenimientos tipomantenimientos { get; set; }
         public virtual usuarios usuarios { get; set; }
         public virtual usuarios usuarios1 { get; set; }
         public virtual usuarios usuarios2 { get; set; }
-        public virtual statusreporte statusreporte { get; set; }
-        public virtual maquinas maquinas { get; set; }
     }
 }

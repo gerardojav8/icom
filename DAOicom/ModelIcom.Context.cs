@@ -30,7 +30,6 @@ namespace DAOicom
         public virtual DbSet<medicionesfiltros> medicionesfiltros { get; set; }
         public virtual DbSet<puestos> puestos { get; set; }
         public virtual DbSet<refacciones_reporte> refacciones_reporte { get; set; }
-        public virtual DbSet<reportes> reportes { get; set; }
         public virtual DbSet<tipofallas> tipofallas { get; set; }
         public virtual DbSet<tipomantenimientos> tipomantenimientos { get; set; }
         public virtual DbSet<usuarios> usuarios { get; set; }
@@ -48,5 +47,6 @@ namespace DAOicom
         public virtual DbSet<chat_general> chat_general { get; set; }
         public virtual DbSet<produccion> produccion { get; set; }
         public virtual DbSet<solicitudmaquinaria> solicitudmaquinaria { get; set; }
+        public virtual DbSet<reportes> reportes { get; set; }
     }
 }

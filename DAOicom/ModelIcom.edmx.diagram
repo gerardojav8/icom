@@ -10,21 +10,13 @@
         <EntityTypeShape EntityType="icomModel.medicionesfiltros" Width="1.5" PointX="8.25" PointY="7.5" IsExpanded="true" />
         <EntityTypeShape EntityType="icomModel.puestos" Width="1.5" PointX="0.75" PointY="15.25" IsExpanded="true" />
         <EntityTypeShape EntityType="icomModel.refacciones_reporte" Width="1.5" PointX="7.5" PointY="2.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="icomModel.reportes" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="icomModel.tipofallas" Width="1.5" PointX="3" PointY="4.125" IsExpanded="true" />
         <EntityTypeShape EntityType="icomModel.tipomantenimientos" Width="1.5" PointX="3" PointY="11.75" IsExpanded="true" />
         <EntityTypeShape EntityType="icomModel.usuarios" Width="1.5" PointX="3.5" PointY="14.25" IsExpanded="true" />
         <AssociationConnector Association="icomModel.FK_medicionesfiltros_filtros" ManuallyRouted="false" />
         <AssociationConnector Association="icomModel.FK_usuarios_puestos" ManuallyRouted="false" />
-        <AssociationConnector Association="icomModel.FK_refacciones_reporte_reportes" ManuallyRouted="false" />
-        <AssociationConnector Association="icomModel.FK_reportes_tipofallas" ManuallyRouted="false" />
-        <AssociationConnector Association="icomModel.FK_reportes_tipomantenimientos" ManuallyRouted="false" />
-        <AssociationConnector Association="icomModel.FK_reportes_usuarios_atiende" ManuallyRouted="false" />
-        <AssociationConnector Association="icomModel.FK_reportes_usuarios_realizo" ManuallyRouted="false" />
-        <AssociationConnector Association="icomModel.FK_reportes_usuarios_reporto" ManuallyRouted="false" />
         <EntityTypeShape EntityType="icomModel.tipomaquina" Width="1.5" PointX="0.75" PointY="4.25" />
         <EntityTypeShape EntityType="icomModel.statusreporte" Width="1.5" PointX="10.375" PointY="0.875" />
-        <AssociationConnector Association="icomModel.FK_reportes_statusreporte" />
         <EntityTypeShape EntityType="icomModel.requerimientos_solicitudes" Width="1.5" PointX="10" PointY="15.125" />
         <EntityTypeShape EntityType="icomModel.equipoauxiliar" Width="1.5" PointX="0.625" PointY="6.75" />
         <EntityTypeShape EntityType="icomModel.mediciones" Width="1.5" PointX="5.25" PointY="7.375" />
@@ -40,7 +32,6 @@
         <AssociationConnector Association="icomModel.FK_maquinas_tipomaquina" />
         <AssociationConnector Association="icomModel.FK_mediciones_maquinas" />
         <AssociationConnector Association="icomModel.FK_medicionesfiltros_maquinas" />
-        <AssociationConnector Association="icomModel.FK_reportes_maquinas" />
         <EntityTypeShape EntityType="icomModel.obras" Width="1.5" PointX="7.75" PointY="10.25" />
         <AssociationConnector Association="icomModel.FK_maquinas_obras" />
         <EntityTypeShape EntityType="icomModel.categoriasPlanificador" Width="1.5" PointX="12" PointY="11.125" />
@@ -56,6 +47,15 @@
         <AssociationConnector Association="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria" />
         <AssociationConnector Association="icomModel.FK_solicitudmaquinaria_usuarios" />
         <AssociationConnector Association="icomModel.FK_solicitudmaquinaria_usuarios1" />
+        <EntityTypeShape EntityType="icomModel.reportes" Width="1.5" PointX="12.625" PointY="4.125" />
+        <AssociationConnector Association="icomModel.FK_reportes_maquinas" />
+        <AssociationConnector Association="icomModel.FK_refacciones_reporte_reportes" />
+        <AssociationConnector Association="icomModel.FK_reportes_statusreporte" />
+        <AssociationConnector Association="icomModel.FK_reportes_tipofallas" />
+        <AssociationConnector Association="icomModel.FK_reportes_tipomantenimientos" />
+        <AssociationConnector Association="icomModel.FK_reportes_usuarios_atiende" />
+        <AssociationConnector Association="icomModel.FK_reportes_usuarios_realizo" />
+        <AssociationConnector Association="icomModel.FK_reportes_usuarios_reporto" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

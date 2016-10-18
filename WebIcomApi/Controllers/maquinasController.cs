@@ -111,7 +111,14 @@ namespace WebIcomApi.Controllers
             String idobra = json["idobraactual"].ToString();
             String imagen = json["imagen"].ToString();
 
-            objmaq.idobra = Int32.Parse(idobra);
+            if (idobra.Equals("-1"))
+            {
+                objmaq.idobra = null;
+            }
+            else
+            {
+                objmaq.idobra = Int32.Parse(idobra);
+            }
 
             if (imagen != "")
             {
@@ -226,27 +233,57 @@ namespace WebIcomApi.Controllers
 
             clsFichaMaquina objficha = new clsFichaMaquina();
 
-            objficha.noeco = objmaquina.noeconomico.ToString();
-            objficha.descripcion = objmaquina.descripcion;
-            objficha.marca = objmaquina.marca;
-            objficha.modelo = objmaquina.modelo.ToString();
-            objficha.serie = objmaquina.noserie;
+            objficha.noeco = "";
+            objficha.descripcion = "";
+            objficha.marca = "";
+            objficha.modelo = "";
+            objficha.serie = "";
+
+            if(objmaquina.noeconomico != null)
+                objficha.noeco = objmaquina.noeconomico.ToString();
+
+            if(objmaquina.descripcion != null)
+                objficha.descripcion = objmaquina.descripcion;
+
+            if(objmaquina.marca != null)
+                objficha.marca = objmaquina.marca;
+
+            if (objmaquina.modelo != null)
+                objficha.modelo = objmaquina.modelo.ToString();
+
+            if(objficha.serie != null)
+                objficha.serie = objmaquina.noserie;
 
             obrasHelper obhelp = new obrasHelper();
-            obras ob = obhelp.getobrasById((int)objmaquina.idobra);
-            if (ob != null)
+            if (objmaquina.idobra != null)
             {
-                objficha.idobraactual = objmaquina.idobra.ToString();
-                objficha.obraactual = ob.nombre;
+                obras ob = obhelp.getobrasById((int)objmaquina.idobra);
+                if (ob != null)
+                {
+                    objficha.idobraactual = objmaquina.idobra.ToString();
+                    objficha.obraactual = ob.nombre;
+                }
+                else
+                {
+                    objficha.idobraactual = "-1";
+                    objficha.obraactual = "";
+                }
             }
-            else {
+            else
+            {
                 objficha.idobraactual = "-1";
                 objficha.obraactual = "";
             }
 
+            if (objmaquina.imagen != null) { 
             if (objmaquina.imagen.Length > 0)
             {
                 objficha.imagen = Convert.ToBase64String(objmaquina.imagen);
+            }
+            else
+            {
+                objficha.imagen = "";
+            }
             }
             else
             {

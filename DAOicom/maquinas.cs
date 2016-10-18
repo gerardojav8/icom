@@ -39,8 +39,8 @@ namespace DAOicom
         public virtual ICollection<mediciones> mediciones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<medicionesfiltros> medicionesfiltros { get; set; }
+        public virtual obras obras { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<reportes> reportes { get; set; }
-        public virtual obras obras { get; set; }
     }
 }
