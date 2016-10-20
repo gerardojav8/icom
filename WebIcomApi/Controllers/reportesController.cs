@@ -344,6 +344,211 @@ namespace WebIcomApi.Controllers
             
         }
 
+        [HttpPost]
+        [Route("getNombresClientesProduccionWeb")]
+        public Object getNombresClientesProduccionWeb()
+        {
+           
+            produccionHelper phelp = new produccionHelper();
+            List<String> lstp;
+
+
+            lstp = phelp.getNombreClientes();
+
+
+            if (lstp.Count() <= 0)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No se encontraron datos para mostrar";
+                objerr.result = 0;
+                return objerr;
+            }            
+
+            return lstp;
+        }
+
+        [HttpPost]
+        [Route("guardarProducionWeb")]
+        public Object guardarProducionWeb(JObject json)
+        {
+
+            try
+            {
+                String folio = json["folio"].ToString();
+                String cantidad = json["cantidad"].ToString();
+                String material = json["material"].ToString();
+                String unidad = json["unidad"].ToString();
+                String cliente = json["cliente"].ToString();
+                String fecha = json["fecha"].ToString();
+
+
+                produccionHelper phelp = new produccionHelper();
+                produccion p = new produccion();
+
+                p.folio = folio;
+                p.cantidad = Decimal.Parse(cantidad);
+                p.material = material;
+                p.unidad = unidad;
+                p.cliente = cliente;
+                p.fecha = DateTime.Parse(fecha);
+
+                phelp.insertproduccion(p);
+
+                clsError objerr = new clsError();
+                objerr.error = "Datos insertados con exito!!";
+                objerr.result = 0;
+                return objerr;
+
+            }catch(Exception e){
+                clsError objerr = new clsError();
+                objerr.error = "Error al insertar : " + e.ToString();
+                objerr.result = 1;
+                return objerr;
+            }
+            
+
+            
+        }
+
+         [HttpPost]
+        [Route("modificarProducionWeb")]
+        public Object modificarProducionWeb(JObject json)
+        {
+
+            try
+            {
+                String folio = json["folio"].ToString();
+                String cantidad = json["cantidad"].ToString();
+                String material = json["material"].ToString();
+                String unidad = json["unidad"].ToString();
+                String cliente = json["cliente"].ToString();
+                String fecha = json["fecha"].ToString();
+
+
+                produccionHelper phelp = new produccionHelper();
+                produccion p = phelp.getproduccionById(folio);
+                
+                p.cantidad = Decimal.Parse(cantidad.Replace(".",","));
+                p.material = material;
+                p.unidad = unidad;
+                p.cliente = cliente;
+                p.fecha = DateTime.Parse(fecha);
+
+                String resp  = phelp.updateproduccion(p);
+
+                if(!resp.Equals("")){
+                     clsError objerr = new clsError();
+                    objerr.error = "No se ha encontrado el registro a actualizar";
+                    objerr.result = 1;
+                    return objerr;
+                }
+
+                
+
+                clsError objex = new clsError();
+                objex.error = "Datos actualizados con exito!!";
+                objex.result = 0;
+                return objex;
+
+            }catch(Exception e){
+                clsError objerr = new clsError();
+                objerr.error = "Error al insertar : " + e.ToString();
+                objerr.result = 1;
+                return objerr;
+            }
+            
+
+            
+        }
+
+         [HttpPost]
+         [Route("EliminaProduccionFromWeb")]
+         public Object EliminaMaquinaFromWeb(JObject json)
+         {
+             try
+             {
+                 String folio = json["folio"].ToString();
+
+                 produccionHelper prodhelp = new produccionHelper();
+
+                 String resp = prodhelp.deleteProduccion(folio);
+
+                 if (resp.Equals(""))
+                 {
+                     clsError objex = new clsError();
+                     objex.error = "Se ha eliminado el Registro";
+                     objex.result = 0;
+                     return objex;
+                 }
+                 else
+                 {
+                     clsError objerr = new clsError();
+                     objerr.error = "Error al eliminar datos " + resp;
+                     objerr.result = 1;
+                     return objerr;
+                 }
+
+
+             }
+             catch (Exception e)
+             {
+                 clsError objerr = new clsError();
+                 objerr.error = "Error " + e.ToString();
+                 objerr.result = 1;
+                 return objerr;
+             }
+         }
+
+        [HttpPost]
+        [Route("getReporteProduccionToWeb")]
+        public Object getReporteProduccionToWeb(JObject json)
+        {
+            
+            String cliente = json["cliente"].ToString();
+                        
+
+            produccionHelper phelp = new produccionHelper();
+            List<produccion> lstp;
+
+            
+            lstp = phelp.getProduccionByFiltros("", "", "", 0, cliente, null, null);
+            
+
+            if (lstp.Count() <= 0)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No se encontraron datos para mostrar";
+                objerr.result = 0;
+                return objerr;
+            }
+
+            List<clsProduccion> lstresp = new List<clsProduccion>();
+            foreach (produccion i in lstp)
+            {
+                clsProduccion p = new clsProduccion();
+                p.folio = i.folio;
+                p.material = i.material;
+                p.cantidad = i.cantidad.ToString().Replace(",", ".");
+                p.unidad = i.unidad;
+                p.cliente = i.cliente;
+                p.unidad = i.unidad;
+
+                DateTime fech = (DateTime)i.fecha;
+                String mes = fech.Month.ToString().Length < 2 ? "0" + fech.Month.ToString() : fech.Month.ToString();
+                String dia = fech.Day.ToString().Length < 2 ? "0" + fech.Day.ToString() : fech.Day.ToString();
+                String strFech = fech.Year.ToString() + "-" + mes + "-" + dia;
+
+                p.fecha = strFech;
+
+                lstresp.Add(p);
+            }
+
+            return lstresp;
+
+
+
+        }
+
         
     }
 }

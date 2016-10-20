@@ -27,6 +27,40 @@ namespace DAOicom.Helpers
             return lstproduccion;
         }
 
+        public List<String> getNombreClientes()
+        {
+            var query = (from tf in db.produccion
+                        select tf.cliente).Distinct();
+
+           
+            return query.ToList();
+        }
+
+        public string deleteProduccion(String folio)
+        {
+            var query = from t in db.produccion
+                        where t.folio == folio
+                        select t;
+
+            if (query.Count() > 0)
+            {
+                try
+                {
+                    db.produccion.Remove(query.First());
+                    db.SaveChanges();
+                    return "";
+                }
+                catch (Exception e)
+                {
+                    return e.ToString();
+                }
+            }
+            else
+            {
+                return "no se ha encontrado el registro a eliminar";
+            }
+        }
+
         public List<produccion> getProduccionByFiltros(String folio, String material, String unidad, decimal cantidad, String cliente, DateTime? pFecha, DateTime? pFechafin)
         {
             String strwhere = "";

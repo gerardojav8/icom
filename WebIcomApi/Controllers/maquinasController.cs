@@ -91,6 +91,160 @@ namespace WebIcomApi.Controllers
 
         }
 
+        [HttpPost]
+        [Route("EliminaMaquinaFromWeb")]
+        public Object EliminaMaquinaFromWeb(JObject json)
+        {
+            try
+            {
+                String noserie = json["noserie"].ToString();                
+
+                maquinasHelper maqhelp = new maquinasHelper();                
+
+                String resp = maqhelp.deleteMaquina(noserie);
+
+                if (resp.Equals(""))
+                {
+
+                    clsError objex = new clsError();
+                    objex.error = "Se ha eliminado la Maquina";
+                    objex.result = 0;
+                    return objex;
+                }
+                else
+                {
+                    clsError objerr = new clsError();
+                    objerr.error = "Error al eliminar datos " + resp;
+                    objerr.result = 0;
+                    return objerr;
+                }
+
+               
+            }
+            catch (Exception e)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "Error " + e.ToString();
+                objerr.result = 1;
+                return objerr;
+            }
+        }
+        
+        [HttpPost]
+        [Route("GuardaFichaMaquinaFromWeb")]
+        public Object GuardaFichaMaquinaFromWeb(JObject json)
+        {
+            try
+            {
+                String noserie = json["noserie"].ToString();
+                String noeconomico = json["noeconomico"].ToString();
+                String marca = json["marca"].ToString();
+                String modelo = json["modelo"].ToString();
+                String anio = json["anio"].ToString();
+                String tipomaquina = json["tipomaquina"].ToString();
+                String descripcion = json["descripcion"].ToString();
+                String imagen = json["imagen"].ToString();
+
+                maquinasHelper maqhelp = new maquinasHelper();
+                maquinas objmaq = new maquinas();
+
+                objmaq.noserie = noserie;
+                objmaq.noeconomico = Int32.Parse(noeconomico);
+                objmaq.marca = marca;
+                objmaq.modelo = modelo;
+                objmaq.aniofabricacion = Int32.Parse(anio);
+                objmaq.idtipomaquina = Int32.Parse(tipomaquina);
+                objmaq.descripcion = descripcion;
+
+
+                if (imagen != "")
+                {
+                    var bytes = Convert.FromBase64String(imagen);
+                    objmaq.imagen = bytes;
+                }
+
+                maqhelp.insertMaquina(objmaq);
+
+                clsError objerr = new clsError();
+                objerr.error = "Se ha guardaro la Maquina";
+                objerr.result = 0;
+                return objerr;
+            }
+            catch (Exception e) {
+                clsError objerr = new clsError();
+                objerr.error = "Error " + e.ToString();
+                objerr.result = 1;
+                return objerr;
+            }
+        }
+
+        [HttpPost]
+        [Route("ModificaMaquinaFromWeb")]
+        public Object ModificaMaquinaFromWeb(JObject json)
+        {
+            try
+            {
+                String noserie = json["noserie"].ToString();
+                String noeconomico = json["noeconomico"].ToString();
+                String marca = json["marca"].ToString();
+                String modelo = json["modelo"].ToString();
+                String anio = json["anio"].ToString();
+                String tipomaquina = json["tipomaquina"].ToString();
+                String descripcion = json["descripcion"].ToString();
+                String imagen = json["imagen"].ToString();
+
+                maquinasHelper maqhelp = new maquinasHelper();
+                maquinas objmaq = maqhelp.getMaquinaByNoSerie(noserie);
+
+                if (objmaq == null)
+                {
+                    clsError obje = new clsError();
+                    obje.error = "No se ha encontrado la maquina, imposible modificarla";
+                    obje.result = 1;
+                    return obje;
+                }
+
+                objmaq.noserie = noserie;
+                objmaq.noeconomico = Int32.Parse(noeconomico);
+                objmaq.marca = marca;
+                objmaq.modelo = modelo;
+                objmaq.aniofabricacion = Int32.Parse(anio);
+                objmaq.idtipomaquina = Int32.Parse(tipomaquina);
+                objmaq.descripcion = descripcion;
+
+
+                if (imagen != "")
+                {
+                    var bytes = Convert.FromBase64String(imagen);
+                    objmaq.imagen = bytes;
+                }
+
+                String resp = maqhelp.updateMaquina(objmaq);
+
+                if (resp.Equals(""))
+                {
+
+                    clsError objex = new clsError();
+                    objex.error = "Se ha guardaro la Maquina";
+                    objex.result = 0;
+                    return objex;
+                }
+                else {
+                    clsError objerr = new clsError();
+                    objerr.error = "Error al actualizar datos " + resp;
+                    objerr.result = 0;
+                    return objerr;
+                }
+            }
+            catch (Exception e)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "Error " + e.ToString();
+                objerr.result = 1;
+                return objerr;
+            }
+        }
+
         [Authorize]
         [HttpPost]
         [Route("ModificaFichaMaquina")]
@@ -384,6 +538,91 @@ namespace WebIcomApi.Controllers
 
         }
 
+        [HttpPost]
+        [Route("getFichaMaquinatoWeb")]
+        public Object getFichaMaquinatoWeb(JObject json)
+        {
+
+            String noserie = json["noserie"].ToString();
+
+            maquinasHelper maqhelp = new maquinasHelper();
+
+            maquinas objmaquina = maqhelp.getMaquinaByNoSerie(noserie);
+
+            if (objmaquina == null)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No se ha encontrado la maquina";
+                objerr.result = 0;
+                return objerr;
+            }
+
+
+            
+            Dictionary<String, string> ficha = new Dictionary<string, string>();
+
+            String noeco = "";
+            String descripcion = "";
+            String marca = "";
+            String modelo = "";
+            String serie = "";
+            String imagen = "";
+            String tipomaquina = "";
+            String anio = "";
+            
+
+            if (objmaquina.noeconomico != null)                
+                noeco = objmaquina.noeconomico.ToString();
+
+            if (objmaquina.descripcion != null)
+                descripcion = objmaquina.descripcion;
+
+            if (objmaquina.marca != null)
+                marca = objmaquina.marca;
+
+            if (objmaquina.modelo != null)
+                modelo = objmaquina.modelo.ToString();
+
+            if (objmaquina.noserie != null)
+                serie = objmaquina.noserie.ToString();
+
+            if (objmaquina.idtipomaquina != null)
+                tipomaquina = objmaquina.idtipomaquina.ToString();
+
+            if (objmaquina.aniofabricacion != null)
+                anio = objmaquina.aniofabricacion.ToString();
+            
+
+            if (objmaquina.imagen != null)
+            {
+                if (objmaquina.imagen.Length > 0)
+                {
+                    imagen = Convert.ToBase64String(objmaquina.imagen);
+                }
+                else
+                {
+                    imagen = "";
+                }
+            }
+            else
+            {
+                imagen = "";
+            }
+
+
+            ficha.Add("noecon", noeco);
+            ficha.Add("descripcion", descripcion);
+            ficha.Add("marca", marca);
+            ficha.Add("noserie", serie);
+            ficha.Add("modelo", modelo);
+            ficha.Add("tipomaquina", tipomaquina);
+            ficha.Add("anio", anio);
+            ficha.Add("imagen", imagen);
+
+            return ficha;
+
+        }
+
         [Authorize]
         [HttpPost]
         [Route("getListadoMaquinas")]
@@ -418,6 +657,50 @@ namespace WebIcomApi.Controllers
                         clsListaMaquinas objmaq = new clsListaMaquinas(item);
                         objmaq.tieneReporte = objrephelp.tieneMaquinaReporte(objmaq.noserie);
                         lstmaq.Add(objmaq);
+                    }
+
+
+                    return lstmaq;
+                }
+
+            }
+        }
+
+        
+        [HttpPost]
+        [Route("getListadoMaquinasToWeb")]
+        public Object getListadoMaquinasToWeb()
+        {
+            maquinasHelper maqhelp = new maquinasHelper();
+
+            List<maquinas> lstemaq = maqhelp.getTodasMaquinas();
+
+            if (lstemaq == null)
+            {
+                clsError objerr = new clsError();
+                objerr.error = "No se han encontrado maquinas";
+                objerr.result = 0;
+                return objerr;
+            }
+            else
+            {
+                if (lstemaq.Count() < 1)
+                {
+                    clsError objerr = new clsError();
+                    objerr.error = "No se han encontrado maquinas";
+                    objerr.result = 0;
+                    return objerr;
+                }
+                else
+                {
+                    reportesHelper objrephelp = new reportesHelper();
+                    List<Dictionary<String, String>> lstmaq = new List<Dictionary<String, String>>();
+                    foreach (maquinas item in lstemaq)
+                    {
+                        Dictionary<String, String> dic = new Dictionary<string, string>();                        
+                        dic.Add("noserie", item.noserie);
+                        dic.Add("descripcion", item.descripcion);                        
+                        lstmaq.Add(dic);
                     }
 
 

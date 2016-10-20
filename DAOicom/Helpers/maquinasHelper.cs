@@ -85,6 +85,55 @@ namespace DAOicom.Helpers
             }
         }
 
+        public String updateMaquina(maquinas obj)
+        {
+            maquinas objmaq = (from m in db.maquinas
+                               where m.noserie == obj.noserie
+                               select m).FirstOrDefault();
+
+            objmaq.noeconomico = obj.noeconomico;
+            objmaq.marca = obj.marca;
+            objmaq.modelo = obj.modelo;
+            objmaq.aniofabricacion = obj.aniofabricacion;
+            objmaq.idequipo = obj.idequipo;
+            objmaq.imagen = obj.imagen;
+            objmaq.descripcion = obj.descripcion;
+
+            try
+            {
+                db.SaveChanges();
+                return "";
+            }
+            catch (Exception e) {
+                return e.ToString();
+            }
+        }
+
+        public string deleteMaquina(String noserie)
+        {
+            var query = from a in db.maquinas
+                        where a.noserie == noserie
+                        select a;
+
+            if (query.Count() > 0)
+            {
+                try
+                {
+                    db.maquinas.Remove(query.First());
+                    db.SaveChanges();
+                    return "";
+                }
+                catch (Exception e)
+                {
+                    return e.ToString();
+                }
+            }
+            else
+            {
+                return "no se ha encontrado el registro a eliminar";
+            }
+        }
+
         public String updateMaquina(maquinas obj, equipoauxiliar objea, List<mediciones> lstmed, List<medicionesfiltros> lstmedfil)
         {
             maquinas objmaq = (from m in db.maquinas
