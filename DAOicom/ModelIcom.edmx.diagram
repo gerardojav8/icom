@@ -41,7 +41,6 @@
         <AssociationConnector Association="icomModel.FK_TareasPlanificador_categoriasPlanificador" />
         <EntityTypeShape EntityType="icomModel.chat_general" Width="1.5" PointX="5.75" PointY="22.25" />
         <AssociationConnector Association="icomModel.FK_chat_general_usuarios" />
-        <EntityTypeShape EntityType="icomModel.produccion" Width="1.5" PointX="9.375" PointY="4.25" />
         <EntityTypeShape EntityType="icomModel.solicitudmaquinaria" Width="1.5" PointX="7.25" PointY="13.875" />
         <AssociationConnector Association="icomModel.FK_solicitudmaquinaria_obras" />
         <AssociationConnector Association="icomModel.FK_requerimientos_solicitudes_solicitudmaquinaria" />
@@ -56,6 +55,7 @@
         <AssociationConnector Association="icomModel.FK_reportes_usuarios_atiende" />
         <AssociationConnector Association="icomModel.FK_reportes_usuarios_realizo" />
         <AssociationConnector Association="icomModel.FK_reportes_usuarios_reporto" />
+        <EntityTypeShape EntityType="icomModel.produccion" Width="1.5" PointX="12.875" PointY="0.875" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

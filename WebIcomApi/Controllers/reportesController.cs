@@ -322,6 +322,7 @@ namespace WebIcomApi.Controllers
             List<clsProduccion> lstresp = new List<clsProduccion>();
             foreach (produccion i in lstp) {
                 clsProduccion p = new clsProduccion();
+                p.idproduccion = i.idproduccion.ToString();
                 p.folio = i.folio;
                 p.material = i.material;
                 p.cantidad = i.cantidad.ToString().Replace(",", ".");
@@ -417,6 +418,9 @@ namespace WebIcomApi.Controllers
 
             try
             {
+                String idproduccion = json["idproduccion"].ToString();
+                long intidproduccion = Int64.Parse(idproduccion);
+
                 String folio = json["folio"].ToString();
                 String cantidad = json["cantidad"].ToString();
                 String material = json["material"].ToString();
@@ -426,7 +430,7 @@ namespace WebIcomApi.Controllers
 
 
                 produccionHelper phelp = new produccionHelper();
-                produccion p = phelp.getproduccionById(folio);
+                produccion p = phelp.getproduccionById(intidproduccion);
                 
                 p.cantidad = Decimal.Parse(cantidad.Replace(".",","));
                 p.material = material;
@@ -467,11 +471,12 @@ namespace WebIcomApi.Controllers
          {
              try
              {
-                 String folio = json["folio"].ToString();
+                 String idproduccion = json["idproduccion"].ToString();
+                 long intidproduccion = Int64.Parse(idproduccion);
 
                  produccionHelper prodhelp = new produccionHelper();
 
-                 String resp = prodhelp.deleteProduccion(folio);
+                 String resp = prodhelp.deleteProduccion(intidproduccion);
 
                  if (resp.Equals(""))
                  {
@@ -526,6 +531,7 @@ namespace WebIcomApi.Controllers
             foreach (produccion i in lstp)
             {
                 clsProduccion p = new clsProduccion();
+                p.idproduccion = i.idproduccion.ToString();
                 p.folio = i.folio;
                 p.material = i.material;
                 p.cantidad = i.cantidad.ToString().Replace(",", ".");

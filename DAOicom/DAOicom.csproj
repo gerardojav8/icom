@@ -168,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="ModelIcom.edmx.diagram">
       <DependentUpon>ModelIcom.edmx</DependentUpon>
     </None>

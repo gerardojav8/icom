@@ -7,6 +7,7 @@ namespace WebIcomApi.Entidades
 {
     public class clsProduccion
     {
+        public string idproduccion { get; set; }
         public string folio { get; set; }
         public string material { get; set; }
         public string cantidad { get; set; }

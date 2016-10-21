@@ -14,6 +14,7 @@ namespace DAOicom
     
     public partial class produccion
     {
+        public long idproduccion { get; set; }
         public string folio { get; set; }
         public string material { get; set; }
         public Nullable<decimal> cantidad { get; set; }

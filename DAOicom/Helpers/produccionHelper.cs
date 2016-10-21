@@ -36,10 +36,10 @@ namespace DAOicom.Helpers
             return query.ToList();
         }
 
-        public string deleteProduccion(String folio)
+        public string deleteProduccion(long id)
         {
             var query = from t in db.produccion
-                        where t.folio == folio
+                        where t.idproduccion == id
                         select t;
 
             if (query.Count() > 0)
@@ -179,10 +179,10 @@ namespace DAOicom.Helpers
             return lstproduccion;
         }
 
-        public produccion getproduccionById(string id)
+        public produccion getproduccionById(long id)
         {
             var query = from t in db.produccion
-                        where t.folio == id
+                        where t.idproduccion == id
                         select t;
 
             if (query.Count() > 0)
@@ -198,7 +198,7 @@ namespace DAOicom.Helpers
         public String updateproduccion(produccion obj)
         {
             produccion objtf = (from t in db.produccion
-                             where t.folio == obj.folio
+                             where t.idproduccion == obj.idproduccion
                              select t).FirstOrDefault();
 
             objtf.material = obj.material;

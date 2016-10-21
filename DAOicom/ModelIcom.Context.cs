@@ -45,8 +45,8 @@ namespace DAOicom
         public virtual DbSet<categoriasPlanificador> categoriasPlanificador { get; set; }
         public virtual DbSet<TareasPlanificador> TareasPlanificador { get; set; }
         public virtual DbSet<chat_general> chat_general { get; set; }
-        public virtual DbSet<produccion> produccion { get; set; }
         public virtual DbSet<solicitudmaquinaria> solicitudmaquinaria { get; set; }
         public virtual DbSet<reportes> reportes { get; set; }
+        public virtual DbSet<produccion> produccion { get; set; }
     }
 }

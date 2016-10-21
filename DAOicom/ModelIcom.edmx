@@ -129,8 +129,9 @@
         </EntityType>
         <EntityType Name="produccion">
           <Key>
-            <PropertyRef Name="folio" />
+            <PropertyRef Name="idproduccion" />
           </Key>
+          <Property Name="idproduccion" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="folio" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="material" Type="varchar" MaxLength="100" />
           <Property Name="cantidad" Type="decimal" Precision="14" Scale="2" />
@@ -946,7 +947,6 @@
             <End Role="usuarios" EntitySet="usuarios" />
             <End Role="chat_general" EntitySet="chat_general" />
           </AssociationSet>
-          <EntitySet Name="produccion" EntityType="icomModel.produccion" />
           <EntitySet Name="solicitudmaquinaria" EntityType="icomModel.solicitudmaquinaria" />
           <AssociationSet Name="FK_solicitudmaquinaria_obras" Association="icomModel.FK_solicitudmaquinaria_obras">
             <End Role="obras" EntitySet="obras" />
@@ -997,6 +997,7 @@
             <End Role="usuarios" EntitySet="usuarios" />
             <End Role="reportes" EntitySet="reportes" />
           </AssociationSet>
+          <EntitySet Name="produccion" EntityType="icomModel.produccion" />
           </EntityContainer>
         <EntityType Name="tipomaquina">
           <Key>
@@ -1310,17 +1311,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="produccion">
-          <Key>
-            <PropertyRef Name="folio" />
-          </Key>
-          <Property Name="folio" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="material" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="cantidad" Type="Decimal" Precision="14" Scale="2" />
-          <Property Name="unidad" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="cliente" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="fecha" Type="DateTime" Precision="0" />
-        </EntityType>
         <EntityType Name="solicitudmaquinaria">
           <Key>
             <PropertyRef Name="folio" />
@@ -1510,6 +1500,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="produccion">
+          <Key>
+            <PropertyRef Name="idproduccion" />
+          </Key>
+          <Property Name="idproduccion" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="folio" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="material" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="cantidad" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="unidad" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="cliente" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="fecha" Type="DateTime" Precision="0" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1753,18 +1755,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="produccion">
-            <EntityTypeMapping TypeName="icomModel.produccion">
-              <MappingFragment StoreEntitySet="produccion">
-                <ScalarProperty Name="fecha" ColumnName="fecha" />
-                <ScalarProperty Name="cliente" ColumnName="cliente" />
-                <ScalarProperty Name="unidad" ColumnName="unidad" />
-                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
-                <ScalarProperty Name="material" ColumnName="material" />
-                <ScalarProperty Name="folio" ColumnName="folio" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="solicitudmaquinaria">
             <EntityTypeMapping TypeName="icomModel.solicitudmaquinaria">
               <MappingFragment StoreEntitySet="solicitudmaquinaria">
@@ -1797,6 +1787,19 @@
                 <ScalarProperty Name="hora" ColumnName="hora" />
                 <ScalarProperty Name="fecha" ColumnName="fecha" />
                 <ScalarProperty Name="folio" ColumnName="folio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="produccion">
+            <EntityTypeMapping TypeName="icomModel.produccion">
+              <MappingFragment StoreEntitySet="produccion">
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="cliente" ColumnName="cliente" />
+                <ScalarProperty Name="unidad" ColumnName="unidad" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="material" ColumnName="material" />
+                <ScalarProperty Name="folio" ColumnName="folio" />
+                <ScalarProperty Name="idproduccion" ColumnName="idproduccion" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
