@@ -431,8 +431,8 @@ namespace WebIcomApi.Controllers
 
                 produccionHelper phelp = new produccionHelper();
                 produccion p = phelp.getproduccionById(intidproduccion);
-                
-                p.cantidad = Decimal.Parse(cantidad.Replace(".",","));
+
+                p.cantidad = Decimal.Parse(cantidad);
                 p.material = material;
                 p.unidad = unidad;
                 p.cliente = cliente;
